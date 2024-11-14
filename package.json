@@ -1,0 +1,23 @@
+{
+  "name": "tmfinal",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "repository": "https://github.com/803571/tmfinal.git",
+  "author": "SSA <158470963+shinseongan@users.noreply.github.com>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "lodash": "^4.17.21",
+    "mysql2": "^3.11.4",
+    "protobufjs": "^7.4.0",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3"
+  }
+}

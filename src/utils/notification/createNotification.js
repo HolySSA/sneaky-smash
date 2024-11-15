@@ -20,3 +20,16 @@ const makeNotification = (message, type) => {
 
   return Buffer.concat([packetLength, packetType, message]);
 };
+
+const createNotificationPacket = (payload, packetType, sequence) => {
+  const protoMessages = getProtoMessages();
+  // const notification = protoMessages.notification~;
+
+  // 수정 필요
+  const payloadName = PayloadName[packetType];
+  const notificationPacket = notification.encode({ [payloadName]: payload }).finish();
+
+  return makeNotification(notificationPacket, packetType, sequence);
+};
+
+export default createNotificationPacket;

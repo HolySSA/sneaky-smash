@@ -1,5 +1,6 @@
 import { CLIENT_VERSION, HOST, PORT } from '../constants/env.js';
-import { PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
+import { HANDLER_IDS } from '../constants/handlerIds.js';
+import { PACKET_TYPE, PACKET_TYPE_LENGTH, TOTAL_LENGTH } from '../constants/header.js';
 
 const config = {
   server: {
@@ -12,6 +13,13 @@ const config = {
   packet: {
     totalLength: TOTAL_LENGTH,
     typeLength: PACKET_TYPE_LENGTH,
+    type: {
+      ping: PACKET_TYPE.PING,
+      normal: PACKET_TYPE.NORMAL,
+    },
+  },
+  handlerIds: {
+    initial: HANDLER_IDS.INITIAL,
   },
 };
 

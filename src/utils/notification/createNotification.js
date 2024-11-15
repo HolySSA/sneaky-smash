@@ -1,8 +1,6 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
-import { PACKET_TYPE } from '../../constants/header.js';
 
-// constants 쓰는 거 싫음. config로 통일
 const makeNotification = (message, type) => {
   // createHeader로 뺄까?
   const packetLength = Buffer.alloc(config.packet.totalLength);

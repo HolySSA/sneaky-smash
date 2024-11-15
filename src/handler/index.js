@@ -1,9 +1,9 @@
-// import { HANDLER_IDS } from '../constants/handlerIds.js';
+import config from '../config/config.js';
 import CustomError from '../utils/error/customError.js';
 import ErrorCodes from '../utils/error/errorCodes.js';
 
 const handlers = {
-  [HANDLER_IDS.INITIAL]: {
+  [config.handlerIds.initial]: {
     handler: null,
     protoType: '',
   },

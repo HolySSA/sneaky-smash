@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import protobuf from 'protobufjs';
+import getAllProtoFiles from './protofiles.js';
+import packetNames from '../protobuf/packetNames.js';
 
 // 현재 파일의 절대경로
 const __filename = fileURLToPath(import.meta.url);

@@ -10,10 +10,12 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "bull": "^4.16.4",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
     "mysql2": "^3.11.4",
     "protobufjs": "^7.4.0",
+    "redis": "^4.7.0",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

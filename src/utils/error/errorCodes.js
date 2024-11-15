@@ -1,4 +1,4 @@
-export const ErrorCodes = {
+const ErrorCodes = {
   CLIENT_VERSION_MISMATCH: 10001,
   UNKNOWN_HANDLER_ID: 10002,
   PACKET_DECODE_ERROR: 10003,
@@ -10,3 +10,5 @@ export const ErrorCodes = {
   GAME_NOT_FOUND: 10009,
   // 추가적인 에러 코드들
 };
+
+export default ErrorCodes;

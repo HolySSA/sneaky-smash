@@ -17,6 +17,7 @@ const createResponse = (handlerId, responseCode, data = null) => {
 
   const packetLength = Buffer.alloc(config.packet.totalLength);
 
+  // createHeader로 뺄까?
   packetLength.writeUInt32BE(
     buffer.length + config.packet.totalLength + config.packet.typeLength,
     0,

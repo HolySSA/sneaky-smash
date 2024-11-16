@@ -8,12 +8,6 @@ export const PORT = process.env.PORT || 3000;
 
 export const CLIENT_VERSION = process.env.CLIENT_VERSION || '1.0.0';
 
-//name: DB_NAME,
-//user: DB_USER,
-//password: DB_PASSWORD,
-//host: DB_HOST,
-//port: DB_PORT,
-
 export const DB_NAME = process.env.DB_NAME || 'database';
 export const DB_USER = process.env.DB_USER || 'user';
 export const DB_PASSWORD = process.env.DB_PASSWORD || 'password';

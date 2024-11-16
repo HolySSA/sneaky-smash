@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// **C_PartyJoin** - 파티에 참여 요청 메시지
+message C_PartyJoin {
+  int32 dungeonLevel = 1;  // 던전 난이도
+}
+// **C_PartyLeave** - 파티에서 나가기 요청 메시지
+message C_PartyLeave {
+  int32 dungeonLevel = 1;  // 던전 난이도
+}
+// **S_Party** - 파티 정보 응답 메시지
+message S_Party {
+  repeated int32 playerId = 1;    // 파티에 참여 중인 유저들의 ID 리스트
+  int32 dungeonLevel = 2;          // 던전 난이도
+}

@@ -1,13 +1,12 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
 import { config } from '../../config/config.js';
 
-const createResponse = (handlerId, responseCode, data = null) => {
+const createResponse = (handlerId, data = null) => {
   const protoMessages = getProtoMessages();
   const Response = protoMessages.response.Response;
 
   const responsePayload = {
     handlerId,
-    responseCode,
     timestamp: Date.now(),
     data: data ? Buffer.from(JSON.stringify(data)) : null,
   };

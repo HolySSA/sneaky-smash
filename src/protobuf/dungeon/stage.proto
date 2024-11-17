@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-message C_EnterPotal {
+message C_EnterPortal {
     int32 potalId = 1;  // 포탈 고유 ID
 }
 
-message S_EnterPotal {
+message S_EnterPortal {
     int32 potalId = 1;  // 포탈 고유 ID
     int32 statId = 2;   // 버프/디버프 ID
     int32 stat = 3;     // 버프/디버프

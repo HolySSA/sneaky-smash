@@ -1,7 +1,9 @@
+import { createReverseMapping } from "../constants/packetId.js";
 import { loadProtos } from "./loadProtos.js";
 
 const initServer = async () => {
   try {
+    createReverseMapping();
     await loadProtos();
   } catch (err) {
     console.error(err);

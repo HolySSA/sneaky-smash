@@ -1,6 +1,6 @@
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
-import joiUtils from '../../utils/joi/joiUtills.js';
+import joiUtils from '../../utils/joi/joiUtils.js';
 import config from '../../config/config.js';
 import { PACKET_ID, reverseMapping } from '../../constants/packetId.js';
 import { findUserByAccount, createUser } from '../../db/user/user.db.js';
@@ -15,13 +15,14 @@ const registerHandler = async (socket, payload) => {
 
     // db에서 중복 아이디 찾기
     const isAccountExist = await findUserByAccount(account);
-
+    // const isAccountExist = null;
     if (isAccountExist) {
       const registerResponse = {
         success: false,
         message: '이미 존재하는 아이디입니다.',
       };
-      const response = createResponse(registerResponse, packetType.sRegister);
+
+      const response = createResponse(PACKET_ID.S_Register, registerResponse);
       socket.write(response);
       return;
     }
@@ -34,7 +35,6 @@ const registerHandler = async (socket, payload) => {
     const registerResponse = {
       success: true,
       message: '회원가입에 성공했습니다!',
-      user: newUser,
     };
 
     // PACKET_ID.S_Register: 20

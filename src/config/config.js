@@ -38,7 +38,7 @@ const config = {
   },
   databases: {
     USER_DB: {
-      name: DB_NAME,
+      database: DB_NAME,
       user: DB_USER,
       password: DB_PASSWORD,
       host: DB_HOST,

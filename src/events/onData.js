@@ -1,4 +1,5 @@
 import config from '../config/config.js';
+import { getHandlerByPacketId } from '../handler/index.js';
 import { decodeMessageByPacketId } from '../init/loadProtos.js';
 
 const onData = (socket) => async (data) => {
@@ -16,6 +17,9 @@ const onData = (socket) => async (data) => {
       try {
         const decodedMessage = decodeMessageByPacketId(packetType, packet);
         console.log(`패킷 ID ${packetType}의 디코드 결과:`, decodedMessage);
+
+        const handler = getHandlerByPacketId(packetType);
+        await handler(socket, decodedMessage);
       } catch (err) {
         // handleError(socket, err);
         console.error(err);

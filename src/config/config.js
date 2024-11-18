@@ -9,7 +9,7 @@ import {
   DB_PORT,
 } from '../constants/env.js';
 import { PACKET_TYPE_LENGTH, PACKET_LENGTH } from '../constants/header.js';
-import { PACKET_ID } from '../constants/packetId.js';
+import { PACKET_ID, reverseMapping } from '../constants/packetId.js';
 
 const config = {
   server: {
@@ -22,12 +22,19 @@ const config = {
   packet: {
     length: PACKET_LENGTH,
     typeLength: PACKET_TYPE_LENGTH,
-    type: {
-      //   cRegister: PACKET_ID.C_Register,
-      sRegister: PACKET_ID.S_Register,
-      //   cLogIn: PACKET_ID.C_LogIn,
-      sLogIn: PACKET_ID.S_LogIn,
-    },
+    // type: {
+    //   cRegister: PACKET_ID.C_Register,
+    //   sRegister: PACKET_ID.S_Register,
+    //   cLogIn: PACKET_ID.C_LogIn,
+    //   sLogIn: PACKET_ID.S_LogIn,
+    // },
+
+    // id: {
+    //   cRegister: reverseMapping.,
+    //   sRegister: PACKET_ID.S_Register,
+    //   cLogIn: PACKET_ID.C_LogIn,
+    //   sLogIn: PACKET_ID.S_LogIn,
+    // },
   },
   databases: {
     USER_DB: {

@@ -10,6 +10,10 @@ const __dirname = path.dirname(__filename);
 const protoDir = path.join(__dirname, '../protobuf'); // .proto 파일이 저장된 디렉토리
 const protoMessages = {}; // 패킷 ID -> Protobuf 타입 매핑을 저장
 
+const getProtoMessages = () => {
+  return { ...protoMessages };
+};
+
 // 모든 Protobuf 타입을 미리 로드하고, 패킷 ID와 매핑
 const loadProtos = async () => {
   try {
@@ -77,4 +81,4 @@ const decodeMessageByPacketId = (packetId, buffer) => {
 };
 
 // 함수 내보내기
-export { loadProtos, decodeMessageByPacketId };
+export { loadProtos, decodeMessageByPacketId, getProtoMessages };

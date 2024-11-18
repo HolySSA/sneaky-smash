@@ -1,28 +1,26 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
-import { config } from '../../config/config.js';
+import config from '../../config/config.js';
 
 const createResponse = (packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  const Response = protoMessages.response.Response;
+  console.log('protoMessages keys:', Object.keys(protoMessages));
+  // key: 숫자 - 패킷 생성
+  const response = protoMessages[packetId];
 
-  const responsePayload = {
-    packetId,
-    timestamp: Date.now(),
-    data: data ? Buffer.from(JSON.stringify(data)) : null,
-  };
+  // console.log('packetId: ', packetId);
+  // console.log('response: ', response);
+  // console.log('data: ', data);
+  // const payload = { [packetId]: data };
 
-  const buffer = Response.encode(responsePayload).finish();
-
-  const packetLength = Buffer.alloc(config.packet.totalLength);
+  const gamePacket = response.create(data);
+  const buffer = response.encode(gamePacket).finish();
 
   // createHeader로 뺄까?
-  packetLength.writeUInt32BE(
-    buffer.length + config.packet.totalLength + config.packet.typeLength,
-    0,
-  );
+  const packetLength = Buffer.alloc(config.packet.length);
+  packetLength.writeUInt32BE(buffer.length + config.packet.length + config.packet.typeLength, 0);
 
   const packetType = Buffer.alloc(config.packet.typeLength);
-  packetType.writeUInt8(config.packet.type.normal, 0);
+  packetType.writeUInt8(packetId);
 
   return Buffer.concat([packetLength, packetType, buffer]);
 };

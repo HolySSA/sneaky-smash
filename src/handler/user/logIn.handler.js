@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
+import { PACKET_ID, reverseMapping } from '../../constants/packetId.js';
 
 // 로그인 핸들러
 const logInHandler = async (socket, payload) => {
@@ -30,7 +31,15 @@ const logInHandler = async (socket, payload) => {
 
     // 세션(redis) 추가
 
-    const response = createResponse(packetType.sLogIn, logInPayload);
+    /*============
+    C_Register: 19,
+    S_Register: 20,
+    C_LogIn: 21,
+    S_LogIn: 22,
+    ============*/
+
+    // 숫자인데?
+    const response = createResponse(PACKET_ID.S_LogIn, logInPayload);
 
     socket.write(response);
   } catch (e) {

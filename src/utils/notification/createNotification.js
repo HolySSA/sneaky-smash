@@ -1,5 +1,5 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
-import { config } from '../../config/config.js';
+import config from '../../config/config.js';
 
 const makeNotification = (message, type) => {
   // createHeader로 뺄까?
@@ -17,11 +17,14 @@ const makeNotification = (message, type) => {
 
 const createNotificationPacket = (payload, packetType, sequence) => {
   const protoMessages = getProtoMessages();
-  // const notification = protoMessages.notification~;
 
-  // 수정 필요
-  const payloadName = PayloadName[packetType];
-  const notificationPacket = notification.encode({ [payloadName]: payload }).finish();
+  // key: 숫자 - 패킷 생성
+  const notification = protoMessages[packetId];
+  const payload = { [packetId]: data };
+  const gamePacket = notification.create(payload);
+  const buffer = notification.encode(gamePacket).finish();
+
+  const notificationPacket = notification.encode(payload).finish();
 
   return makeNotification(notificationPacket, packetType, sequence);
 };

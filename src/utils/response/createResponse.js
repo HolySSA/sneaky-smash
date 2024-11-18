@@ -3,7 +3,8 @@ import config from '../../config/config.js';
 
 const createResponse = (packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  console.log('protoMessages keys:', Object.keys(protoMessages));
+  // console.log('protoMessages keys:', Object.keys(protoMessages));
+
   // key: 숫자 - 패킷 생성
   const response = protoMessages[packetId];
 

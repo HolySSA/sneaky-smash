@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID, reverseMapping } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../constants/packetId.js';
 import { findUserByAccount } from '../../db/user/user.db.js';
 
 // 로그인 핸들러
@@ -24,8 +24,9 @@ const logInHandler = async (socket, payload) => {
       return;
     }
 
-    console.log('user: ', user);
-    console.log('password: ', user.password);
+    // console.log('user: ', user);
+    // console.log('password: ', user.password);
+
     // 비밀번호 비교
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {

@@ -8,8 +8,8 @@ import bcrypt from 'bcrypt';
 const packetType = config.packet.type;
 
 const registerHandler = async (socket, payload) => {
-    try {
-        const { account, password } = await joiUtils.validateRegister(payload);
+  try {
+    const { account, password } = await joiUtils.validateRegister(payload);
 
         // db에서 중복 아이디 찾기
         const isAccountExist = await findUserByAccount(account);
@@ -35,12 +35,12 @@ const registerHandler = async (socket, payload) => {
             user: newUser,
         };
 
-        const response = createResponse(registerResponse, packetType.sRegister);
+    const response = createResponse(packetType.sRegister, registerResponse);
 
-        socket.write(response);
-    } catch (e){
-        handleError(socket, e);
-    }
-}
+    socket.write(response);
+  } catch (e) {
+    handleError(socket, e);
+  }
+};
 
 export default registerHandler;

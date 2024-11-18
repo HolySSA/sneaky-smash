@@ -22,8 +22,8 @@ export const PACKET_ID = {
   S_MonsterAction: 18,
   C_Register: 19,
   S_Register: 20,
-  C_LoginIn: 21,
-  S_LoginIn: 22,
+  C_LogIn: 21,
+  S_LogIn: 22,
   C_EnterPortal: 23,
   S_EnterPortal: 24,
   S_Inventory: 25,
@@ -62,11 +62,11 @@ export const PACKET_ID = {
   S_Phase: 60,
   C_PartyJoin: 61,
   C_PartyLeave: 62,
-  S_Party: 63
+  S_Party: 63,
 };
 
 export const createReverseMapping = () => {
   for (const [key, value] of Object.entries(PACKET_ID)) {
-      reverseMapping[value] = key; // value를 key로, key를 value로 저장
+    reverseMapping[value] = key; // value를 key로, key를 value로 저장
   }
 };

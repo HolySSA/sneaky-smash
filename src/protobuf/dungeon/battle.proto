@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+// 던전에서 나가기 요청 (C_LeaveDungeon)
+message C_LeaveDungeon {
+  // 요청 필드는 없음. 단순히 던전 나가기 요청 메시지.
+}
+// 던전에서 나가는 응답 (S_LeaveDungeon)
+message S_LeaveDungeon {
+  int32 playerId = 1;          // 던전에서 나간 플레이어 ID
+}
+// 플레이어 체력 업데이트 (S_UpdatePlayerHp)
+message S_UpdatePlayerHp {
+  float hp = 1;                // 플레이어의 체력
+}
+// 플레이어 마나 업데이트 (S_UpdatePlayerMp)
+message S_UpdatePlayerMp {
+  float mp = 1;                // 플레이어의 마나
+}
+// 몬스터 체력 업데이트 (S_UpdateMonsterHp)
+message S_UpdateMonsterHp {
+  float hp = 1;                // 몬스터의 체력
+}
+// 몬스터 액션 요청 (C_MonsterAction)
+message C_MonsterAction {
+  int32 actionMonsterIdx = 1;  // 액션을 취하는 몬스터 인덱스
+  ActionSet actionSet = 2;     // 몬스터의 액션 설정
+}
+// 몬스터 액션 응답 (S_MonsterAction)
+message S_MonsterAction {
+  int32 actionMonsterIdx = 1;  // 액션을 취하는 몬스터 인덱스
+  ActionSet actionSet = 2;     // 몬스터의 액션 설정
+}

@@ -1,6 +1,8 @@
-import { transform } from 'lodash';
-import { PACKET_ID } from '../../constants/packetId';
-import createResponse from '../../utils/response/createResponse';
+// import { transform } from 'lodash';
+// import bcrypt from 'bcrypt';
+import { PACKET_ID } from '../../constants/packetId.js';
+import createResponse from '../../utils/response/createResponse.js';
+import { townSession } from '../../utils/sessions/town.session.js';
 
 export const movePlayerHandler = ({ socket, payload }) => {
   const { posX, posY, posZ, rot } = payload;
@@ -11,22 +13,31 @@ export const movePlayerHandler = ({ socket, payload }) => {
   user.position = { posX, posY, posZ, rot };
   const S_MoveData = {
     playerId: user.id,
-    trans,
+    transform: user.position,
   };
+  if (!townSession) {
+    console.error('타운미아');
+    return;
+  }
+  const gameSession = getGameSessionById(user.currentSessionId);
+  // const { posX, posY, posZ, rot }= payload.transform;
+  user.position = { posX, posY, posZ, rot };
 
-  try {
-    const gameSession = getGameSessionById(user.currentSessionId);
-    // const { posX, posY, posZ, rot }= payload.transform;
-    user.position = { posX, posY, posZ, rot };
-
-    const moveResponsePayload = {
-      playerId: user.id,
-      transform: user,
-      position,
-    };
-    const moveResponse = createResponse(PACKET_ID.S_Move, moveResponsePayload);
-    const allUsers = gameSession.getAllUsers();
-  } catch (e) {}
+  const moveResponsePayload = {
+    playerId: user.id,
+    transform: user.position,
+  };
+  const movePayload = createResponse(PACKET_ID.S_Move, moveResponsePayload);
+  // const allUsers = gameSession.getAllUsers();
+  townSession.users.forEach((targetUser) => {
+    if (targetUser.id !== user.id) {
+      try {
+        targetUser.socket.writh(movePayload);
+      } catch (e) {
+        handleError(socket, e);
+      }
+    }
+  });
 };
 
 // **TransformInfo** - 위치 및 회전 정보

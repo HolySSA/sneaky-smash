@@ -3,15 +3,19 @@
   "version": "1.0.0",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "client": "node client.js"
   },
   "repository": "https://github.com/803571/tmfinal.git",
   "author": "SSA <158470963+shinseongan@users.noreply.github.com>",
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bull": "^4.16.4",
     "dotenv": "^16.4.5",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mysql2": "^3.11.4",
     "protobufjs": "^7.4.0",

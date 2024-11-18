@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+message MonsterStatus {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 monsterModel = 2; // 몬스터 모델 ID
+  string monsterName = 3; // 몬스터 이름
+  float monsterHp = 4; // 몬스터 체력
+}
+
+message C_MonsterDamage {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 damage = 2; // 데미지
+}
+
+message S_MonsterDamage {
+  int32 playerId = 1; // 플레이어 식별 ID
+  int32 monsterId = 2; // 몬스터 식별 ID
+  int32 damage = 3; // 데미지
+}
+
+message C_MonsterMove {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  TransformInfo transform = 2; // 몬스터 위치
+}
+
+message S_MonsterMove {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  TransformInfo transform = 2; // 몬스터 위치
+}
+
+message C_MonsterKill {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 itemId = 2; // 아이템 식별 ID
+}
+
+message S_MonsterKill {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 itemId = 2; // 아이템 식별 ID
+}
+
+message C_MonsterSpawn {
+  int32 stageId = 1; // 해당 스테이지의 아이디
+}
+
+message S_MonsterSpawn {
+  repeated MonsterStatus monsters = 1; // 몬스터 정보
+  repeated int32 amount = 2; // 몬스터 마리수
+}

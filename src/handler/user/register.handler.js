@@ -15,7 +15,6 @@ const registerHandler = async (socket, payload) => {
 
     // db에서 중복 아이디 찾기
     const isAccountExist = await findUserByAccount(account);
-    // const isAccountExist = null;
     if (isAccountExist) {
       const registerResponse = {
         success: false,

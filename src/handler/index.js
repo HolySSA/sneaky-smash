@@ -8,7 +8,7 @@ const handlers = {
   [PACKET_ID.C_Register]: {
     handler: registerHandler,
   },
-  [PACKET_ID.S_LogIn]: {
+  [PACKET_ID.C_LogIn]: {
     handler: logInHandler,
   },
   // 다른 핸들러들 추가

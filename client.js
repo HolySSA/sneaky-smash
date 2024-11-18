@@ -1,6 +1,7 @@
 import net from "net";
 import protobuf from "protobufjs";
 import config from "./src/config/config.js";
+import { PACKET_ID } from "./src/constants/packetId.js";
 
 // .proto 파일 경로
 const PROTO_PATH = "./src/protobuf/town/login.proto";
@@ -61,7 +62,7 @@ async function loadProtoAndSend(packetType, messageType, payload) {
         account: "testPlayer",
         password: "testPassword",
     };
-    const packetType = 1; // 패킷 타입
+    const packetType = PACKET_ID.C_Register; // 패킷 타입
 
     await loadProtoAndSend(packetType, messageType, payload);
 })();

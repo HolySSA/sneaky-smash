@@ -1,18 +1,14 @@
-import fs from 'fs';
 import path from 'path';
 import protobuf from 'protobufjs';
 import { fileURLToPath } from 'url';
-import { PACKET_ID, reverseMapping } from '../constants/packetId.js';
+import { reverseMapping } from '../constants/packetId.js';
 import getAllProtoFiles from './protofiles.js';
 
-// ES 모듈에서 __dirname 대체
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const protoDir = path.join(__dirname, '../protobuf'); // .proto 파일이 저장된 디렉토리
 const protoMessages = {}; // 패킷 ID -> Protobuf 타입 매핑을 저장
-
-// let root; // 로드된 Protobuf의 루트 객체 -- 전역적 사용 기피(유지보수, 테스트 용이)
 
 // 모든 Protobuf 타입을 미리 로드하고, 패킷 ID와 매핑
 const loadProtos = async () => {

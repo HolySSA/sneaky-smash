@@ -22,19 +22,6 @@ const config = {
   packet: {
     length: PACKET_LENGTH,
     typeLength: PACKET_TYPE_LENGTH,
-    // type: {
-    //   cRegister: PACKET_ID.C_Register,
-    //   sRegister: PACKET_ID.S_Register,
-    //   cLogIn: PACKET_ID.C_LogIn,
-    //   sLogIn: PACKET_ID.S_LogIn,
-    // },
-
-    // id: {
-    //   cRegister: reverseMapping.,
-    //   sRegister: PACKET_ID.S_Register,
-    //   cLogIn: PACKET_ID.C_LogIn,
-    //   sLogIn: PACKET_ID.S_LogIn,
-    // },
   },
   databases: {
     USER_DB: {

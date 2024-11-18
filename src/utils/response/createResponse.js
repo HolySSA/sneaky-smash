@@ -17,7 +17,6 @@ const createResponse = (packetId, data = null) => {
   const gamePacket = response.create(data);
   const buffer = response.encode(gamePacket).finish();
 
-  // createHeader로 뺄까?
   const header = createHeader(packetId, buffer);
 
   return Buffer.concat([header, buffer]);

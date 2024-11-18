@@ -1,6 +1,6 @@
 import config from '../config/config.js';
 import { getHandlerByPacketId } from '../handler/index.js';
-import { decodeMessageByPacketId } from '../init/loadProtos.js';
+import decodeMessageByPacketId from '../utils/parser/decodePacket.js';
 
 const onData = (socket) => async (data) => {
   socket.buffer = Buffer.concat([socket.buffer, data]);

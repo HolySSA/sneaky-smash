@@ -11,7 +11,6 @@ const makeNotification = (packetId, buffer) => {
 const createNotificationPacket = (packetId, data = null) => {
   const protoMessages = getProtoMessages();
 
-  // key: 숫자 - 패킷 생성
   const notification = protoMessages[packetId];
   const gamePacket = notification.create(data);
   const buffer = notification.encode(gamePacket).finish();

@@ -85,7 +85,7 @@ async function loadProtoAndSend(packetType, messageType, payload) {
 (async () => {
   const messageType = 'C_Register'; // 전송할 메시지 타입
   const payload = {
-    account: 'testPlayer',
+    account: 'testPlayer1',
     password: 'testPassword',
   };
   const packetType = PACKET_ID.C_Register; // 패킷 타입

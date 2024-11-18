@@ -10,12 +10,12 @@ message S_Register {
     string message = 2;   // 메시지
 }
 
-message C_LoginIn {
+message C_LogIn {
     string account = 1;  // 아이디
     string password = 2;  // 비밀번호
 }
 
-message S_LoginIn {
+message S_LogIn {
     bool success = 1;     // 성공 여부
     string message = 2;   // 메시지
     string token = 3;     // 토큰

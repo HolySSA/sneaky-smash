@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "../user/customMessage.proto";
 message C_Enter {
     string nickname = 1;        // 닉네임
     int32 class = 2;            // 캐릭터 클래스

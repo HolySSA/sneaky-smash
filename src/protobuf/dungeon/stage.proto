@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+import "../dungeon/stage.proto";
+import "../dungeon/monster.proto";
+
 message C_EnterPortal {
     int32 potalId = 1;  // 포탈 고유 ID
 }

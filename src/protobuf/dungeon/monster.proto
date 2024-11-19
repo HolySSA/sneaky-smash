@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "../user/customMessage.proto";
+
 message MonsterStatus {
   int32 monsterId = 1; // 몬스터 식별 ID
   int32 monsterModel = 2; // 몬스터 모델 ID

@@ -9,10 +9,10 @@ import handleError from '../../utils/error/errorHandler';
 const enterHandler = async (socket, payload) => {
   try {
     const { player } = payload;
-    const spawnPayload = {
-      players,
+    const enterPayload = {
+      player,
     };
-    const response = createResponse(PACKET_ID.S_Spawn, spawnPayload);
+    const response = createResponse(PACKET_ID.S_Enter, enterPayload);
     socket.write(response);
   } catch (e) {
     handleError(socket, e);

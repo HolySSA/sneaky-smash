@@ -3,7 +3,7 @@ import { addCharacter } from "./character.db.js";
 (async () => {
     try {
         const newCharacter = await addCharacter({
-            userId: 2,
+            userId: 1,
             nickname: 'testCharacter2',
             class: 'Warrior',
             gold: 0,

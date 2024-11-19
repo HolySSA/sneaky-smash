@@ -1,15 +1,15 @@
 import User from '../../classes/model/userClass.js';
 import redis from './redisManager.js';
 
-const addUser = async (id, account) => {
-  // const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
-  socket.account = account;
+const addUser = async (socket, id, account) => {
   const user = new User(id, account);
+  const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
 
   const userKey = `user:${user.id}`;
   await redis.hmset(userKey, {
     id: user.id,
     account: user.account,
+    clientId: clientId,
   });
 
   return user;
@@ -21,13 +21,10 @@ const removeUser = async (socket) => {
   for (const key of keys) {
     const user = await redis.hgetall(key);
 
-    // 소켓으로 해당 유저 찾기가 안됨 - account나 id로 교체
     // console.log('socket: ', JSON.stringify(socket));
 
-    console.log('user.account: ', user.account);
-    console.log('socket.account: ', socket.account);
-
-    if (socket.account && user.account === socket.account) {
+    const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
+    if (user.clientId === clientId) {
       // 인덱스 삭제
       await redis.del(key);
 

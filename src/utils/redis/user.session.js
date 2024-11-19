@@ -1,10 +1,10 @@
 import User from '../../classes/model/user.class.js';
 import redis from './redisManager.js';
 
-const addUser = async (socket, id, account) => {
+const addUser = async (socket, id, myClass, nickName) => {
   socket.id = id;
 
-  const user = new User(id, account);
+  const user = new User(id, myClass, nickName);
   //const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
 
   const userKey = `user:${user.id}`;

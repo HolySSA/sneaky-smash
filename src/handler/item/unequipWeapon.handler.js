@@ -1,6 +1,6 @@
-import createResponse from '../../utils/response/createResponse';
-import { PACKET_ID } from '../../constants/packetId';
-import handleError from '../../utils/error/errorHandler';
+import createResponse from '../../utils/response/createResponse.js';
+import { PACKET_ID } from '../../constants/packetId.js';
+import handleError from '../../utils/error/errorHandler.js';
 // 패킷명세
 // message S_UnequipWeapon {
 //     string itemType = 1; // 탈착한 아이템 유형

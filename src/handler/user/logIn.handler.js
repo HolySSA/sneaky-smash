@@ -43,7 +43,6 @@ const logInHandler = async (socket, payload) => {
     }
 
     const connectedUser = await getUserById(user.id);
-    console.log('=>', connectedUser);
     if (connectedUser) {
       const logInResponse = {
         success: false,
@@ -56,7 +55,7 @@ const logInHandler = async (socket, payload) => {
       return;
     }
 
-    // redis 추가
+    // 유저 db id로 저장
     await addUser(socket, user.id, account);
 
     // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)

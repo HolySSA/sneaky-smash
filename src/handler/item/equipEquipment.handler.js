@@ -1,6 +1,6 @@
-import createResponse from '../../utils/response/createResponse';
-import { PACKET_ID } from '../../constants/packetId';
-import handleError from '../../utils/error/errorHandler';
+import createResponse from '../../utils/response/createResponse.js';
+import { PACKET_ID } from '../../constants/packetId.js';
+import handleError from '../../utils/error/errorHandler.js';
 // 패킷명세
 // message S_EquipEquipment {
 //     int32 itemId = 1; // 장착한 장비 ID

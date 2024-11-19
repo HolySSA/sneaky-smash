@@ -2,14 +2,14 @@ import User from '../../classes/model/userClass.js';
 import redis from './redisManager.js';
 
 const addUser = async (socket, id, account) => {
+  socket.id = id;
+
   const user = new User(id, account);
-  const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
+  //const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
 
   const userKey = `user:${user.id}`;
   await redis.hmset(userKey, {
     id: user.id,
-    account: user.account,
-    clientId: clientId,
   });
 
   return user;
@@ -22,9 +22,9 @@ const removeUser = async (socket) => {
     const user = await redis.hgetall(key);
 
     // console.log('socket: ', JSON.stringify(socket));
+    // const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
 
-    const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
-    if (user.clientId === clientId) {
+    if (user.id === socket.id) {
       // 인덱스 삭제
       await redis.del(key);
 

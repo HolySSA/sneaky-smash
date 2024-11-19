@@ -1,6 +1,6 @@
-import createResponse from '../../utils/response/createResponse';
-import { PACKET_ID } from '../../constants/packetId';
-import handleError from '../../utils/error/errorHandler';
+import createResponse from '../../utils/response/createResponse.js';
+import { PACKET_ID } from '../../constants/packetId.js';
+import handleError from '../../utils/error/errorHandler.js';
 // 패킷명세
 // message S_Animation {
 //     int32 playerId = 1;             // 애니메이션을 실행하는 플레이어 ID

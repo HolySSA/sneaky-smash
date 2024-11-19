@@ -1,6 +1,6 @@
-import createResponse from '../../utils/response/createResponse';
-import { PACKET_ID } from '../../constants/packetId';
-import handleError from '../../utils/error/errorHandler';
+import createResponse from '../../utils/response/createResponse.js';
+import { PACKET_ID } from '../../constants/packetId.js';
+import handleError from '../../utils/error/errorHandler.js';
 // 패킷명세
 // message S_MonsterKill {
 //     int32 monsterId = 1; // 몬스터 식별 ID

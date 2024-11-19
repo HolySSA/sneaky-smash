@@ -67,7 +67,7 @@ async function loadProtoAndSend(packetType, messageType, payload) {
       const decoded = S_LogInMessage.decode(payloadBuffer);
       console.log(`디코딩된 데이터: ${JSON.stringify(decoded, null, 2)}`);
 
-      client.destroy(); // 응답 수신 후 연결 종료
+      // client.destroy(); // 응답 수신 후 연결 종료
     });
 
     client.on('close', () => {

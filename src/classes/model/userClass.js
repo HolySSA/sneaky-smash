@@ -1,6 +1,5 @@
 class User {
-  constructor(socket, id, account) {
-    this.socket = socket;
+  constructor(id, account) {
     this.id = id;
     this.account = account;
   }

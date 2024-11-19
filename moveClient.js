@@ -5,7 +5,7 @@ import config from './src/config/config.js';
 // import handleError from './src/utils/error/errorHandler.js';
 // import { transform } from 'lodash';
 
-const PROTO_PATH = ' ./src/protobuf/town/town.proto';
+const PROTO_PATH = './src/protobuf/town/town.proto';
 
 async function loadProtoAndSend(packetType, messageType, payload) {
   try {

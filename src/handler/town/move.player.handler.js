@@ -1,7 +1,7 @@
 import { PACKET_ID } from '../../constants/packetId.js';
+import { getUserById } from '../../utils/redis/user.session.js';
 import createResponse from '../../utils/response/createResponse.js';
 import { townSession } from '../../utils/sessions/town.session.js';
-import { getUserBySocket } from '../../utils/sessions/user.session.js';
 
 /**
  * 무브 핸들러
@@ -13,7 +13,7 @@ export const movePlayerHandler = async ({ socket, payload }) => {
     const { posX, posY, posZ, rot } = payload;
 
     // 소켓에서 유저 정보 가져오기
-    const user = await getUserBySocket(socket);
+    const user = await getUserById(socket.id);
     if (!user) {
       throw new Error('유저를 찾을 수 없습니다.');
     }

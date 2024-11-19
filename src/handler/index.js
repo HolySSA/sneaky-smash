@@ -32,16 +32,6 @@ const handlers = {
   },
   [PACKET_ID.C_LogIn]: {
     handler: logInHandler,
-
-  },
-  [PACKET_ID.C_LogIn]: {
-    handler: logInHandler,
-  },
-  [PACKET_ID.C_LogIn]: {
-    handler: logInHandler,
-  },
-  [PACKET_ID.C_LogIn]: {
-    handler: logInHandler,
   },
   // battle
   [PACKET_ID.C_LeaveDungeon]: {

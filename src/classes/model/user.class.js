@@ -11,6 +11,7 @@ class User {
       z : 0,
       rot : 0
     };
+    this.locationType = 'town';
     this.Inventory = new Inventory();
     this.skillList = [];
   }

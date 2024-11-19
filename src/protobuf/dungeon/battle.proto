@@ -30,3 +30,8 @@ message S_MonsterAction {
   int32 actionMonsterIdx = 1;  // 액션을 취하는 몬스터 인덱스
   ActionSet actionSet = 2;     // 몬스터의 액션 설정
 }
+// 액션셋
+message ActionSet {
+  int32 animCode = 1;
+  int32 effectCode = 2;
+}

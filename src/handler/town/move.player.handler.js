@@ -18,7 +18,7 @@ export const movePlayerHandler = async ({ socket, payload }) => {
       throw new Error('유저를 찾을 수 없습니다.');
     }
 
-    // 유저 위치 업데이트
+    // 유저 위치 업데이트 - redis에 저장될 유저 세션에 position을 넣어야 한다.
     user.position = { posX, posY, posZ, rot };
 
     // S_Move 패킷 데이터 생성
@@ -35,13 +35,16 @@ export const movePlayerHandler = async ({ socket, payload }) => {
     // S_Move 패킷 생성
     const movePayload = createResponse(PACKET_ID.S_Move, moveResponsePayload);
 
+    // 타운 세션 불러오기
+    const townSession = null; // await getTownSession();
     // 타운 세션이 존재하지 않을 경우 처리
     if (!townSession || !townSession.users) {
       console.error('타운 세션을 찾을 수 없습니다.');
       return;
     }
-
-    // 타운 세션의 다른 유저들에게 S_Move 패킷 전송
+    // 나한테 위치를 보내는 패이로드가 없음.+패킷전달까지. selfPosition
+    // 분할터미널 테스트떄는 세션 찾는로직을 빼고 임시 아이디값을 넣어서 해봐야함
+    // 타운 세션의 다른 유저들에게 S_Move 패킷 전송 - 타운 Enter할 때 townSession에 유저 정보 넣기
     townSession.users.forEach((targetUser) => {
       if (targetUser.id !== user.id) {
         try {

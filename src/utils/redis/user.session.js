@@ -1,15 +1,17 @@
 import User from '../../classes/model/userClass.js';
 import redis from './redisManager.js';
 
-const addUser = async (socket, id, account) => {
+const addUser = async (socket, id, myClass, nickName) => {
   socket.id = id;
 
-  const user = new User(id, account);
+  const user = new User(id, myClass, nickName);
   //const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
 
   const userKey = `user:${user.id}`;
   await redis.hmset(userKey, {
+    socket,
     id: user.id,
+    nickName,
   });
 
   return user;
@@ -43,4 +45,22 @@ const getUserById = async (id) => {
   return Object.keys(user).length > 0 ? user : null;
 };
 
-export { addUser, removeUser, getUserById };
+const getAllUsers = async () => {
+  try {
+    const userKeys = await redis.keys('user:*');
+
+    const users = await Promise.all(
+      userKeys.map(async (key) => {
+        const user = await redis.hgetall(key);
+        return user;
+      }),
+    );
+
+    return users;
+  } catch (err) {
+    console.error('모든 유저 불러오기 오류: ', err);
+    throw err;
+  }
+};
+
+export { addUser, removeUser, getUserById, getAllUsers };

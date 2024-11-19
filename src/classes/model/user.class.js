@@ -1,4 +1,4 @@
-import Inventory from "./inventory.class.js";
+import Inventory from './inventory.class.js';
 
 class User {
   constructor(id, myClass, nickName) {
@@ -6,10 +6,10 @@ class User {
     this.myClass = myClass;
     this.nickName = nickName;
     this.position = {
-      x : 0,
-      y : 0,
-      z : 0,
-      rot : 0
+      posX: 0,
+      posY: 0,
+      posZ: 0,
+      rot: 0,
     };
     this.Inventory = new Inventory();
     this.skillList = [];

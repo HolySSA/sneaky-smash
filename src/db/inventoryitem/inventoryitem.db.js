@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import { SQL_QUERIES } from './user.query.js';
+import { SQL_QUERIES } from './inventoryitem.query.js';
 
 // 아이템 사용
 export const userItem = async ({ characterId, itemId, amount }) => {

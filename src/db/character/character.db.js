@@ -1,6 +1,6 @@
 import toCamelCase from '../../utils/transformCase.js';
 import dbPool from '../database.js';
-import { SQL_QUERIES } from './user.query.js';
+import { SQL_QUERIES } from './character.query.js';
 
 // 캐릭터 생성하기
 export const addCharacter = async ({ userId, nickname, class: className, gold }) => {

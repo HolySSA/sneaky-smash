@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import { SQL_QUERIES } from './user.query.js';
+import { SQL_QUERIES } from './item.query.js';
 
 // 아이템 생성
 export const createItem = async ({ gold, ATK, DEF, MaxHP, CriticalDamageRate, CriticalProbability, CurHP, MoveSpeed }) => {

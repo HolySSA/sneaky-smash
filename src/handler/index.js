@@ -32,6 +32,7 @@ const handlers = {
   },
   [PACKET_ID.C_LogIn]: {
     handler: logInHandler,
+
   },
   [PACKET_ID.C_LogIn]: {
     handler: logInHandler,

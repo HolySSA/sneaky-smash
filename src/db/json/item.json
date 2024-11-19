@@ -1,0 +1,26 @@
+{
+    "name": "Item",
+    "version": "1.0.0",
+    "data": [
+      { "itemID": 100, "itemName": "회복 엘릭서", "CurHp": 30, "gold": 50, "description": "고대의 연금술사가 만든 마법 물약으로, 즉시 체력을 회복시켜줍니다." },
+      { "itemID": 101, "itemName": "전사의 엘릭서", "ATK": 15, "gold": 70, "description": "힘의 기운을 증폭시키는 물약으로 전투력을 단시간에 강화시킵니다." },
+      { "itemID": 102, "itemName": "방어 엘릭서", "DEF": 10, "gold": 60, "description": "강철 같은 피부를 만들어 적의 공격으로부터 몸을 보호합니다." },
+      { "itemID": 103, "itemName": "활력의 엘릭서", "MaxHp": 50, "gold": 100, "description": "생명의 에너지가 담긴 물약으로 최대 체력을 영구적으로 증가시켜줍니다." },
+      { "itemID": 104, "itemName": "신속의 엘릭서", "MoveSpeed": 10, "gold": 80, "description": "전설적인 속도의 신의 축복을 받아 이동 속도가 대폭 증가합니다." },
+      { "itemID": 105, "itemName": "연마제", "ATK": 25, "gold": 150, "description": "무기를 날카롭게 갈아내는 용도로 사용되며 공격력을 크게 향상시킵니다." },
+      { "itemID": 106, "itemName": "철 가루", "DEF": 20, "gold": 120, "description": "단단한 방어구를 강화할 수 있는 재료로, 방어력을 높여줍니다." },
+      { "itemID": 107, "itemName": "안약", "CriticalProbability": 5, "gold": 130, "description": "시야를 맑게 하여 적의 약점을 쉽게 발견할 수 있게 합니다." },
+      { "itemID": 108, "itemName": "손목 붕대", "CriticalDamageRate": 15, "gold": 140, "description": "고통을 억제하고 치명타 공격의 위력을 크게 강화합니다." },
+      { "itemID": 109, "itemName": "생명의 코코아", "CurHp": 50, "MaxHp": 25, "gold": 200, "description": "생명의 나무에서 추출된 코코아로, 체력을 회복시키고 생명력을 증대시킵니다." },
+      { "itemID": 110, "itemName": "마법의 신기루", "DEF": 15, "MaxHp": 20, "gold": 180, "description": "마법의 힘으로 몸을 둘러싸 방어력을 향상시키고 생명력을 증대시킵니다." },
+      { "itemID": 111, "itemName": "힘의 고구마", "ATK": 10, "CriticalDamageRate": 10, "gold": 170, "description": "힘을 북돋아주는 신비한 고구마로 전투력을 전반적으로 증가시킵니다." },
+      { "itemID": 112, "itemName": "불사조의 똥으로 만든 단약", "CurHp": 100, "gold": 250, "description": "불사조의 신비한 배설물로 만들어져 치유 효과가 매우 강력합니다." },
+      { "itemID": 113, "itemName": "오크의 정수", "ATK": 40, "CriticalProbability": 7, "gold": 300, "description": "오크 전사의 혼이 담긴 정수로 공격력을 극대화합니다." },
+      { "itemID": 114, "itemName": "단단해지는 스프레이", "DEF": 25, "MaxHp": 30, "gold": 220, "description": "즉시 몸을 단단하게 만들어 적의 공격을 효과적으로 방어합니다." },
+      { "itemID": 115, "itemName": "스피드 물약", "MoveSpeed": 20, "gold": 90, "description": "빠른 이동이 필요한 순간에 사용되는 물약으로 속도를 대폭 증가시킵니다." },
+      { "itemID": 116, "itemName": "갑옷 광택제", "DEF": 35, "gold": 400, "description": "오래된 갑옷을 새것처럼 만들며 방어력을 크게 향상시킵니다." },
+      { "itemID": 117, "itemName": "말라붙은 피", "ATK": 50, "CriticalDamageRate": 20, "gold": 500, "description": "강력한 전사의 피가 말라붙은 물질로, 극도의 공격력을 제공합니다." },
+      { "itemID": 118, "itemName": "레인저의 남은 화살", "CriticalProbability": 10, "MoveSpeed": 5, "gold": 250, "description": "레인저의 특별한 화살로, 치명타 확률과 이동 속도를 함께 증가시킵니다." },
+      { "itemID": 119, "itemName": "드래곤 슬레이어의 일회성 격언", "ATK": 60, "CriticalDamageRate": 25, "gold": 700, "description": "드래곤을 쓰러뜨린 전설의 전사의 외침이 담긴 격언으로, 공격력과 치명타를 대폭 강화합니다." }
+    ]
+  }

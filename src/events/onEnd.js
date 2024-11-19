@@ -1,5 +1,7 @@
+import { removeUser } from '../utils/redis/user.session.js';
+
 const onEnd = (socket) => async () => {
-  console.log('클라이언트 연결이 종료되었습니다.');
+  await removeUser(socket);
 };
 
 export default onEnd;

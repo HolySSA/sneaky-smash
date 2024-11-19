@@ -1,4 +1,3 @@
-// skill.db.js
 import dbPool from '../database.js';
 import SQL_QUERIES from './skill.query.js';
 import handleDbQuery from '../../utils/dbHelper.js';  // DB 처리 함수 임포트
@@ -13,17 +12,17 @@ export const createSkill = async (DamageRate, CoolTime, IncreasePercent, Decreas
 
 // 스킬 조회
 export const findSkillById = async (id) => {
-  const rows = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_SKILL_BY_ID, id]);
-  if (rows.length === 0) {
+  const skill = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_SKILL_BY_ID, id]);
+  if (!skill) {
     throw new Error(`Skill with ID ${id} not found.`);
   }
-  return rows[0];
+  return skill;  // 이미 카멜케이스로 변환된 결과 반환
 };
 
 // 모든 스킬 조회
 export const findAllSkills = async () => {
-  const rows = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_ALL_SKILLS]);
-  return rows;  // 모든 스킬 반환
+  const skills = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_ALL_SKILLS], true); // 여러 결과 반환
+  return skills;  // 이미 카멜케이스로 변환된 결과 반환
 };
 
 // 스킬 수정

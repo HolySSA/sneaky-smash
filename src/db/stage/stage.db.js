@@ -1,4 +1,3 @@
-// stage.db.js
 import dbPool from '../database.js';
 import SQL_QUERIES from './stage.query.js';
 import handleDbQuery from '../../utils/dbHelper.js';  // DB 처리 함수 임포트
@@ -13,17 +12,17 @@ export const createStage = async (MonsterID, MonsterCount) => {
 
 // 스테이지 조회
 export const findStageById = async (id) => {
-  const rows = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_STAGE_BY_ID, id]);
-  if (rows.length === 0) {
+  const stage = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_STAGE_BY_ID, id]);
+  if (!stage) {
     throw new Error(`Stage with ID ${id} not found.`);
   }
-  return rows[0];
+  return stage;  // 이미 카멜케이스로 변환된 결과 반환
 };
 
 // 모든 스테이지 조회
 export const findAllStages = async () => {
-  const rows = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_ALL_STAGES]);
-  return rows;  // 모든 스테이지 반환
+  const stages = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_ALL_STAGES], true); // 여러 결과 반환
+  return stages;  // 이미 카멜케이스로 변환된 결과 반환
 };
 
 // 스테이지 수정

@@ -10,8 +10,10 @@ const createSchemas = async () => {
   const sqlDir = path.join(__dirname, '../sql');
 
   const sqlFiles = [
-    'boos_db.sql',
+    'boss_db.sql',
     'dungeon_db.sql',
+    'equipment_db.sql',
+    'item_db.sql',
     'monsters_db.sql',
     'skill_db.sql',
     'stage_db.sql',

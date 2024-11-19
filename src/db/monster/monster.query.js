@@ -1,4 +1,4 @@
-export const SQL_QUERIES = {
+const SQL_QUERIES = {
     CREATE_MONSTER: // 몬스터 테이블 만들기
     ` INSERT INTO monsters (MaxHp, ATK, DEF, CriticalProbability, CriticalDamageRate, MoveSpeed, AttackSpeed) 
     VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -17,3 +17,5 @@ export const SQL_QUERIES = {
     DELETE_MONSTER: // Id에 맞는 몬스터 테이블 값 삭제
     `DELETE FROM monsters WHERE id = ?`
 }
+
+export default SQL_QUERIES;

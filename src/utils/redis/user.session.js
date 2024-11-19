@@ -21,10 +21,11 @@ const removeUser = async (socket) => {
   for (const key of keys) {
     const user = await redis.hgetall(key);
 
-    // console.log('socket: ', JSON.stringify(socket));
+    // console.log('user.id: ', user.id);
+    // console.log('socket.id: ', socket.id);
     // const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
 
-    if (user.id === socket.id) {
+    if (Number(user.id) === socket.id) {
       // 인덱스 삭제
       await redis.del(key);
 

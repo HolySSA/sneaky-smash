@@ -1,29 +1,21 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
-import { config } from '../../config/config.js';
+import config from '../../config/config.js';
+import createHeader from '../createHeader.js';
 
-const makeNotification = (message, type) => {
-  // createHeader로 뺄까?
-  const packetLength = Buffer.alloc(config.packet.totalLength);
-  packetLength.writeUInt32BE(
-    message.length + config.packet.totalLength + config.packet.typeLength,
-    0,
-  );
+const makeNotification = (packetId, buffer) => {
+  const header = createHeader(packetId, buffer);
 
-  const packetType = Buffer.alloc(config.packet.typeLength);
-  packetType.writeUInt8(type, 0);
-
-  return Buffer.concat([packetLength, packetType, message]);
+  return Buffer.concat([header, buffer]);
 };
 
-const createNotificationPacket = (payload, packetType, sequence) => {
+const createNotificationPacket = (packetId, data = null) => {
   const protoMessages = getProtoMessages();
-  // const notification = protoMessages.notification~;
 
-  // 수정 필요
-  const payloadName = PayloadName[packetType];
-  const notificationPacket = notification.encode({ [payloadName]: payload }).finish();
+  const notification = protoMessages[packetId];
+  const gamePacket = notification.create(data);
+  const buffer = notification.encode(gamePacket).finish();
 
-  return makeNotification(notificationPacket, packetType, sequence);
+  return makeNotification(packetId, buffer);
 };
 
 export default createNotificationPacket;

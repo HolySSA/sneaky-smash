@@ -4,7 +4,7 @@ import formatDate from '../utils/dateFormatter.js';
 
 const createPool = () => {
   const pool = mysql.createPool({
-    //...config.databases.USER_DB,
+    ...config.databases.USER_DB,
     //...config.databases.GAME_DB,
     waitForConnections: true,
     connectionLimit: 10,

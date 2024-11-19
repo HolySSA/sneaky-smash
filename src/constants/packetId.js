@@ -14,6 +14,7 @@ export const PACKET_ID = {
   S_Animation: 7,
   C_Chat: 8,
   S_Chat: 9,
+  S_EnterDungeon: 10,
   C_LeaveDungeon: 12,
   S_LeaveDungeon: 13,
   S_UpdatePlayerHp: 14,

@@ -43,12 +43,12 @@ export const movePlayerHandler = async (socket, payload) => {
     //   },
     // };
 
-    const moveResponsePayload = {
+    const movePayload = {
       playerId: user.id,
       transform: transform,
     };
 
-    const movePayload = createResponse(PACKET_ID.S_Move, moveResponsePayload);
+    const moveResponsePayload = createResponse(PACKET_ID.S_Move, movePayload);
 
     const allUsers = await getAllUsers();
     if (!allUsers || allUsers.length === 0) {
@@ -58,7 +58,7 @@ export const movePlayerHandler = async (socket, payload) => {
     // 로케이션 타입 확인 후 같은 로케이션의 유저들에게 패킷 전송
     allUsers.forEach((targetUser) => {
       if (targetUser.locationType === user.locationType && targetUser.id !== user.id) {
-        targetUser.socket.write(movePayload);
+        targetUser.socket.write(moveResponsePayload);
         console.log(`${targetUser.id} 타겟유저아이디패킷전송성공`);
       }
     });

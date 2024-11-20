@@ -5,7 +5,7 @@ import { SQL_QUERIES } from './character.query.js';
 // 캐릭터 생성하기
 export const addCharacter = async (userId, nickname, myClass, gold) => {
   const [result] = await dbPool.query(SQL_QUERIES.ADD_CHARACTER, [userId, nickname, myClass, gold]);
-  return { id: result.insertId, userId, nickname, myClass, gold };
+  return { userId, nickname, myClass, gold };
 };
 
 // 해당 유저 캐릭터 불러오기

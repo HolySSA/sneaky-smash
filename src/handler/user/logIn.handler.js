@@ -79,14 +79,14 @@ const logInHandler = async (socket, payload) => {
     if (character) {
       // 일단 user 테이블 id로 저장
       const userSession = await addUser(socket, user.id, character.class, character.nickname);
-      await enterLogic(userSession);
+      await enterLogic(socket, userSession);
     }
   } catch (e) {
     handleError(socket, e);
   }
 };
 
-const enterLogic = async (userSession) => {
+const enterLogic = async (socket, userSession) => {
   const player = {
     playerId: userSession.id,
     nickname: userSession.nickname,

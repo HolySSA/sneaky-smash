@@ -5,7 +5,7 @@ class User {
     this.id = id;
     this.myClass = myClass;
     this.nickname = nickname;
-    this.position = {
+    this.transform = {
       posX: 0,
       posY: 0,
       posZ: 0,

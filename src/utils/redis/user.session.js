@@ -2,7 +2,13 @@ import User from '../../classes/model/user.class.js';
 import redis from './redisManager.js';
 
 const userSessions = [];
-
+//여기다가 latency transform를 playerId를 키값으로 넣어줘야함 핑퐁받으면 어떤값을 userSessions에서 계속 갱신시켜주는
+// {
+// player.id : {
+//   transform:
+//   latancy
+// }
+// }
 const addUser = async (socket, id, myClass, nickname) => {
   const user = new User(id, myClass, nickname);
   //const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
@@ -24,6 +30,12 @@ const addUser = async (socket, id, myClass, nickname) => {
     rot: user.transform.rot,
   });
 
+  //유저세션에도 추가해줍니당 이뤄케에에말이죠
+  userSessions[user.id] = {
+    transfrom: user.transform,
+    latency: 0,
+  };
+
   return user;
 };
 
@@ -40,6 +52,9 @@ const removeUser = async (socket) => {
     if (Number(user.id) === socket.id) {
       // 인덱스 삭제
       await redis.del(key);
+
+      // 유저세션에서도 제거해줍시당 이~뤄케 말이죠
+      delete userSessions[user.id];
 
       return user;
     }
@@ -73,6 +88,12 @@ const updateUserTransformById = async (id, posX, posY, posZ, rot) => {
     posZ: estimatedPos.z.toString(),
     rot: rot.toString(),
   });
+
+  // 유저세션에업데잍
+  if (userSessions[id]) {
+    userSessions[id].transform = estimatedPos;
+    userSessions[id].latency = latency;
+  }
 
   const updatedTransform = await redis.hgetall(transformKey);
 
@@ -109,6 +130,13 @@ const getAllUsers = async () => {
   }
 };
 
+/**
+ * userSessions를 반환 디버깅용도로 추가했습니다.
+ */
+const getUserSessions = () => {
+  return userSessions;
+};
+
 export {
   addUser,
   removeUser,
@@ -116,4 +144,5 @@ export {
   getAllUsers,
   getUserTransformById,
   updateUserTransformById,
+  getUserSessions,
 };

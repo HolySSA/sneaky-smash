@@ -92,7 +92,7 @@ const logInHandler = async (socket, payload) => {
   }
 };
 
-const enterLogic = async (socket, userSession) => {
+const enterLogic = async (userSession, socket) => {
   const player = {
     playerId: userSession.id,
     nickname: userSession.nickname,
@@ -100,9 +100,13 @@ const enterLogic = async (socket, userSession) => {
     // inventory: userSession.inventory,
   };
 
+  console.log(userSession);
+
   const enterPayload = {
     player,
   };
+
+  console.log("엔터 로직 실시");
 
   const response = createResponse(PACKET_ID.S_Enter, enterPayload);
   socket.write(response);

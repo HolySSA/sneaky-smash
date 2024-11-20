@@ -1,9 +1,14 @@
-const createParty = async (socket, id) => {
-  const partyKey = `party:${user.id}`;
-  await redis.hmset(userKey, {
-    socket,
+const createParty = async (id, userId) => {
+  const party = {
     id: id,
+    userId: userId,
+  };
+
+  const partyKey = `party:${userId}`;
+  await redis.hmset(partyKey, {
+    id: id,
+    userId: userId,
   });
 
-  return user;
+  return party;
 };

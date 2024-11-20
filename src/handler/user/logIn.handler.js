@@ -101,7 +101,6 @@ const enterLogic = async (userSession) => {
   const response = createResponse(PACKET_ID.S_Enter, enterPayload);
   socket.write(response);
 
-  /*
   const allUsers = await getAllUsers();
 
   const spawnPayload = {
@@ -117,7 +116,6 @@ const enterLogic = async (userSession) => {
   allUsers.forEach((user) => {
     user.socket.write(notification);
   });
-  */
 };
 
 export default logInHandler;

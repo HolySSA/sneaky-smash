@@ -3,16 +3,30 @@ import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 
 // 패킷명세
-// // **C_PartyJoin** - 파티에 참여 요청 메시지
+// **C_PartyJoin** - 파티에 참여 요청 메시지
 // message C_PartyJoin {
 //   int32 dungeonLevel = 1;  // 던전 난이도
+//   int32 roomId = 2;
+//   bool isOner = 3;
 // }
-// **S_Party** - 파티 정보 응답 메시지
+
+// // **C_PartyLeave** - 파티에서 나가기 요청 메시지
+// message C_PartyLeave {
+//   int32 roomId = 1;  // 방 번호
+// }
+
+// message  C_MatchStart {
+// 	int32 dungeonLevel = 1; // 던전 들어가기
+// 	int32 roomdId = 2; // 방번호
+// }
+
+// // **S_Party** - 파티 정보 응답 메시지
 // message S_Party {
-//     repeated int32 playerId = 1;    // 파티에 참여 중인 유저들의 ID 리스트
-//     int32 dungeonLevel = 2;          // 던전 난이도
-//   }
-const partyHandler = async (socket, payload) => {
+//   repeated int32 playerId = 1;    // 파티에 참여 중인 유저들의 ID 리스트
+//   int32 roomId = 2;         // 던전 난이도
+// }
+
+const partyJoinHandler = async (socket, payload) => {
   try {
     const { playerId, dungeonLevel } = payload;
 
@@ -48,4 +62,4 @@ const dungeonStartHandler = async (socket, payload) => {
   }
 };
 
-export { partyHandler, dungeonStartHandler };
+export { partyJoinHandler, dungeonStartHandler };

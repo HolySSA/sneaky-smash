@@ -1,6 +1,11 @@
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
+import {
+  getUserById,
+  getAllUsers,
+  updateUserTransformById,
+} from '../../utils/redis/user.session.js';
 // 패킷명세
 // message C_Chat {
 //     string chatMsg = 1;             // 채팅 메시지 내용
@@ -19,8 +24,16 @@ const chatHandler = async (socket, payload) => {
       chatMsg,
     };
 
-    const response = createResponse(PACKET_ID.S_Chat, chatPayload);
-    socket.write(response);
+    // const response = createResponse(PACKET_ID.S_Chat, chatPayload);
+    // const allUsers = await getUserById();
+    // if(!allUsers || allUsers.length === 0){
+    //   console.error('유저세션미아');
+    //   return;
+    // }
+    // allUsers.forEach((targetUser)=> {
+    //   if(targetUser.locationType)
+    // })
+    // socket.write(response);
   } catch (e) {
     handleError(socket, e);
   }

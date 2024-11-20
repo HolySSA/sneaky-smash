@@ -71,7 +71,7 @@ const logInHandler = async (socket, payload) => {
     // 로그인 검증에 통과되었으므로 해당 socket에 id 부여
     socket.id = user.id;
 
-    const response = createResponse(PACKET_ID.S_LogIn, logInPayload);
+    const response = createResponse(PACKET_ID.S_Login, logInPayload);
     socket.write(response);
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn

@@ -18,7 +18,7 @@ const enterHandler = async (socket, payload) => {
     }
 
     // sql 에서 gold default 선언해서 만들면 gold 입력 빼기 가능
-    character = addCharacter(user.id, user.nickname, user.class, 0);
+    character = await addCharacter(user.id, user.nickname, user.myClass, 0);
 
     const player = {
       playerId: user.id,

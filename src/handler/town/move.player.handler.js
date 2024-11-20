@@ -52,6 +52,7 @@ export const movePlayerHandler = async (socket, payload) => {
     //     }
     //   }
     // });
+    
   } catch (error) {
     console.error('무브 핸들러 실행 중 오류 발생:', error.message);
   }

@@ -128,9 +128,9 @@ const handlers = {
     handler: dungeonStartHandler,
   },
 
-  [PACKET_ID.C_PartyLeave]: {
-    handler: partyHandler,
-  },
+  // [PACKET_ID.C_PartyLeave]: {
+  //   handler: partyHandler,
+  // },
   // 다른 핸들러들 추가
 };
 

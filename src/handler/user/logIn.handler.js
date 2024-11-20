@@ -5,11 +5,12 @@ import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import { findUserByAccount } from '../../db/user/user.db.js';
 import { addUser, getUserById } from '../../utils/redis/user.session.js';
+import { getCharacterByUserId } from '../../db/character/character.db.js';
 
 // 로그인 핸들러
 const logInHandler = async (socket, payload) => {
   try {
-    const { account, password, nickname, myClass } = payload;
+    const { account, password } = payload;
 
     // db에서 해당 아이디 찾기
     const user = await findUserByAccount(account);
@@ -67,14 +68,56 @@ const logInHandler = async (socket, payload) => {
       token: bearerToken,
     };
 
-    // db 클래스, 닉네임 불러오기. - 없으면 생성
+    // 로그인 검증에 통과되었으므로 해당 socket에 id 부여
+    socket.id = user.id;
 
     const response = createResponse(PACKET_ID.S_LogIn, logInPayload);
-
     socket.write(response);
+
+    // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
+    let character = getCharacterByUserId(user.id);
+    if (character) {
+      // 일단 user 테이블 id로 저장
+      const userSession = await addUser(socket, user.id, character.class, character.nickname);
+      await enterLogic(userSession);
+    }
   } catch (e) {
     handleError(socket, e);
   }
+};
+
+const enterLogic = async (userSession) => {
+  const player = {
+    playerId: userSession.id,
+    nickname: userSession.nickname,
+    class: userSession.myClass,
+    // inventory: userSession.inventory,
+  };
+
+  const enterPayload = {
+    player,
+  };
+
+  const response = createResponse(PACKET_ID.S_Enter, enterPayload);
+  socket.write(response);
+
+  /*
+  const allUsers = await getAllUsers();
+
+  const spawnPayload = {
+    players: allUsers.map((user) => ({
+      playerId: user.id,
+      nickname: user.nickname,
+      class: user.myClass,
+    })),
+  };
+
+  const notification = createNotificationPacket(PACKET_ID.S_Spawn, spawnPayload);
+
+  allUsers.forEach((user) => {
+    user.socket.write(notification);
+  });
+  */
 };
 
 export default logInHandler;

@@ -2,6 +2,9 @@ import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 // 패킷명세
+// message C_Animation {
+//     int32 animCode = 1;             // 애니메이션 코드
+// }
 // message S_Animation {
 //     int32 playerId = 1;             // 애니메이션을 실행하는 플레이어 ID
 //     int32 animCode = 2;             // 애니메이션 코드
@@ -9,16 +12,18 @@ import handleError from '../../utils/error/errorHandler.js';
 
 const animationHandler = async (socket, payload) => {
   try {
-    const { playerId, animCode } = payload;
+    const { animCode } = payload;
 
     const animationPayload = {
-      playerId,
+      playerId: socket.id,
       animCode,
     };
+
     const response = createResponse(PACKET_ID.S_Animation, animationPayload);
     socket.write(response);
   } catch (e) {
     handleError(socket, e);
   }
 };
+
 export default animationHandler;

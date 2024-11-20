@@ -35,6 +35,7 @@ import bossSpawnHandler from './boss/bossSpawn.handler.js';
 import targetPlayerHandler from './boss/targetPlayer.handler.js';
 // party
 import partyHandler from './party/party.handler.js';
+
 const handlers = {
   // town
   [PACKET_ID.C_Enter]: {

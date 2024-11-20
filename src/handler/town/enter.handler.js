@@ -4,12 +4,21 @@ import handleError from '../../utils/error/errorHandler.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { getAllUsers } from '../../utils/redis/user.session.js';
 import { addUser } from '../../utils/redis/user.session.js';
-import { v4 as uuidv4 } from 'uuid';
+import { addCharacter, getCharacterByUserId } from '../../db/character/character.db.js';
 
 const enterHandler = async (socket, payload) => {
   try {
-    // uuid는 문자열 형식. - 세션 수정 필요
-    const user = await addUser(socket, uuidv4(), payload.class, payload.nickname);
+    // 아직 접속하지 않아서 redis에 저장되어 있지 않음.
+    const user = await addUser(socket, socket.id, payload.class, payload.nickname);
+
+    // 캐릭터 생성 로직
+    let character = getCharacterByUserId(socket.id);
+    if (character) {
+      return;
+    }
+
+    // sql 에서 gold default 선언해서 만들면 gold 입력 빼기 가능
+    character = addCharacter(user.id, user.nickname, user.class, 0);
 
     const player = {
       playerId: user.id,
@@ -24,12 +33,9 @@ const enterHandler = async (socket, payload) => {
     const response = createResponse(PACKET_ID.S_Enter, enterPayload);
     socket.write(response);
 
-    /*
     // 여기는 다른 유저들 전부 알려주기
-    
-    // 레디스에서 모든 유저를 불러옵니다.
+
     const allUsers = await getAllUsers();
-    // notification 페이로드를 만듭니다.
 
     const spawnPayload = {
       players: allUsers.map((user) => ({
@@ -46,7 +52,6 @@ const enterHandler = async (socket, payload) => {
     allUsers.forEach((user) => {
       user.socket.write(notification);
     });
-    */
   } catch (e) {
     handleError(socket, e);
   }

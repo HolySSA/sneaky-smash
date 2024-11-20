@@ -5,7 +5,7 @@ class DBManager {
     this.itemTable = [];
     this.equipmentTable = [];
     this.bossTable = [];
-    this.skillTable = [];    
+    this.skillTable = [];
     this.monsterTable = [];
     this.userTable = [];
     this.dungeonTable = [];

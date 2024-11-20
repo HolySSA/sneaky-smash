@@ -23,7 +23,7 @@ const enterHandler = async (socket, payload) => {
     const enterPayload = {
       player: {
         playerId: socket.id,
-        nickname,
+        nickName,
         myClass,
       },
     };

@@ -5,6 +5,16 @@ import config from './src/config/config.js';
 // import handleError from './src/utils/error/errorHandler.js';
 // import { transform } from 'lodash';
 
+const S_Move = `
+syntax = "proto3";
+
+message S_Move {
+    bool success = 1;
+    string message = 2;
+    string token = 3;
+}
+`;
+// message move프로토에 맞춰서 수정
 const PROTO_PATH = './src/protobuf/town/town.proto';
 
 async function loadProtoAndSend(packetType, messageType, payload) {

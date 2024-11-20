@@ -23,22 +23,13 @@ import partyHandler from './party/party.handler.js';
 import animationHandler from './town/animation.handler.js';
 import chatHandler from './town/chat.handler.js';
 import enterHandler from './town/enter.handler.js';
+import { movePlayerHandler } from './town/move.player.handler.js';
 import logInHandler from './user/logIn.handler.js';
 import registerHandler from './user/register.handler.js';
 
 const handlers = {
   [PACKET_ID.C_Register]: {
     handler: registerHandler,
-  },
-  [PACKET_ID.C_LogIn]: {
-    handler: logInHandler,
-
-  },
-  [PACKET_ID.C_LogIn]: {
-    handler: logInHandler,
-  },
-  [PACKET_ID.C_LogIn]: {
-    handler: logInHandler,
   },
   [PACKET_ID.C_LogIn]: {
     handler: logInHandler,
@@ -120,7 +111,7 @@ const handlers = {
     handler: enterHandler,
   },
   [PACKET_ID.C_Move]: {
-    handler: chatHandler,
+    handler: movePlayerHandler,
   },
   [PACKET_ID.C_Animation]: {
     handler: animationHandler,

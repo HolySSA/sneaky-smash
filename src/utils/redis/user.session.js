@@ -1,4 +1,4 @@
-import User from '../../classes/model/userClass.js';
+import User from '../../classes/model/user.class.js';
 import redis from './redisManager.js';
 
 const addUser = async (socket, id, myClass, nickName) => {

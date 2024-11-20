@@ -26,24 +26,24 @@ const enterHandler = async (socket, payload) => {
     // 여기는 다른 유저들 전부 알려주기
 
     // 레디스에서 모든 유저를 불러옵니다.
-    const allUsers = await getAllUsers();
-    // notification 페이로드를 만듭니다.
+    // const allUsers = await getAllUsers();
+    // // notification 페이로드를 만듭니다.
 
-    const spawnPayload = {
-      players: allUsers.map((user) => ({
-        playerId: user.id,
-        nickname: user.nickname,
-        class: user.myClass,
-      })),
-    };
+    // const spawnPayload = {
+    //   players: allUsers.map((user) => ({
+    //     playerId: user.id,
+    //     nickname: user.nickname,
+    //     class: user.myClass,
+    //   })),
+    // };
 
-    // 모든 유저에게 보낼 notification
-    const notification = createNotificationPacket(PACKET_ID.S_Spawn, spawnPayload);
+    // // 모든 유저에게 보낼 notification
+    // const notification = createNotificationPacket(PACKET_ID.S_Spawn, spawnPayload);
 
-    // 모든 유저의 소켓에 notification 패킷을 던집니다.
-    allUsers.forEach((user) => {
-      user.socket.write(notification);
-    });
+    // // 모든 유저의 소켓에 notification 패킷을 던집니다.
+    // allUsers.forEach((user) => {
+    //   user.socket.write(notification);
+    // });
   } catch (e) {
     handleError(socket, e);
   }

@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 import "../user/customMessage.proto";
-import "../user/player.proto";
 import "../dungeon/stage.proto";
 
 message C_Enter {

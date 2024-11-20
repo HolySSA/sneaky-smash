@@ -17,7 +17,7 @@ const addUser = async (socket, id, myClass, nickname) => {
   await redis.hmset(userKey, {
     id: id,
     nickname,
-    class: myClass,
+    myClass,
     locationType: user.locationType,
   });
 

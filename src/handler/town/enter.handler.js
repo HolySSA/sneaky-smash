@@ -45,14 +45,19 @@ const enterHandler = async (socket, payload) => {
       })),
     };
 
-    // 모든 유저에게 보낼 notification
+    // 나한테 다른 유저의 Info를 보내야 한다.
+
     const notification = createNotificationPacket(PACKET_ID.S_Spawn, spawnPayload);
 
     const users = await getUserSessions();
 
-    // 모든 유저의 소켓에 notification 패킷을 던집니다.
+    // 나한테는 다른 사람의 정보
+    // 다른 사람한테는 나의 정보 를 S_Spawn 다 보낸다.
+
     users.forEach((user) => {
-      user.socket.write(notification);
+      if (user !== socket.id) {
+        user.socket.write(notification);
+      }
     });
   } catch (e) {
     handleError(socket, e);

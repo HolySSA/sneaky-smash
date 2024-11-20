@@ -32,7 +32,7 @@ const addUser = async (socket, id, myClass, nickname) => {
   // 소켓, 위치, 레이턴시 메모리 보관
   userSessions[user.id] = {
     socket,
-    transfrom: user.transform,
+    transform: user.transform,
     // latency: 0,
   };
 

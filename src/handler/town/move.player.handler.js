@@ -24,7 +24,7 @@ export const movePlayerHandler = async (socket, payload) => {
     // ~법  클라가 이동할 위치를 미리 계산
 
     // const transform = await getUserTransformById(socket.id);
-    const transform = await updateUserTransformById(posX, posY, posZ, rot, socket.id);
+    const transform = await updateUserTransformById(socket.id, posX, posY, posZ, rot);
     if (!transform) {
       throw new Error('위치정보를 찾을 수 없습니다.');
     }

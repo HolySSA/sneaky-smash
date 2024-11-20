@@ -81,6 +81,20 @@ src/
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+## town
+
+C_Enter: 0,
+S_Enter: 1,
+S_Spawn: 2, -> 이거 c가 없음
+S_Despawn: 3, -> 이거 c가 없음
+C_Move: 4,
+S_Move: 5,
+C_Animation: 6,
+S_Animation: 7,
+C_Chat: 8,
+S_Chat: 9,
+S_EnterDungeon: 10,-> 이거 c가 없음
+
 ## battle
 
 C_LeaveDungeon: 12,
@@ -126,16 +140,6 @@ C_Inventory: 26,
 C_UseSkill: 42,
 S_UseSkill: 43,
 
-## boss
-
-S_Phase: 60, -> 이거 c가 없음
-C_BossSpawn: 52,
-S_BossSpawn: 53,
-C_TargetPlayer: 54,
-S_TargetPlayer: 55,
-C_ActionBoss: 58,
-S_ActionBoss: 59,
-
 ## monster
 
 C_MonsterDamage: 44,
@@ -147,19 +151,15 @@ S_MonsterKill: 49,
 C_MonsterSpawn: 50,
 S_MonsterSpawn: 51,
 
-## town
+## boss
 
-C_Enter: 0,
-S_Enter: 1,
-S_Spawn: 2, -> 이거 c가 없음
-S_Despawn: 3, -> 이거 c가 없음
-C_Move: 4,
-S_Move: 5,
-C_Animation: 6,
-S_Animation: 7,
-C_Chat: 8,
-S_Chat: 9,
-S_EnterDungeon: 10,-> 이거 c가 없음
+S_Phase: 60, -> 이거 c가 없음
+C_BossSpawn: 52,
+S_BossSpawn: 53,
+C_TargetPlayer: 54,
+S_TargetPlayer: 55,
+C_ActionBoss: 58,
+S_ActionBoss: 59,
 
 ## party
 

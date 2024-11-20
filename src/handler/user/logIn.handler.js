@@ -69,24 +69,26 @@ const logInHandler = async (socket, payload) => {
     };
 
     // 로그인 검증에 통과되었으므로 해당 socket에 id 부여
-    socket.id = user.id;
-
-    const response = createResponse(PACKET_ID.S_Login, logInPayload);
-    socket.write(response);
+    socket.id = user.id; 
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
-    let character = getCharacterByUserId(user.id);
+    let character = await getCharacterByUserId(user.id);
+    
     if (character) {
       // 일단 user 테이블 id로 저장
       const userSession = await addUser(socket, user.id, character.class, character.nickname);
-      await enterLogic(socket, userSession);
+      await enterLogic(userSession, socket);
+    }
+    else{
+      const response = createResponse(PACKET_ID.S_Login, logInPayload);
+      socket.write(response);
     }
   } catch (e) {
     handleError(socket, e);
   }
 };
 
-const enterLogic = async (socket, userSession) => {
+const enterLogic = async (userSession, socket) => {
   const player = {
     playerId: userSession.id,
     nickname: userSession.nickname,
@@ -94,9 +96,13 @@ const enterLogic = async (socket, userSession) => {
     // inventory: userSession.inventory,
   };
 
+  console.log(userSession);
+
   const enterPayload = {
     player,
   };
+
+  console.log("엔터 로직 실시");
 
   const response = createResponse(PACKET_ID.S_Enter, enterPayload);
   socket.write(response);

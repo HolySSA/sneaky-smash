@@ -14,6 +14,7 @@ message C_PartyJoin {
 message S_PartyJoin {
 	int32 playerId = 1;
 	int32 roomId = 2;
+	int32 dungeonLevel = 3;
 }
 
 // **C_PartyLeave** - 파티에서 나가기 요청 메시지

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const enterHandler = async (socket, payload) => {
   try {
+    // uuid는 문자열 형식. - 세션 수정 필요
     const user = await addUser(socket, uuidv4(), payload.class, payload.nickname);
 
     const player = {
@@ -23,8 +24,9 @@ const enterHandler = async (socket, payload) => {
     const response = createResponse(PACKET_ID.S_Enter, enterPayload);
     socket.write(response);
 
+    /*
     // 여기는 다른 유저들 전부 알려주기
-
+    
     // 레디스에서 모든 유저를 불러옵니다.
     const allUsers = await getAllUsers();
     // notification 페이로드를 만듭니다.
@@ -44,6 +46,7 @@ const enterHandler = async (socket, payload) => {
     allUsers.forEach((user) => {
       user.socket.write(notification);
     });
+    */
   } catch (e) {
     handleError(socket, e);
   }

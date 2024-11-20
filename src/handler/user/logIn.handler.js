@@ -21,7 +21,7 @@ const logInHandler = async (socket, payload) => {
         token: null,
       };
 
-      const response = createResponse(PACKET_ID.S_LogIn, logInResponse);
+      const response = createResponse(PACKET_ID.S_Login, logInResponse);
       socket.write(response);
       return;
     }
@@ -38,7 +38,7 @@ const logInHandler = async (socket, payload) => {
         token: null,
       };
 
-      const response = createResponse(PACKET_ID.S_LogIn, logInResponse);
+      const response = createResponse(PACKET_ID.S_Login, logInResponse);
       socket.write(response);
       return;
     }
@@ -51,7 +51,7 @@ const logInHandler = async (socket, payload) => {
         token: null,
       };
 
-      const response = createResponse(PACKET_ID.S_LogIn, logInResponse);
+      const response = createResponse(PACKET_ID.S_Login, logInResponse);
       socket.write(response);
       return;
     }

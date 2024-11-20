@@ -24,8 +24,8 @@ export const PACKET_ID = {
   S_MonsterAction: 18,
   C_Register: 19,
   S_Register: 20,
-  C_LogIn: 21,
-  S_LogIn: 22,
+  C_Login: 21,
+  S_Login: 22,
   C_EnterPortal: 23,
   S_EnterPortal: 24,
   S_Inventory: 25,
@@ -64,7 +64,8 @@ export const PACKET_ID = {
   S_Phase: 60,
   C_PartyJoin: 61,
   C_PartyLeave: 62,
-  S_Party: 63,
+  C_MatchStart: 63,
+  S_Party: 64,
 };
 
 export const createReverseMapping = () => {

@@ -32,4 +32,20 @@ const partyHandler = async (socket, payload) => {
   }
 };
 
-export default partyHandler;
+const dungeonStartHandler = async (socket, payload) => {
+  try {
+    const { playerId, dungeonLevel } = payload;
+
+    const partyPayload = {
+      playerId,
+      dungeonLevel,
+    };
+
+    const response = createResponse(PACKET_ID.S_EnterDungeon, partyPayload);
+    socket.write(response);
+  } catch (e) {
+    handleError(socket, e);
+  }
+};
+
+export { partyHandler, dungeonStartHandler };

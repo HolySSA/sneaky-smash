@@ -34,7 +34,7 @@ import actionBossHandler from './boss/ActionBoss.handler.js';
 import bossSpawnHandler from './boss/bossSpawn.handler.js';
 import targetPlayerHandler from './boss/targetPlayer.handler.js';
 // party
-import partyHandler from './party/party.handler.js';
+import { partyHandler, dungeonStartHandler } from './party/party.handler.js';
 
 const handlers = {
   // town
@@ -54,7 +54,7 @@ const handlers = {
   [PACKET_ID.C_Register]: {
     handler: registerHandler,
   },
-  [PACKET_ID.C_LogIn]: {
+  [PACKET_ID.C_Login]: {
     handler: logInHandler,
   },
   // battle
@@ -123,6 +123,11 @@ const handlers = {
   [PACKET_ID.C_PartyJoin]: {
     handler: partyHandler,
   },
+
+  [PACKET_ID.C_MatchStart]: {
+    handler: dungeonStartHandler,
+  },
+
   [PACKET_ID.C_PartyLeave]: {
     handler: partyHandler,
   },

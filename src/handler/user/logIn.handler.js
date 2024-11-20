@@ -20,7 +20,7 @@ const logInHandler = async (socket, payload) => {
         token: null,
       };
 
-      const response = createResponse(PACKET_ID.S_LogIn, logInResponse);
+      const response = createResponse(PACKET_ID.S_Login, logInResponse);
       socket.write(response);
       return;
     }
@@ -37,7 +37,7 @@ const logInHandler = async (socket, payload) => {
         token: null,
       };
 
-      const response = createResponse(PACKET_ID.S_LogIn, logInResponse);
+      const response = createResponse(PACKET_ID.S_Login, logInResponse);
       socket.write(response);
       return;
     }
@@ -50,7 +50,7 @@ const logInHandler = async (socket, payload) => {
         token: null,
       };
 
-      const response = createResponse(PACKET_ID.S_LogIn, logInResponse);
+      const response = createResponse(PACKET_ID.S_Login, logInResponse);
       socket.write(response);
       return;
     }
@@ -69,7 +69,7 @@ const logInHandler = async (socket, payload) => {
 
     // db 클래스, 닉네임 불러오기. - 없으면 생성
 
-    const response = createResponse(PACKET_ID.S_LogIn, logInPayload);
+    const response = createResponse(PACKET_ID.S_Login, logInPayload);
 
     socket.write(response);
   } catch (e) {

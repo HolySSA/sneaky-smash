@@ -53,7 +53,7 @@ const handlers = {
   [PACKET_ID.C_Register]: {
     handler: registerHandler,
   },
-  [PACKET_ID.C_LogIn]: {
+  [PACKET_ID.C_Login]: {
     handler: logInHandler,
   },
   // battle

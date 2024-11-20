@@ -1,6 +1,5 @@
 syntax = "proto3";
 
-import "../dungeon/stage.proto";
 import "../dungeon/monster.proto";
 
 message C_EnterPortal {

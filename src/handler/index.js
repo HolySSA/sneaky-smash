@@ -121,10 +121,12 @@ const handlers = {
     handler: actionBossHandler,
   },
   // party
+  [PACKET_ID.C_Party]: {
+    handler: null,
+  },
   [PACKET_ID.C_PartyJoin]: {
     handler: partyJoinHandler,
   },
-
   [PACKET_ID.C_MatchStart]: {
     handler: dungeonStartHandler,
   },

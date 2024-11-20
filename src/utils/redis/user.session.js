@@ -15,7 +15,6 @@ const addUser = async (socket, id, myClass, nickname) => {
 
   const userKey = `user:${user.id}`;
   await redis.hmset(userKey, {
-    socket,
     id: id,
     nickname,
     class: myClass,
@@ -30,8 +29,9 @@ const addUser = async (socket, id, myClass, nickname) => {
     rot: user.transform.rot,
   });
 
-  //유저세션에도 추가해줍니당 이뤄케에에말이죠
+  // 소켓, 위치, 레이턴시 메모리 보관
   userSessions[user.id] = {
+    socket,
     transfrom: user.transform,
     latency: 0,
   };
@@ -137,6 +137,10 @@ const getUserSessions = () => {
   return userSessions;
 };
 
+const getUserSessionbyId = (id) => {
+  return userSessions[id] ? userSessions[id] : null;
+};
+
 export {
   addUser,
   removeUser,
@@ -145,4 +149,5 @@ export {
   getUserTransformById,
   updateUserTransformById,
   getUserSessions,
+  getUserSessionbyId,
 };

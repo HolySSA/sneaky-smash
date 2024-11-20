@@ -7,19 +7,19 @@ import handleError from '../../utils/error/errorHandler.js';
 //     int32 statId = 2;   // 버프/디버프 ID
 //     int32 stat = 3;     // 버프/디버프
 // }
-const enterPotalHandler = async (socket, payload) => {
+const enterPortalHandler = async (socket, payload) => {
   try {
     const { potalId, statId, stat } = Payload;
 
-    const enterPotalpayload = {
+    const enterPortalpayload = {
       potalId,
       statId,
       stat,
     };
-    const response = createResponse(PACKET_ID.S_EnterPortal, enterPotalpayload);
+    const response = createResponse(PACKET_ID.S_EnterPortal, enterPortalpayload);
     socket.write(response);
   } catch (e) {
     handleError(socket, e);
   }
 };
-export default enterPotalHandler;
+export default enterPortalHandler;

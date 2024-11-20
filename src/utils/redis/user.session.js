@@ -21,19 +21,19 @@ const addUser = async (socket, id, myClass, nickname) => {
     locationType: user.locationType,
   });
 
-  const transformKey = `transform:${user.id}`;
-  await redis.hmset(transformKey, {
-    posX: user.transform.posX,
-    posY: user.transform.posY,
-    posZ: user.transform.posZ,
-    rot: user.transform.rot,
-  });
+  // const transformKey = `transform:${user.id}`;
+  // await redis.hmset(transformKey, {
+  //   posX: user.transform.posX,
+  //   posY: user.transform.posY,
+  //   posZ: user.transform.posZ,
+  //   rot: user.transform.rot,
+  // });
 
   // 소켓, 위치, 레이턴시 메모리 보관
   userSessions[user.id] = {
     socket,
     transfrom: user.transform,
-    latency: 0,
+    // latency: 0,
   };
 
   return user;
@@ -71,46 +71,30 @@ const getUserById = async (id) => {
 };
 
 const getUserTransformById = async (id) => {
-  const transformKey = `transform:${user.id}`;
-  const userTransform = await redis.hgetall(transformKey);
+  // const transformKey = `transform:${user.id}`;
+  // const userTransform = await redis.hgetall(transformKey);
 
-  return Object.keys(userTransform).length > 0 ? userTransform : null;
+  // return Object.keys(userTransform).length > 0 ? userTransform : null;
+  return userSessions[id]?.transform || null;
 };
 
 const updateUserTransformById = async (id, posX, posY, posZ, rot) => {
-  const transformKey = `transform:${id}`;
-
-  const estimatedPos = calculatePosition(posX, posY, posZ, latency);
-
-  await redis.hmset(transformKey, {
-    posX: estimatedPos.x.toString(),
-    posY: estimatedPos.y.toString(),
-    posZ: estimatedPos.z.toString(),
-    rot: rot.toString(),
-  });
-
-  // 유저세션에업데잍
-  if (userSessions[id]) {
-    userSessions[id].transform = estimatedPos;
-    userSessions[id].latency = latency;
-  }
-
-  const updatedTransform = await redis.hgetall(transformKey);
-
-  return Object.keys(updatedTransform).length > 0 ? updatedTransform : null;
+  const newTransform = { posX, posY, posZ, rot };
+  userSessions[id].transform = newTransform;
+  return newTransform;
 };
 
-const calculatePosition = (x, y, z, latency) => {
-  const timeDiff = latency / 1000; // 레이턴시를 초 단위로 변환
-  const speed = 1; // 이동 속도 (고정 값)
-  const distance = speed * timeDiff; // 이동 거리 계산
+// const calculatePosition = (x, y, z, latency) => {
+//   const timeDiff = latency / 1000; // 레이턴시를 초 단위로 변환
+//   const speed = 1; // 이동 속도 (고정 값)
+//   const distance = speed * timeDiff; // 이동 거리 계산
 
-  const estimatedX = x + distance;
-  const estimatedY = y + distance;
-  const estimatedZ = z + distance;
+//   const estimatedX = x + distance;
+//   const estimatedY = y + distance;
+//   const estimatedZ = z + distance;
 
-  return { x: estimatedX, y: estimatedY, z: estimatedZ };
-};
+//   return { x: estimatedX, y: estimatedY, z: estimatedZ };
+// };
 
 const getAllUsers = async () => {
   try {

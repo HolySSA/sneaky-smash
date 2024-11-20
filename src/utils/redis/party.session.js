@@ -1,17 +1,31 @@
-const createParty = async (id, userId) => {
+const createParty = async (id, dungeonLevel, userId) => {
   const partyKey = `party:${id}`;
 
   // 파티 생성
   await redis.sadd(partyKey, userId);
   // 파티 리스트
   await redis.sadd('partyList', id);
+  // 파티 던전 난이도
+  await redis.hset(`party:${id}:info`, 'dungeonLevel', dungeonLevel, 'owner', userId);
 
   const party = {
-    id: id,
+    roomId: id,
     members: [userId],
+    dungeonLevel,
   };
 
   return party;
+};
+
+const removeParty = async (id) => {
+  const partyKey = `party:${id}`;
+  const infoKey = `party:${id}:info`;
+
+  // 멤버 제거
+  await redis.del(partyKey);
+  // info 제거
+  await redis.del(infoKey);
+  await redis.srem('partyList', id);
 };
 
 const joinParty = async (id, userId) => {
@@ -22,7 +36,7 @@ const joinParty = async (id, userId) => {
   const members = await redis.smembers(partyKey);
 
   const updatedParty = {
-    id: id,
+    roomId: id,
     members: members,
   };
 
@@ -48,23 +62,36 @@ const leaveParty = async (id, userId) => {
 
 const getParty = async (id) => {
   const partyKey = `party:${id}`;
+  const infoKey = `party:${id}:info`;
 
   // 파티 멤버 조회
   const members = await redis.smembers(partyKey);
+  // 파티 정보
+  const info = await redis.hgetall(infoKey);
 
-  return members;
+  const party = {
+    roomId: id,
+    members,
+    dungeonLevel: info.dungeonLevel ? parseInt(info.dungeonLevel, 10) : null,
+    owner: info.owner ? parseInt(info.dungeonLevel, 10) : null,
+  };
+
+  return party;
 };
 
 const getAllParties = async () => {
-  const partyIds = await redis.smembers('partyList');
+  const roomIds = await redis.smembers('partyList');
 
   // 각 파티 멤버 정보 가져오기
   const parties = await Promise.all(
-    partyIds.map(async (partyId) => {
-      const members = await redis.smembers(`party:${partyId}`);
+    roomIds.map(async (roomId) => {
+      const members = await redis.smembers(`party:${roomId}`);
+      const info = `party:${roomId}:info`;
+
       return {
-        id: partyId,
+        roomId: roomId,
         members: members,
+        dungeonLevel: info.dungeonLevel,
       };
     }),
   );
@@ -72,4 +99,4 @@ const getAllParties = async () => {
   return parties;
 };
 
-export { createParty, joinParty, leaveParty, getParty, getAllParties };
+export { createParty, joinParty, leaveParty, getParty, getAllParties, removeParty };

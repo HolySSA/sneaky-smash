@@ -9,7 +9,7 @@ import { addUser, getUserById } from '../../utils/redis/user.session.js';
 // 로그인 핸들러
 const logInHandler = async (socket, payload) => {
   try {
-    const { account, password } = payload;
+    const { account, password, nickname, myClass } = payload;
 
     // db에서 해당 아이디 찾기
     const user = await findUserByAccount(account);

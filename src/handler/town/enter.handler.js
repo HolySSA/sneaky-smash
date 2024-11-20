@@ -8,16 +8,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 const enterHandler = async (socket, payload) => {
   try {
-     const user = await addUser(socket, uuidv4(), payload.class, payload.nickname);
+    const user = await addUser(socket, uuidv4(), payload.class, payload.nickname);
 
-     const player = {
-        playerId: user.id,
-        nickname: user.nickName,
-        class: user.myClass,
-     };
+    const player = {
+      playerId: user.id,
+      nickname: user.nickname,
+      class: user.myClass,
+    };
 
     const enterPayload = {
-      player   
+      player,
     };
 
     const response = createResponse(PACKET_ID.S_Enter, enterPayload);
@@ -29,17 +29,10 @@ const enterHandler = async (socket, payload) => {
     const allUsers = await getAllUsers();
     // notification 페이로드를 만듭니다.
 
-    /*
-    await redis.hmset(userKey, {
-      playerId: user.id,
-      nickName: user.nickName,
-      socket: socket
-    });
-     */
     const spawnPayload = {
       players: allUsers.map((user) => ({
         playerId: user.id,
-        nickname: user.nickName,
+        nickname: user.nickname,
         class: user.myClass,
       })),
     };

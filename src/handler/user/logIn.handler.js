@@ -67,6 +67,8 @@ const logInHandler = async (socket, payload) => {
       token: bearerToken,
     };
 
+    // db 클래스, 닉네임 불러오기. - 없으면 생성
+
     const response = createResponse(PACKET_ID.S_LogIn, logInPayload);
 
     socket.write(response);

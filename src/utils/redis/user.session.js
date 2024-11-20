@@ -1,17 +1,17 @@
 import User from '../../classes/model/user.class.js';
 import redis from './redisManager.js';
 
-const addUser = async (socket, id, myClass, nickName) => {
+const addUser = async (socket, id, myClass, nickname) => {
   socket.id = id;
 
-  const user = new User(id, myClass, nickName);
+  const user = new User(id, myClass, nickname);
   //const clientId = `${socket.remoteAddress}:${socket.remotePort}`;
 
   const userKey = `user:${user.id}`;
   await redis.hmset(userKey, {
     socket,
     id: user.id,
-    nickName,
+    nickname,
   });
 
   return user;

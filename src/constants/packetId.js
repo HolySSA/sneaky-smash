@@ -62,10 +62,13 @@ export const PACKET_ID = {
   C_ActionBoss: 58,
   S_ActionBoss: 59,
   S_Phase: 60,
-  C_PartyJoin: 61,
-  C_PartyLeave: 62,
-  C_MatchStart: 63,
-  S_Party: 64,
+  C_Party: 61,
+  C_PartyJoin: 62,
+  S_PartyJoin: 63,
+  C_PartyLeave: 64,
+  S_PartyLeave: 65,
+  C_MatchStart: 66,
+  S_Party: 67,
 };
 
 export const createReverseMapping = () => {

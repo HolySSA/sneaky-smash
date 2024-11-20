@@ -128,7 +128,6 @@ const handlers = {
   [PACKET_ID.C_MatchStart]: {
     handler: dungeonStartHandler,
   },
-
   [PACKET_ID.C_PartyLeave]: {
     handler: partyLeaveHandler,
   },

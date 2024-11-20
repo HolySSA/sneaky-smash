@@ -4,21 +4,6 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getParty, leaveParty, removeParty } from '../../utils/redis/party.session.js';
 import { getUserById, getUserSessionbyId } from '../../utils/redis/user.session.js';
 
-// message C_PartyLeave {
-//   int32 roomId = 1;  // 방 번호
-// }
-
-// message S_PartyLeave {
-// 	int32 playerId = 1;
-// 	int32 roomId = 2;
-// }
-
-// message S_Party {
-//   repeated int32 playerId = 1;    // 파티에 참여 중인 유저들의 ID 리스트
-//   int32 roomId = 2;
-// 	int32 dungeonLevel = 3; // 던전 난이도
-// }
-
 const partyLeaveHandler = async (socket, payload) => {
   try {
     const { roomId } = payload;

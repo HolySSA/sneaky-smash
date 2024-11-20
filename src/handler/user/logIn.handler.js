@@ -4,8 +4,14 @@ import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import { findUserByAccount } from '../../db/user/user.db.js';
-import { addUser, getUserById } from '../../utils/redis/user.session.js';
+import {
+  addUser,
+  getAllUsers,
+  getUserById,
+  getUserSessions,
+} from '../../utils/redis/user.session.js';
 import { getCharacterByUserId } from '../../db/character/character.db.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 // 로그인 핸들러
 const logInHandler = async (socket, payload) => {
@@ -56,30 +62,28 @@ const logInHandler = async (socket, payload) => {
       return;
     }
 
-    // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)
-    const TMP_SECRET_KEY = 'tmp_secret_key';
-
-    const token = jwt.sign(user, TMP_SECRET_KEY, { expiresIn: '24h' });
-    const bearerToken = `Bearer ${token}`;
-
-    const logInPayload = {
-      success: true,
-      message: '로그인에 성공했습니다.',
-      token: bearerToken,
-    };
-
     // 로그인 검증에 통과되었으므로 해당 socket에 id 부여
-    socket.id = user.id; 
+    socket.id = user.id;
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
     let character = await getCharacterByUserId(user.id);
-    
     if (character) {
       // 일단 user 테이블 id로 저장
       const userSession = await addUser(socket, user.id, character.class, character.nickname);
-      await enterLogic(userSession, socket);
-    }
-    else{
+      await enterLogic(socket, userSession);
+    } else {
+      // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)
+      const TMP_SECRET_KEY = 'tmp_secret_key';
+
+      const token = jwt.sign(user, TMP_SECRET_KEY, { expiresIn: '24h' });
+      const bearerToken = `Bearer ${token}`;
+
+      const logInPayload = {
+        success: true,
+        message: '로그인에 성공했습니다.',
+        token: bearerToken,
+      };
+
       const response = createResponse(PACKET_ID.S_Login, logInPayload);
       socket.write(response);
     }
@@ -119,7 +123,8 @@ const enterLogic = async (userSession, socket) => {
 
   const notification = createNotificationPacket(PACKET_ID.S_Spawn, spawnPayload);
 
-  allUsers.forEach((user) => {
+  const users = await getUserSessions();
+  users.forEach((user) => {
     user.socket.write(notification);
   });
 };

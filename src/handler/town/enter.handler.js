@@ -2,7 +2,7 @@ import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
-import { getAllUsers } from '../../utils/redis/user.session.js';
+import { getAllUsers, getUserSessions } from '../../utils/redis/user.session.js';
 import { addUser } from '../../utils/redis/user.session.js';
 import { addCharacter, getCharacterByUserId } from '../../db/character/character.db.js';
 
@@ -12,7 +12,7 @@ const enterHandler = async (socket, payload) => {
     const user = await addUser(socket, socket.id, payload.class, payload.nickname);
 
     // 캐릭터 생성 로직
-    let character = getCharacterByUserId(socket.id);
+    let character = await getCharacterByUserId(socket.id);
     if (character) {
       return;
     }
@@ -48,8 +48,10 @@ const enterHandler = async (socket, payload) => {
     // 모든 유저에게 보낼 notification
     const notification = createNotificationPacket(PACKET_ID.S_Spawn, spawnPayload);
 
+    const users = await getUserSessions();
+
     // 모든 유저의 소켓에 notification 패킷을 던집니다.
-    allUsers.forEach((user) => {
+    users.forEach((user) => {
       user.socket.write(notification);
     });
   } catch (e) {

@@ -35,6 +35,7 @@ import bossSpawnHandler from './boss/bossSpawn.handler.js';
 import targetPlayerHandler from './boss/targetPlayer.handler.js';
 // party
 import { partyJoinHandler, dungeonStartHandler } from './party/party.join.handler.js';
+import partyLeaveHandler from './party/party.leave.handler.js';
 
 const handlers = {
   // town
@@ -129,7 +130,7 @@ const handlers = {
   },
 
   [PACKET_ID.C_PartyLeave]: {
-    handler: partyHandler,
+    handler: partyLeaveHandler,
   },
   // 다른 핸들러들 추가
 };

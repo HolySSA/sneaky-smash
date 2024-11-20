@@ -6,23 +6,8 @@ import { getAllUsers } from '../../utils/redis/user.session.js';
 import { addUser } from '../../utils/redis/user.session.js';
 import { v4 as uuidv4 } from 'uuid';
 
-// 패킷명세
-// message S_Spawn {
-//     repeated PlayerInfo players = 1; // 스폰되는 플레이어 리스트 (추후 정의 예정)
-// }
-// message C_Enter {
-//   string nickname = 1;        // 닉네임
-//   int32 class = 2;            // 캐릭터 클래스
-// }
-// message S_Enter {
-//   PlayerInfo player = 1;      // 플레이어 정보 (추후 정의 예정)
-// }
-// **StatInfo** - 플레이어의 상세 스탯 정보
-
 const enterHandler = async (socket, payload) => {
   try {
-    const { nickname, myClass } = payload;
-
      const user = await addUser(socket, uuidv4(), payload.class, payload.nickname);
 
      const player = {
@@ -32,11 +17,7 @@ const enterHandler = async (socket, payload) => {
      };
 
     const enterPayload = {
-      player: {
-        playerId: socket.id,
-        nickName,
-        myClass,
-      },
+      player   
     };
 
     const response = createResponse(PACKET_ID.S_Enter, enterPayload);
@@ -58,8 +39,8 @@ const enterHandler = async (socket, payload) => {
     const spawnPayload = {
       players: allUsers.map((user) => ({
         playerId: user.id,
-        nickName: user.nickName,
-        myClass: user.myClass,
+        nickname: user.nickName,
+        class: user.myClass,
       })),
     };
 

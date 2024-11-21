@@ -1,8 +1,9 @@
-import { removeUser } from '../utils/redis/user.session.js';
+import { removeRedisUser } from '../sessions/redis/redis.user.js';
+import { removeUserSession } from '../sessions/user.session.js';
 
 const onEnd = (socket) => async () => {
-
-  await removeUser(socket);
+  await removeUserSession(socket);
+  await removeRedisUser(socket);
 };
 
 export default onEnd;

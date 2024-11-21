@@ -6,6 +6,12 @@ import handleError from '../../utils/error/errorHandler.js';
 //     int32 monsterId = 1; // 몬스터 식별 ID
 //     TransformInfo transform = 2; // 몬스터 위치
 //   }
+// message TransformInfo {
+//   float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
+//   float posY = 2;   // Y 좌표 (기본값 : 1)
+//   float posZ = 3;   // Z 좌표 (기본값 : -8 ~ 8)
+//   float rot = 4;    // 회전 값 (기본값 : 0 ~ 360)
+// }
 const monsterMoveHandler = async (socket, payload) => {
   try {
     const { monsterId, transform } = payload;

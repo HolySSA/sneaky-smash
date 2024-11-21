@@ -1,30 +1,35 @@
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getParty, leaveParty, removeParty } from '../../utils/redis/party.session.js';
-import { getUserById, getUserSessionbyId } from '../../utils/redis/user.session.js';
+import { getUserSessionById } from '../../sessions/user.session.js';
+import {
+  getRedisParty,
+  leaveRedisParty,
+  removeRedisParty,
+} from '../../sessions/redis/redis.party.js';
 
 const partyLeaveHandler = async (socket, payload) => {
   try {
     const { roomId } = payload;
 
     // 해당 유저를 뺀 파티원들
-    const members = await leaveParty(roomId, socket.id);
+    const members = await leaveRedisParty(roomId, socket.id);
 
-    const party = await getParty(roomId);
+    const party = await getRedisParty(roomId);
     if (party.owner === socket.id) {
+      // 현재 파티 목록에서 제거
+      await removeRedisParty();
+
       const payload = {
         playerId: {},
         roomId,
         dungeonLevel: party.dungeonLevel,
       };
 
-      await removeParty();
-
       const response = createResponse(PACKET_ID.S_Party, payload);
 
       party.members.forEach((member) => {
-        const user = getUserSessionbyId(member);
+        const user = getUserSessionById(member);
 
         user.socket.write(response);
       });
@@ -42,7 +47,7 @@ const partyLeaveHandler = async (socket, payload) => {
 
     members.forEach((member) => {
       if (member !== socket.id) {
-        const user = getUserById(member);
+        const user = getUserSessionById(member);
         user.socket.write(response);
       }
     });

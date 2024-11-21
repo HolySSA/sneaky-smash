@@ -1,4 +1,6 @@
-const createParty = async (id, dungeonLevel, userId) => {
+import redis from '../../utils/redis/redisManager.js';
+
+const addRedisParty = async (id, dungeonLevel, userId) => {
   const partyKey = `party:${id}`;
 
   // 파티 생성
@@ -17,7 +19,7 @@ const createParty = async (id, dungeonLevel, userId) => {
   return party;
 };
 
-const removeParty = async (id) => {
+const removeRedisParty = async (id) => {
   const partyKey = `party:${id}`;
   const infoKey = `party:${id}:info`;
 
@@ -25,10 +27,11 @@ const removeParty = async (id) => {
   await redis.del(partyKey);
   // info 제거
   await redis.del(infoKey);
+  // partyList에서 제거
   await redis.srem('partyList', id);
 };
 
-const joinParty = async (id, userId) => {
+const joinRedisParty = async (id, userId) => {
   const partyKey = `party:${id}`;
 
   await redis.sadd(partyKey, userId);
@@ -43,7 +46,7 @@ const joinParty = async (id, userId) => {
   return updatedParty;
 };
 
-const leaveParty = async (id, userId) => {
+const leaveRedisParty = async (id, userId) => {
   const partyKey = `party:${id}`;
 
   // 유저 제거
@@ -60,7 +63,7 @@ const leaveParty = async (id, userId) => {
   return remainingMembers;
 };
 
-const getParty = async (id) => {
+const getRedisParty = async (id) => {
   const partyKey = `party:${id}`;
   const infoKey = `party:${id}:info`;
 
@@ -79,7 +82,7 @@ const getParty = async (id) => {
   return party;
 };
 
-const getAllParties = async () => {
+const getRedisParties = async () => {
   const roomIds = await redis.smembers('partyList');
 
   // 각 파티 멤버 정보 가져오기
@@ -99,4 +102,11 @@ const getAllParties = async () => {
   return parties;
 };
 
-export { createParty, joinParty, leaveParty, getParty, getAllParties, removeParty };
+export {
+  addRedisParty,
+  removeRedisParty,
+  joinRedisParty,
+  leaveRedisParty,
+  getRedisParty,
+  getRedisParties,
+};

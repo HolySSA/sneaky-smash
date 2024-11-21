@@ -1,9 +1,9 @@
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { createParty, getParty, joinParty } from '../../utils/redis/party.session.js';
-import { getUserById, getUserSessions } from '../../utils/redis/user.session.js';
+import { getUserSessions } from '../../sessions/user.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { addRedisParty, getRedisParty, joinRedisParty } from '../../sessions/redis/redis.party.js';
 
 // 패킷명세
 // **C_PartyJoin** - 파티에 참여 요청 메시지
@@ -25,15 +25,15 @@ const partyJoinHandler = async (socket, payload) => {
 
     let party = null;
     if (isOner) {
-      party = await createParty(roomId, dungeonLevel, socket.id);
+      party = await addRedisParty(roomId, dungeonLevel, socket.id);
     } else {
-      party = await joinParty(roomId, socket.id);
+      party = await joinRedisParty(roomId, socket.id);
     }
 
     // C_Party로 파티 요청 -> S_Party로 해당 파티원들에게 패킷 전달.
     // 방장이 매치 시작하면, 해당 파티원들에게 S_던전들어가기 패킷 전달.
 
-    const users = await getUserSessions();
+    const userSessions = await getUserSessions();
 
     const partyPayload = {
       playerId: socket.id,
@@ -43,8 +43,8 @@ const partyJoinHandler = async (socket, payload) => {
 
     const notification = createNotificationPacket(PACKET_ID.S_PartyJoin, partyPayload);
 
-    users.forEach((user) => {
-      user.socket.write(notification);
+    userSessions.forEach((userSession) => {
+      userSession.socket.write(notification);
     });
   } catch (e) {
     handleError(socket, e);
@@ -63,12 +63,7 @@ const dungeonStartHandler = async (socket, payload) => {
       infoText,
     };
 
-    const members = await getParty(roomdId);
-
-    // 해당 파티에 있는 id로 유저에 있는 id의 socket불러오기.
-    members.forEach((member) => {
-      const user = getUserById(member);
-    });
+    const members = await getRedisParty(roomdId);
 
     // 그 소켓들에 S_EnterDungeon던지기
 

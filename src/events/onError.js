@@ -1,7 +1,10 @@
-import { removeUser } from '../utils/redis/user.session.js';
+import { removeRedisUser } from '../sessions/redis/redis.user.js';
+import { removeUserSession } from '../sessions/user.session.js';
 
 const onError = (socket) => async (err) => {
-  await removeUser(socket);
+  await removeUserSession(socket);
+  await removeRedisUser(socket);
+
   console.error('Socket error:', err);
 };
 

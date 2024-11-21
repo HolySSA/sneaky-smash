@@ -1,8 +1,9 @@
 import Redis from 'ioredis';
+import { REDIS_HOST, REDIS_PORT } from '../../constants/env.js';
 
 const redis = new Redis({
-  host: '127.0.0.1',
-  port: 6379,
+  host: REDIS_HOST,
+  port: REDIS_PORT,
 });
 
 redis.on('connect', () => {

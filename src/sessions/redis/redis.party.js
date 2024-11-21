@@ -27,7 +27,7 @@ const removeRedisParty = async (id) => {
   await redis.del(partyKey);
   // info 제거
   await redis.del(infoKey);
-  // partyList에서 제거
+  // 파티 리스트에서 제거
   await redis.srem('partyList', id);
 };
 
@@ -76,7 +76,7 @@ const getRedisParty = async (id) => {
     roomId: id,
     members,
     dungeonLevel: info.dungeonLevel ? parseInt(info.dungeonLevel, 10) : null,
-    owner: info.owner ? parseInt(info.dungeonLevel, 10) : null,
+    owner: info.owner ? parseInt(info.owner, 10) : null,
   };
 
   return party;

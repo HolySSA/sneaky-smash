@@ -29,21 +29,20 @@ export const createUser = async (account, password) => {
 
 // 아이디로 사용자 찾기
 export const findUserByAccount = async (account) => {
-  const row = await handleDbQuery(dbPool.query.bind(dbPool), [
+  const result = await handleDbQuery(dbPool.query.bind(dbPool), [
     SQL_QUERIES.FIND_USER_BY_ACCOUNT,
     account,
   ]);
-  if (!row) {
-    // 아이디가 없으면 오류
-    throw new Error(`User with account ${account} not found.`);
-  }
-  return row; // 이미 카멜케이스로 변환된 결과 반환
+
+  // 단일 사용자 객체가 반환되므로 바로 반환
+  return result ? result.rows : null; // 결과가 있으면 반환, 없으면 null
 };
 
 // 모든 사용자 조회
 export const findAllUsers = async () => {
-  const rows = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_ALL_USERS], true); // 여러 결과 반환
-  return rows; // 이미 카멜케이스로 변환된 결과 반환
+  const result = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_ALL_USERS], true);
+  // 여러 사용자 객체가 반환되므로 rows 배열을 그대로 반환
+  return result ? result.rows : []; // 결과가 있으면 반환, 없으면 빈 배열
 };
 
 // 사용자 수정

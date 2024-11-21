@@ -11,7 +11,7 @@ let createdUserId = null; // 생성된 사용자 ID를 저장할 변수
 // 사용자 생성 테스트
 const testCreateUser = async () => {
   try {
-    const account = 'testuser1';
+    const account = 'testuser';
     const password = 'password123';
 
     const newUser = await createUser(account, password);
@@ -25,10 +25,14 @@ const testCreateUser = async () => {
 // 사용자 계정으로 찾기 테스트
 const testFindUserByAccount = async () => {
   try {
-    const account = 'testuser1'; // 이미 생성한 계정으로 조회
+    const account = 'testuser'; // 이미 생성한 계정으로 조회
 
     const user = await findUserByAccount(account);
-    console.log('Found User:', user); // 조회된 사용자 정보 출력
+    if (user) {
+      console.log('Found User:', user); // 조회된 사용자 정보 출력
+    } else {
+      console.log('No user found for account:', account);
+    }
   } catch (error) {
     console.error('Error finding user:', error.message);
   }
@@ -38,7 +42,11 @@ const testFindUserByAccount = async () => {
 const testFindAllUsers = async () => {
   try {
     const users = await findAllUsers();
-    console.log('All Users:', users); // 모든 사용자 출력
+    if (users.length > 0) {
+      console.log('All Users:', users); // 모든 사용자 출력
+    } else {
+      console.log('No users found');
+    }
   } catch (error) {
     console.error('Error finding all users:', error.message);
   }
@@ -82,11 +90,11 @@ const runTests = async () => {
   console.log('Running tests...');
 
   // 테스트 순서대로 실행
-  // await testCreateUser();
+  await testCreateUser();
   await testFindUserByAccount();
-  // await testFindAllUsers();
-  // await testUpdateUser();
-  // await testDeleteUser();
+  await testFindAllUsers();
+  await testUpdateUser();
+  await testDeleteUser();
 };
 
 runTests();

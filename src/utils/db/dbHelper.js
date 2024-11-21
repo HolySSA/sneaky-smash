@@ -7,11 +7,11 @@ const handleDbQuery = async (queryFn, queryParams, isArray = false) => {
     const [rows, fields] = await queryFn(query, params);
 
     if (!rows || rows.length === 0) {
-      return isArray ? [] : null;
+      return null;
     }
 
     // 항상 배열로 변환하여 반환 (결과가 배열이 아닌 경우에도 배열로 처리)
-    const result = isArray ? rows.map((row) => toCamelCase(row)) : [toCamelCase(rows[0])];
+    const result = isArray ? rows.map((row) => toCamelCase(row)) : toCamelCase(rows[0]);
 
     let response = { rows: result };
 

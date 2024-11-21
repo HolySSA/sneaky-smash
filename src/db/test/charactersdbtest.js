@@ -46,7 +46,7 @@ const testFindCharacterByUserId = async () => {
     const user = await findUserByAccount(account);
 
     console.log('user:', user);
-    const { id: userId } = user.rows[0];
+    const { id: userId } = user;
 
     // 해당 사용자 ID로 캐릭터 조회
     const character = await findCharacterByUserId(userId);
@@ -76,7 +76,7 @@ const testUpdateCharacter = async () => {
 
     // 사용자 조회
     const user = await findUserByAccount(account);
-    const { id: userId } = user.rows[0];
+    const { id: userId } = user;
 
     const updatedData = {
       nickname: 'Knight', // 새로운 닉네임
@@ -99,7 +99,7 @@ const testDeleteCharacter = async () => {
 
     // 사용자 조회
     const user = await findUserByAccount(account);
-    const { id: userId } = user.rows[0];
+    const { id: userId } = user;
 
     // 캐릭터 삭제
     const deletedCharacter = await deleteCharacter(userId);
@@ -115,7 +115,7 @@ const testDeleteUser = async () => {
 
     // 사용자 조회
     const user = await findUserByAccount(account);
-    const { id: userId } = user.rows[0];
+    const { id: userId } = user;
 
     // 사용자 삭제
     const deletedUser = await deleteUser(userId);

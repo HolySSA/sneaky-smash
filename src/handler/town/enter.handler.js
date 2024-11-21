@@ -1,8 +1,5 @@
 import handleError from '../../utils/error/errorHandler.js';
-import createNotificationPacket from '../../utils/notification/createNotification.js';
-import { getAllUsers, getUserSessions } from '../../utils/redis/user.session.js';
-import { addUser } from '../../utils/redis/user.session.js';
-import { addCharacter, findCharacterByUserId } from '../../db/character/characters.db.js';
+import { createCharacter, findCharacterByUserId } from '../../db/character/characters.db.js';
 import { addRedisUser } from '../../sessions/redis/redis.user.js';
 import User from '../../classes/model/user.class.js';
 import { addUserSession } from '../../sessions/user.session.js';
@@ -22,7 +19,7 @@ const enterHandler = async (socket, payload) => {
     }
 
     // sql에서 gold default 선언해서 만들면 gold 입력 빼도 됨
-    character = await addCharacter(user.id, user.nickname, user.myClass, 0);
+    character = await createCharacter(user.id, user.nickname, user.myClass, 0);
 
     await enterLogic(socket, userRedis);
   } catch (e) {

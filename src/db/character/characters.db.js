@@ -49,20 +49,18 @@ export const findCharacterByUserId = async (userid) => {
     SQL_QUERIES.FIND_CHARACTER_BY_USERID,
     userid,
   ]);
-  if (!row) {
-    throw new Error(`Character for user with ID ${userid} not found.`);
-  }
+
   return row; // 이미 카멜케이스로 변환된 결과 반환
 };
 
 // 모든 캐릭터 조회
 export const findAllCharacters = async () => {
-  const rows = await handleDbQuery(
+  const result = await handleDbQuery(
     dbPool.query.bind(dbPool),
     [SQL_QUERIES.FIND_ALL_CHARACTERS],
-    true,
-  ); // 여러 결과 반환
-  return rows; // 이미 카멜케이스로 변환된 결과 반환
+    true, // 여러 결과를 반환하기 위한 설정
+  );
+  return result ? result.rows : []; // rows가 있으면 반환, 없으면 빈 배열
 };
 
 // 캐릭터 수정

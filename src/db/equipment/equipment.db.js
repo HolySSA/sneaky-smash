@@ -1,6 +1,6 @@
 import dbPool from '../database.js';
 import SQL_QUERIES from './equipment.query.js';
-import handleDbQuery from '../../utils/dbHelper.js';
+import handleDbQuery from '../../utils/db/dbHelper.js'; // DB 처리 함수 임포트
 
 // 장비 생성 (INSERT)
 export const createEquipment = async (equipment) => {
@@ -28,10 +28,8 @@ export const findEquipmentById = async (id) => {
     SQL_QUERIES.FIND_EQUIPMENT_BY_ID,
     id,
   ]);
-  if (!row) {
-    throw new Error(`Equipment with ID ${id} not found.`);
-  }
-  return row; // 단일 장비 반환
+
+  return row.rows; // 단일 장비 반환 (toCamelCase로 변환됨)
 };
 
 // 모든 장비 조회
@@ -39,9 +37,10 @@ export const findAllEquipments = async () => {
   const rows = await handleDbQuery(
     dbPool.query.bind(dbPool),
     [SQL_QUERIES.FIND_ALL_EQUIPMENTS],
-    true,
-  ); // isArray = true
-  return rows; // 모든 장비 반환
+    true, // isArray = true
+  );
+
+  return rows.rows; // 모든 장비 반환 (toCamelCase로 변환됨)
 };
 
 // 장비 수정 (UPDATE)

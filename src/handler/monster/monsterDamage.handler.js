@@ -7,6 +7,10 @@ import handleError from '../../utils/error/errorHandler.js';
 //     int32 monsterId = 2; // 몬스터 식별 ID
 //     int32 damage = 3; // 데미지
 //   }
+// message C_MonsterDamage {
+//   int32 monsterId = 1; // 몬스터 식별 ID
+//   int32 damage = 2; // 데미지
+// }
 const monsterDamageHandler = async (socket, payload) => {
   try {
     const { playerId, monsterId, damage } = payload;

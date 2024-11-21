@@ -6,6 +6,10 @@ import handleError from '../../utils/error/errorHandler.js';
 //     int32 monsterId = 1; // 몬스터 식별 ID
 //     int32 itemId = 2; // 아이템 식별 ID
 //   }
+// message C_MonsterKill {
+//   int32 monsterId = 1; // 몬스터 식별 ID
+//   int32 itemId = 2; // 아이템 식별 ID
+// }
 const monsterKillHandler = async (socket, payload) => {
   try {
     const { monsterId, itemId } = payload;

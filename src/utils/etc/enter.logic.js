@@ -12,41 +12,27 @@ const enterLogic = async (socket, userSession) => {
     transform: getUserTransformById(userSession.id),
   };
 
-  console.log("enterLogic payload 1" + JSON.stringify({ player: playerPayload }));
-
   const response = createResponse(PACKET_ID.S_Enter, { player: playerPayload });
   socket.write(response);
 
-  const allUsers = await getRedisUsers();
+  const users = await getRedisUsers();
+  const userSessions = getUserSessions();
 
-  const otherUserPayload = {
-    players: allUsers
-      .filter((player) => parseInt(player.id) !== socket.id)
-      .map((player) => ({
-        playerId: player.id,
-        nickname: player.nickname,
-        class: player.myClass,
-        transform: getUserTransformById(player.id),
-      })),
-  };
+  for (const [key, value] of userSessions) {
+    const otherUserPayload = {
+      players: users
+        .filter((player) => player.id !== key)
+        .map((player) => ({
+          playerId: player.id,
+          nickname: player.nickname,
+          class: player.myClass,
+          transform: getUserTransformById(player.id),
+        })),
+    };
 
-  // 해당 유저에게는 다른 유저 정보를 S_Spawn으로 전달.
-
-  if (otherUserPayload.players.length > 0) {
-    const notification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
-    socket.write(notification);
+    const otherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
+    value.socket.write(otherUsernotification);
   }
-
-  // 다른 유저에게는 나의 정보를 S_Spawn으로 전달.
-  const sessions = getUserSessions();
-
-  const anotherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, { player: playerPayload });
-
-  sessions.forEach((value, targetUserId) => {
-    if (targetUserId !== socket.id) {
-      value.socket.write(anotherUsernotification);
-    }
-  });
 };
 
 export default enterLogic;

@@ -89,12 +89,12 @@ const getRedisParties = async () => {
   const parties = await Promise.all(
     roomIds.map(async (roomId) => {
       const members = await redis.smembers(`party:${roomId}`);
-      const info = `party:${roomId}:info`;
+      const info = await redis.hgetall(`party:${roomId}:info`);
 
       return {
         roomId: roomId,
         members: members,
-        dungeonLevel: info.dungeonLevel,
+        dungeonLevel: info.dungeonLevel ? parseInt(info.dungeonLevel, 10) : null,
       };
     }),
   );

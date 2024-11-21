@@ -10,7 +10,7 @@ import {
   getUserById,
   getUserSessions,
 } from '../../utils/redis/user.session.js';
-import { getCharacterByUserId } from '../../db/character/character.db.js';
+import { findCharacterByUserId } from '../../db/character/characters.db.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 // 로그인 핸들러
@@ -66,7 +66,7 @@ const logInHandler = async (socket, payload) => {
     socket.id = user.id;
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
-    let character = await getCharacterByUserId(user.id);
+    let character = await findCharacterByUserId(user.id);
     if (character) {
       // 일단 user 테이블 id로 저장
       const userSession = await addUser(socket, user.id, character.class, character.nickname);
@@ -92,7 +92,7 @@ const logInHandler = async (socket, payload) => {
   }
 };
 
-const enterLogic = async (userSession, socket) => {
+const enterLogic = async (socket, userSession) => {
   const player = {
     playerId: userSession.id,
     nickname: userSession.nickname,
@@ -100,13 +100,9 @@ const enterLogic = async (userSession, socket) => {
     // inventory: userSession.inventory,
   };
 
-  console.log(userSession);
-
   const enterPayload = {
     player,
   };
-
-  console.log("엔터 로직 실시");
 
   const response = createResponse(PACKET_ID.S_Enter, enterPayload);
   socket.write(response);

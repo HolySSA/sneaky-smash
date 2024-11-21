@@ -4,7 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { getAllUsers, getUserSessions } from '../../utils/redis/user.session.js';
 import { addUser } from '../../utils/redis/user.session.js';
-import { addCharacter, getCharacterByUserId } from '../../db/character/character.db.js';
+import { addCharacter, findCharacterByUserId } from '../../db/character/characters.db.js';
 
 const enterHandler = async (socket, payload) => {
   try {
@@ -12,7 +12,7 @@ const enterHandler = async (socket, payload) => {
     const user = await addUser(socket, socket.id, payload.class, payload.nickname);
 
     // 캐릭터 생성 로직
-    let character = await getCharacterByUserId(socket.id);
+    let character = await findCharacterByUserId(socket.id);
     if (character) {
       return;
     }

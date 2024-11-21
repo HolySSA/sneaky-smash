@@ -23,6 +23,7 @@ const partyHandler = async (socket, payload) => {
       dungeonLevel: party.dungeonLevel,
     };
 
+    console.log("partyHandler" + JSON.stringify(partyPayload));
     const packet = createResponse(PACKET_ID.S_Party, partyPayload);
 
     socket.write(packet);

@@ -1,7 +1,7 @@
 import { PACKET_ID } from '../../constants/packetId.js';
-import { getRedisUserById, getRedisUsers } from '../../sessions/redis/redis.user.js';
+import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import createResponse from '../../utils/response/createResponse.js';
-import { updateUserTransformById } from '../../sessions/user.session.js';
+import { getUserSessions, updateUserTransformById } from '../../sessions/user.session.js';
 
 /**
  * 무브 핸들러
@@ -31,17 +31,17 @@ export const movePlayerHandler = async (socket, payload) => {
 
     const moveResponsePayload = createResponse(PACKET_ID.S_Move, movePayload);
 
-    const allUsers = await getRedisUsers();
+    const allUsers = getUserSessions();
     if (!allUsers || allUsers.length === 0) {
       console.error('유저세션이 없습니다.');
       return;
     }
-
+    
     // 로케이션 타입 확인 후 같은 로케이션의 유저들에게 패킷 전송
-    allUsers.forEach((targetUser) => {
-      if (targetUser.locationType === user.locationType && targetUser.id !== user.id) {
-        targetUser.socket.write(moveResponsePayload);
-        console.log(`${targetUser.id} 타겟유저아이디패킷전송성공`);
+    allUsers.forEach((value, targetUserId) => {
+      if (targetUserId !== user.id) {
+        value.socket.write(moveResponsePayload);
+        console.log(`${targetUserId} 타겟유저아이디패킷전송성공`);
       }
     });
   } catch (error) {

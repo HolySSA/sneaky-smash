@@ -10,7 +10,7 @@ const enterHandler = async (socket, payload) => {
     const user = new User(socket.id, payload.class, payload.nickname);
 
     const userRedis = await addRedisUser(user);
-    await addUserSession(socket, user);
+    addUserSession(socket, user);
 
     // 캐릭터 생성 로직
     let character = await getCharacterByUserId(socket.id);

@@ -5,7 +5,6 @@ import createNotificationPacket from '../notification/createNotification.js';
 import createResponse from '../response/createResponse.js';
 
 const enterLogic = async (socket, userSession) => {
-
   const playerPayload = {
     playerId: userSession.id,
     nickname: userSession.nickname,
@@ -31,20 +30,21 @@ const enterLogic = async (socket, userSession) => {
 
   // 해당 유저에게는 다른 유저 정보를 S_Spawn으로 전달.
 
-  if(otherUserPayload.players.length > 0)
-  {
+  if (otherUserPayload.players.length > 0) {
     const notification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
     socket.write(notification);
   }
 
   // 다른 유저에게는 나의 정보를 S_Spawn으로 전달.
-  const sessions = await getUserSessions();
+  const sessions = getUserSessions();
 
-  const anotherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, { player: playerPayload });
+  const anotherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, {
+    player: playerPayload,
+  });
 
-  sessions.forEach((session) => {
-    if (session.socket !== socket) {
-      session.socket.write(anotherUsernotification);
+  sessions.forEach((value, targetUserId) => {
+    if (targetUserId !== socket.id) {
+      value.socket.write(anotherUsernotification);
     }
   });
 };

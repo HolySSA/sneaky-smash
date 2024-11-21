@@ -1,12 +1,11 @@
 const userSessions = new Map();
 
-const addUserSession = async (socket, user) => {
+const addUserSession = (socket, user) => {
   if (userSessions.has(socket.id)) {
     throw new Error('세션 중복');
   }
 
   userSessions.set(socket.id, { socket, transform: user.transform });
-
   return user;
 };
 

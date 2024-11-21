@@ -53,7 +53,7 @@ const logInHandler = async (socket, payload) => {
 
       // redis, session에 저장
       const userRedis = await addRedisUser(user);
-      await addUserSession(socket, user);
+      addUserSession(socket, user);
 
       return await enterLogic(socket, user);
     }

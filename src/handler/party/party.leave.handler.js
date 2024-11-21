@@ -27,7 +27,7 @@ const partyLeaveHandler = async (socket, payload) => {
       party.members.forEach((member) => {
         const user = getUserSessionById(member);
 
-        user.socket.write(response);
+        user?.socket.write(response);
       });
 
       return;
@@ -47,7 +47,9 @@ const partyLeaveHandler = async (socket, payload) => {
     members.forEach((member) => {
       if (member !== socket.id) {
         const user = getUserSessionById(member);
-        user.socket.write(response);
+    console.log("partyLeaveHandler : user" + user);
+
+        user?.socket.write(response);
       }
     });
   } catch (e) {

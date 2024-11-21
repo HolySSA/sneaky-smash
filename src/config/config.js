@@ -10,7 +10,6 @@ import {
 } from '../constants/env.js';
 import { PACKET_TYPE_LENGTH, PACKET_LENGTH } from '../constants/header.js';
 import { PACKET_ID, reverseMapping } from '../constants/packetId.js';
-import { REDIS_URL, REDIS_PORT, REDIS_HOST, REDIS_PASSWORD } from '../constants/env.js';
 
 const config = {
   server: {
@@ -33,12 +32,6 @@ const config = {
       port: DB_PORT,
     },
     // 필요한 만큼 추가
-  },
-  redis: {
-    url: REDIS_URL,
-    port: REDIS_PORT,
-    host: REDIS_HOST,
-    password: REDIS_PASSWORD,
   },
 };
 

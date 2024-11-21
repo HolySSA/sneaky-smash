@@ -16,18 +16,16 @@ const animationHandler = async (socket, payload) => {
     };
 
     const animationResponsePayload = createResponse(PACKET_ID.S_Animation, animationPayload);
-    // socket.write(response);
 
     const allUsers = getUserSessions();
     if (!allUsers || allUsers.length === 0) {
       console.error('저장된 유저세션이 없습니다.');
       return;
     }
-    
-    for(const user of allUsers.values()){
-      user.socket.write(animationResponsePayload);
-    }
-    
+
+    allUsers.forEach((value) => {
+      value.socket.write(animationResponsePayload);
+    });
   } catch (e) {
     handleError(socket, e);
   }

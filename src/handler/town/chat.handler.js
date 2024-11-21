@@ -24,9 +24,7 @@ const chatHandler = async (socket, payload) => {
 
     // 같은 로케이션의 유저들에게 패킷 전송
     allUsers.forEach((value) => {
-      if(value.socket.id !== socket.id){
         value.socket.write(chatResponsePayload);
-      }
     })
   } catch (e) {
     handleError(socket, e);

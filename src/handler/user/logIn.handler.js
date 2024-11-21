@@ -47,6 +47,7 @@ const logInHandler = async (socket, payload) => {
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
     let character = await getCharacterByUserId(existUser.id);
+    
     if (character) {
       // 일단 user 테이블 id로
       const user = new User(socket.id, character.myClass, character.nickname);

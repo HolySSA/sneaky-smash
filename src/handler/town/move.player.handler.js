@@ -36,12 +36,11 @@ export const movePlayerHandler = async (socket, payload) => {
       console.error('유저세션이 없습니다.');
       return;
     }
-    
+
     // 로케이션 타입 확인 후 같은 로케이션의 유저들에게 패킷 전송
     allUsers.forEach((value, targetUserId) => {
       if (targetUserId !== user.id) {
         value.socket.write(moveResponsePayload);
-        console.log(`${targetUserId} 타겟유저아이디패킷전송성공`);
       }
     });
   } catch (error) {

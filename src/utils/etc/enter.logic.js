@@ -12,6 +12,8 @@ const enterLogic = async (socket, userSession) => {
     transform: getUserTransformById(userSession.id),
   };
 
+  console.log("enterLogic payload 1" + JSON.stringify({ player: playerPayload }));
+
   const response = createResponse(PACKET_ID.S_Enter, { player: playerPayload });
   socket.write(response);
 
@@ -38,9 +40,7 @@ const enterLogic = async (socket, userSession) => {
   // 다른 유저에게는 나의 정보를 S_Spawn으로 전달.
   const sessions = getUserSessions();
 
-  const anotherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, {
-    player: playerPayload,
-  });
+  const anotherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, { player: playerPayload });
 
   sessions.forEach((value, targetUserId) => {
     if (targetUserId !== socket.id) {

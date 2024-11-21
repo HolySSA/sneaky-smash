@@ -36,7 +36,13 @@ const getRedisUsers = async () => {
     const users = await Promise.all(
       userKeys.map(async (key) => {
         const user = await redis.hgetall(key);
-        return user;
+
+        return {
+          id: user.id,
+          nickname: user.nickname,
+          myClass: parseInt(user.myClass),
+          locationType: user.locationType,
+        }
       }),
     );
 

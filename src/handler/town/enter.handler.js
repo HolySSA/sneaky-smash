@@ -1,5 +1,8 @@
 import handleError from '../../utils/error/errorHandler.js';
-import { addCharacter, getCharacterByUserId } from '../../db/character/character.db.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { getAllUsers, getUserSessions } from '../../utils/redis/user.session.js';
+import { addUser } from '../../utils/redis/user.session.js';
+import { addCharacter, findCharacterByUserId } from '../../db/character/characters.db.js';
 import { addRedisUser } from '../../sessions/redis/redis.user.js';
 import User from '../../classes/model/user.class.js';
 import { addUserSession } from '../../sessions/user.session.js';
@@ -13,7 +16,7 @@ const enterHandler = async (socket, payload) => {
     await addUserSession(socket, user);
 
     // 캐릭터 생성 로직
-    let character = await getCharacterByUserId(socket.id);
+    let character = await findCharacterByUserId(socket.id);
     if (character) {
       return;
     }

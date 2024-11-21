@@ -23,20 +23,11 @@ const animationHandler = async (socket, payload) => {
       console.error('저장된 유저세션이 없습니다.');
       return;
     }
-
-    const sameLocationType = allUsers.filter(
-      (targetUser) => targetUser.locationType === user.locationType,
-    );
-
-    if (sameLocationType.length === 0) {
-      return;
+    
+    for(const user of allUsers.values()){
+      user.socket.write(animationResponsePayload);
     }
-
-    // 나를 포함한 모든 유저에게 보냄
-    sameLocationType.forEach((targetUser) => {
-      targetUser.socket?.write(animationResponsePayload);
-      console.log(`${targetUser.id} 유저아이디패킷전송성공`);
-    });
+    
   } catch (e) {
     handleError(socket, e);
   }

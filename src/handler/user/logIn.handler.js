@@ -30,13 +30,13 @@ const logInHandler = async (socket, payload) => {
     }
 
     // 비밀번호 비교
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, existUser.password);
     if (!isPasswordValid) {
       writeLoginResponse(socket, false, '비밀번호가 일치하지 않습니다.', null);
       return;
     }
 
-    const connectedUser = await getRedisUserById(user.id);
+    const connectedUser = await getRedisUserById(existUser.id);
     if (connectedUser) {
       writeLoginResponse(socket, false, '이미 접속 중인 유저입니다.', null);
       return;
@@ -55,13 +55,13 @@ const logInHandler = async (socket, payload) => {
       const userRedis = await addRedisUser(user);
       await addUserSession(socket, user);
 
-      return await enterLogic(socket, userRedis);
+      return await enterLogic(socket, user);
     }
 
     // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)
     const TMP_SECRET_KEY = 'tmp_secret_key';
 
-    const token = jwt.sign(user, TMP_SECRET_KEY, { expiresIn: '24h' });
+    const token = jwt.sign(existUser, TMP_SECRET_KEY, { expiresIn: '24h' });
     const bearerToken = `Bearer ${token}`;
 
     writeLoginResponse(socket, true, '로그인에 성공했습니다.', bearerToken);

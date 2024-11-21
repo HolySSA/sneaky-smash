@@ -1,4 +1,5 @@
 import config from '../config/config.js';
+import { PACKET_ID } from '../constants/packetId.js';
 import { getHandlerByPacketId } from '../handler/index.js';
 import decodeMessageByPacketId from '../utils/parser/decodePacket.js';
 
@@ -16,6 +17,8 @@ const onData = (socket) => async (data) => {
 
       try {
         const decodedMessage = decodeMessageByPacketId(packetType, packet);
+
+        if(packetType !== PACKET_ID.C_Move)
         console.log(`패킷 ID ${packetType}의 디코드 결과:`, decodedMessage);
 
         const handler = getHandlerByPacketId(packetType);

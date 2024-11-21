@@ -9,7 +9,7 @@ const createResponse = (packetId, data = null) => {
   // key: 숫자 - 패킷 생성
   const response = protoMessages[packetId];
 
-  console.log('packetId: ', packetId);
+  // console.log('packetId: ', packetId);
   // console.log('response: ', response);
   // console.log('data: ', data);
   // const payload = { [packetId]: data };

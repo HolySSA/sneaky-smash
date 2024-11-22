@@ -3,8 +3,8 @@ const userSessions = new Map();
 const addUserSession = (socket, user) => {
   if (userSessions.has(socket.id)) {
     throw new Error('세션 중복');
-  }
-
+  }   
+  
   userSessions.set(socket.id, { socket, transform: user.transform });
   return user;
 };
@@ -24,7 +24,8 @@ const getUserSessionById = (id) => {
 };
 
 const getUserTransformById = (id) => {
-  if (userSessions.has(id)) return userSessions.get(id).transform;
+  if (userSessions.has(id)) 
+    return userSessions.get(id).transform;
 
   return { posX: -5, posY: 0.5, posZ: 135, rot: 0 };
 };

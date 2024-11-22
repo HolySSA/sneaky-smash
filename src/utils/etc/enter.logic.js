@@ -2,51 +2,58 @@ import { PACKET_ID } from '../../constants/packetId.js';
 import { getRedisUsers } from '../../sessions/redis/redis.user.js';
 import { getUserSessions, getUserTransformById } from '../../sessions/user.session.js';
 import createNotificationPacket from '../notification/createNotification.js';
+import decodeMessageByPacketId from '../parser/decodePacket.js';
 import createResponse from '../response/createResponse.js';
 
 const enterLogic = async (socket, userSession) => {
-  const playerPayload = {
-    playerId: userSession.id,
-    nickname: userSession.nickname,
-    class: userSession.myClass,
-    transform: getUserTransformById(userSession.id),
-  };
+  try {
+    // 현재 유저의 데이터를 구성 (다른 유저들에게 알릴 정보)
+    const currentUserPayload = {
+      playerId: userSession.id, // 유저 ID
+      nickname: userSession.nickname, // 닉네임
+      class: userSession.myClass, // 유저 클래스
+      transform: getUserTransformById(userSession.id), // 유저 위치 정보
+    };
 
-  console.log("enterLogic payload 1" + JSON.stringify({ player: playerPayload }));
+    console.log(currentUserPayload);
 
-  const response = createResponse(PACKET_ID.S_Enter, { player: playerPayload });
-  socket.write(response);
+    // 현재 유저에게 자신의 입장 정보를 전달
+    const response = createResponse(PACKET_ID.S_Enter, { player: currentUserPayload });
+    socket.write(response); // 소켓으로 패킷 전송
 
-  const allUsers = await getRedisUsers();
+    const users = await getRedisUsers();
+    const userSessions = getUserSessions();
 
-  const otherUserPayload = {
-    players: allUsers
-      .filter((player) => parseInt(player.id) !== socket.id)
-      .map((player) => ({
-        playerId: player.id,
-        nickname: player.nickname,
-        class: player.myClass,
-        transform: getUserTransformById(player.id),
-      })),
-  };
+    const entryNotification = createNotificationPacket(PACKET_ID.S_Spawn, { players: [currentUserPayload]});
 
-  // 해당 유저에게는 다른 유저 정보를 S_Spawn으로 전달.
+    for (const [sessionId, sessionData] of userSessions) {
 
-  if (otherUserPayload.players.length > 0) {
-    const notification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
-    socket.write(notification);
-  }
-
-  // 다른 유저에게는 나의 정보를 S_Spawn으로 전달.
-  const sessions = getUserSessions();
-
-  const anotherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, { player: playerPayload });
-
-  sessions.forEach((value, targetUserId) => {
-    if (targetUserId !== socket.id) {
-      value.socket.write(anotherUsernotification);
+      if (sessionId !== userSession.id) {
+        sessionData.socket.write(entryNotification);
+      }
     }
-  });
+
+    const otherUsersPayload = {
+      players: users
+        .filter((player) => player.id !== userSession.id) // 현재 유저 제외
+        .map((player) => ({
+          playerId: player.id, // 다른 유저 ID
+          nickname: player.nickname, // 다른 유저 닉네임
+          class: player.myClass, // 다른 유저 클래스
+          transform: getUserTransformById(player.id), // 다른 유저 위치 정보
+        })),
+    };
+
+    // 현재 유저에게 다른 유저 정보 알림 패킷 전송
+
+    if(otherUsersPayload.players.length === 0)
+      return;
+
+    const otherUsersNotification = createNotificationPacket(PACKET_ID.S_Spawn, otherUsersPayload);
+    socket.write(otherUsersNotification);
+  } catch (error) {
+    console.error('Error in enterLogic:', error); // 에러 발생 시 로그 출력
+  }
 };
 
 export default enterLogic;

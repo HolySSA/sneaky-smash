@@ -38,7 +38,7 @@ const getRedisUsers = async () => {
         const user = await redis.hgetall(key);
 
         return {
-          id: user.id,
+          id:  parseInt(user.id),
           nickname: user.nickname,
           myClass: parseInt(user.myClass),
           locationType: user.locationType,

@@ -9,7 +9,7 @@ const enterHandler = async (socket, payload) => {
   try {
     const user = new User(socket.id, payload.class, payload.nickname);
 
-    const userRedis = await addRedisUser(user);
+    await addRedisUser(user);
     addUserSession(socket, user);
 
     // 캐릭터 생성 로직
@@ -19,9 +19,9 @@ const enterHandler = async (socket, payload) => {
     }
 
     // sql에서 gold default 선언해서 만들면 gold 입력 빼도 됨
-    character = await addCharacter(user.id, user.nickname, user.myClass, 0);
+    await addCharacter(user.id, user.nickname, user.myClass, 0);
 
-    await enterLogic(socket, userRedis);
+    await enterLogic(socket, user);
   } catch (e) {
     handleError(socket, e);
   }

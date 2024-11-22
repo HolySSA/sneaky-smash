@@ -4,7 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import { findUserByAccount } from '../../db/user/user.db.js';
-import { getCharacterByUserId } from '../../db/character/character.db.js';
+import { findCharacterByUserId } from '../../db/character/characters.db.js';
 import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
 import User from '../../classes/model/user.class.js';
@@ -24,13 +24,18 @@ const logInHandler = async (socket, payload) => {
 
     // db에서 해당 아이디 찾기
     const existUser = await findUserByAccount(account);
+    console.log('existUser: ', existUser);
     if (!existUser) {
       writeLoginResponse(socket, false, '존재하지 않는 아이디입니다.', null);
       return;
     }
 
     // 비밀번호 비교
+    console.log('password: ', password);
+    console.log('existUser.password:', existUser.password);
+
     const isPasswordValid = await bcrypt.compare(password, existUser.password);
+
     if (!isPasswordValid) {
       writeLoginResponse(socket, false, '비밀번호가 일치하지 않습니다.', null);
       return;
@@ -47,7 +52,7 @@ const logInHandler = async (socket, payload) => {
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
     let character = await getCharacterByUserId(existUser.id);
-    
+
     if (character) {
       // 일단 user 테이블 id로
       const user = new User(socket.id, character.myClass, character.nickname);

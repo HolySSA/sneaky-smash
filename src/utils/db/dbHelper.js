@@ -1,19 +1,23 @@
-import toCamelCase from '../../utils/transformCase.js';  // toCamelCase import
+import toCamelCase from '../../utils/transformCase.js'; // toCamelCase import
 
 const handleDbQuery = async (queryFn, queryParams, isArray = false) => {
   try {
     // 쿼리 파라미터 배열을 강제로 처리
-    const [query, params] = Array.isArray(queryParams) ? queryParams : [queryParams, []]; 
+    const [query, params] = Array.isArray(queryParams) ? queryParams : [queryParams, []];
 
-    const [rows] = await queryFn(query, params); // queryFn은 dbPool.query
+    const [rows, fields] = await queryFn(query, params);
 
-    // 결과를 카멜케이스로 변환
-    const result = isArray ? rows.map(row => toCamelCase(row)) : toCamelCase(rows[0]);
+    if (!rows || rows.length === 0) {
+      return null;
+    }
+
+    // 항상 배열로 변환하여 반환 (결과가 배열이 아닌 경우에도 배열로 처리)
+    const result = isArray ? rows.map((row) => toCamelCase(row)) : toCamelCase(rows[0]);
 
     return result;
   } catch (error) {
     console.error('Database query error:', error.message);
-    throw error;  // 예외를 호출자에게 전달
+    throw error; // 예외를 호출자에게 전달
   }
 };
 

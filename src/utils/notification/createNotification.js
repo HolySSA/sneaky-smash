@@ -1,21 +1,16 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
-import config from '../../config/config.js';
 import createHeader from '../createHeader.js';
-
-const makeNotification = (packetId, buffer) => {
-  const header = createHeader(packetId, buffer);
-
-  return Buffer.concat([header, buffer]);
-};
 
 const createNotificationPacket = (packetId, data = null) => {
   const protoMessages = getProtoMessages();
 
-  const notification = protoMessages[packetId];
-  const gamePacket = notification.create(data);
-  const buffer = notification.encode(gamePacket).finish();
+  const response = protoMessages[packetId];
+  const gamePacket = response.create(data);
+  const buffer = response.encode(gamePacket).finish();
 
-  return makeNotification(packetId, buffer);
+  const header = createHeader(packetId, buffer);
+
+  return Buffer.concat([header, buffer]);
 };
 
 export default createNotificationPacket;

@@ -13,7 +13,7 @@ const enterHandler = async (socket, payload) => {
     addUserSession(socket, user);
 
     // 캐릭터 생성 로직
-    let character = await getCharacterByUserId(socket.id);
+    let character = await findCharacterByUserId(socket.id);
     if (character) {
       return;
     }

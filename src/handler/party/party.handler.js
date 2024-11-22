@@ -21,8 +21,8 @@ const partyHandler = async (socket, payload) => {
     parties.forEach((party) => {
       const partyPayload = {
         playerId: party.members.map((m) => parseInt(m)),
-        roomId: parseInt(party.roomId),
-        dungeonLevel: parseInt(party.dungeonLevel),
+        roomId: party.roomId,
+        dungeonLevel: party.dungeonLevel,
       };
 
       const response = createResponse(PACKET_ID.S_Party, partyPayload);

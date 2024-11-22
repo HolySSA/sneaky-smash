@@ -35,7 +35,6 @@ const partyLeaveHandler = async (socket, payload) => {
 
       party.members.forEach((memberId) => {
         const user = getUserSessionById(parseInt(memberId));
-
         user?.socket.write(response);
       });
     } else {
@@ -43,16 +42,22 @@ const partyLeaveHandler = async (socket, payload) => {
 
       const payload = {
         playerId: parseInt(socket.id),
-        roomId: roomId,
+        roomId,
       };
 
       const response = createResponse(PACKET_ID.S_PartyLeave, payload);
 
       remainMembers.members.forEach((memberId) => {
         const user = getUserSessionById(parseInt(memberId));
-
         user?.socket.write(response);
       });
+
+      /*
+      party.members.forEach((memberId) => {
+        const user = getUserSessionById(parseInt(memberId));
+        user?.socket.write(response);
+      });
+      */
     }
   } catch (e) {
     handleError(socket, e);

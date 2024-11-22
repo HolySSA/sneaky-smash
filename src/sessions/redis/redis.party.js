@@ -1,13 +1,13 @@
 import redis from '../../utils/redis/redisManager.js';
 
-const addRedisParty = async (id, dungeonLevel, userId) => {
-  const partyKey = `party:${id}`;
-  const infoKey = `party:${id}:info`;
+const addRedisParty = async (roomId, dungeonLevel, userId) => {
+  const partyKey = `party:${roomId}`;
+  const infoKey = `party:${roomId}:info`;
 
   // 파티 생성
   await redis.sadd(partyKey, userId.toString());
   // 파티 리스트
-  await redis.sadd('partyList', id.toString());
+  await redis.sadd('partyList', roomId.toString());
   // 파티 던전 난이도
   await redis.hset(infoKey, {
     dungeonLevel: dungeonLevel.toString(),
@@ -15,7 +15,7 @@ const addRedisParty = async (id, dungeonLevel, userId) => {
   });
 
   const party = {
-    roomId: id.toString(),
+    roomId: parseInt(roomId),
     members: [userId.toString()],
     dungeonLevel: parseInt(dungeonLevel),
     owner: userId.toString(),
@@ -24,21 +24,21 @@ const addRedisParty = async (id, dungeonLevel, userId) => {
   return party;
 };
 
-const removeRedisParty = async (id) => {
-  const partyKey = `party:${id}`;
-  const infoKey = `party:${id}:info`;
+const removeRedisParty = async (roomId) => {
+  const partyKey = `party:${roomId}`;
+  const infoKey = `party:${roomId}:info`;
 
   // 멤버 제거
   await redis.del(partyKey);
   // info 제거
   await redis.del(infoKey);
   // 파티 리스트에서 제거
-  await redis.srem('partyList', id.toString());
+  await redis.srem('partyList', roomId.toString());
 };
 
-const joinRedisParty = async (id, userId) => {
-  const partyKey = `party:${id}`;
-  const infoKey = `party:${id}:info`;
+const joinRedisParty = async (roomId, userId) => {
+  const partyKey = `party:${roomId}`;
+  const infoKey = `party:${roomId}:info`;
 
   const exists = await redis.exists(partyKey);
   if (!exists) {
@@ -53,7 +53,7 @@ const joinRedisParty = async (id, userId) => {
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 
   const updatedParty = {
-    roomId: id.toString(),
+    roomId: parseInt(roomId),
     members: members.map((m) => m.toString()),
     dungeonLevel: parseInt(info.dungeonLevel),
   };
@@ -61,9 +61,9 @@ const joinRedisParty = async (id, userId) => {
   return updatedParty;
 };
 
-const leaveRedisParty = async (id, userId) => {
-  const partyKey = `party:${id}`;
-  const infoKey = `party:${id}:info`;
+const leaveRedisParty = async (roomId, userId) => {
+  const partyKey = `party:${roomId}`;
+  const infoKey = `party:${roomId}:info`;
 
   const removeUser = await redis.srem(partyKey, userId.toString());
   if (removeUser === 0) {
@@ -76,15 +76,15 @@ const leaveRedisParty = async (id, userId) => {
   ]);
 
   return {
-    roomId: id.toString(),
+    roomId: parseInt(roomId),
     members: remainingMembers.map((m) => m.toString()),
     dungeonLevel: parseInt(info.dungeonLevel),
   };
 };
 
-const getRedisParty = async (id) => {
-  const partyKey = `party:${id}`;
-  const infoKey = `party:${id}:info`;
+const getRedisParty = async (roomId) => {
+  const partyKey = `party:${roomId}`;
+  const infoKey = `party:${roomId}:info`;
 
   const exists = await redis.exists(partyKey);
   if (!exists) {
@@ -94,13 +94,37 @@ const getRedisParty = async (id) => {
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 
   const party = {
-    roomId: id.toString(),
+    roomId: parseInt(roomId),
     members: members.map((m) => m.toString()),
     dungeonLevel: parseInt(info.dungeonLevel),
     owner: info.owner.toString(),
   };
 
   return party;
+};
+
+const getRedisPartyByUserId = async (userId) => {
+  const roomIds = await redis.smembers('partyList');
+
+  for (const roomId of roomIds) {
+    const partyKey = `party:${roomId}`;
+    const infoKey = `party:${roomId}:info`;
+
+    const isMember = await redis.sismember(partyKey, userId.toString());
+
+    if (isMember) {
+      const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
+
+      return {
+        roomId: parseInt(roomId),
+        members: members.map((m) => m.toString()),
+        dungeonLevel: parseInt(info.dungeonLevel),
+        owner: info.owner.toString(),
+      };
+    }
+  }
+
+  return null;
 };
 
 const getRedisParties = async () => {
@@ -114,7 +138,7 @@ const getRedisParties = async () => {
       const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 
       return {
-        roomId: roomId.toString(),
+        roomId: parseInt(roomId),
         members: members.map((m) => m.toString()),
         dungeonLevel: parseInt(info.dungeonLevel),
         owner: info.owner.toString(),
@@ -131,5 +155,6 @@ export {
   joinRedisParty,
   leaveRedisParty,
   getRedisParty,
+  getRedisPartyByUserId,
   getRedisParties,
 };

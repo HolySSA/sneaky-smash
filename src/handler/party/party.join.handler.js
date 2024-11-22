@@ -34,8 +34,8 @@ const partyJoinHandler = async (socket, payload) => {
 
     const partyPayload = {
       playerId: parseInt(socket.id),
-      roomId: parseInt(roomId),
-      dungeonLevel: parseInt(dungeonLevel),
+      roomId,
+      dungeonLevel,
     };
 
     const notification = createNotificationPacket(PACKET_ID.S_PartyJoin, partyPayload);

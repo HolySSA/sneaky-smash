@@ -1,4 +1,4 @@
-import fs from 'fs'; 
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dbPool from '../database.js';
@@ -10,6 +10,9 @@ const createSchemas = async () => {
   const sqlDir = path.join(__dirname, '../sql');
 
   const sqlFiles = [
+    'user_db.sql',
+    'characters_db.sql',
+    'inventoryItem_db.sql',
     'boss_db.sql',
     'dungeon_db.sql',
     'equipment_db.sql',
@@ -17,21 +20,32 @@ const createSchemas = async () => {
     'monsters_db.sql',
     'skill_db.sql',
     'stage_db.sql',
-    'user_db.sql',
-]; // 여러 SQL 파일을 처리
+  ]; // 여러 SQL 파일을 처리
 
   try {
-    const sql = fs.readFileSync(path.join(sqlDir, sqlFiles), 'utf8');
-    const queries = sql
-      .split(';')
-      .map((query) => query.trim())
-      .filter((query) => query.length > 0);
+    // 각 SQL 파일을 하나씩 읽고 쿼리 실행
+    for (const sqlFile of sqlFiles) {
+      const filePath = path.join(sqlDir, sqlFile); // 각 파일 경로
+      console.log(`Reading SQL file: ${filePath}`);
 
-    for (const query of queries) {
-      await dbPool.query(query);
+      // 파일 내용을 읽음
+      const sql = fs.readFileSync(filePath, 'utf8');
+
+      // SQL 쿼리로 분할하여 실행
+      const queries = sql
+        .split(';')
+        .map((query) => query.trim())
+        .filter((query) => query.length > 0);
+
+      // 각 쿼리 실행
+      for (const query of queries) {
+        await dbPool.query(query);
+      }
+
+      console.log(`${sqlFile} 테이블 생성 완료`);
     }
 
-    console.log('데이터베이스 테이블 생성 성공');
+    console.log('모든 데이터베이스 테이블 생성 성공');
   } catch (error) {
     console.error('데이터베이스 테이블 생성 에러: ', error);
   }

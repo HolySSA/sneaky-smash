@@ -2,10 +2,10 @@ import redis from '../../utils/redis/redisManager.js';
 
 const addRedisUser = async (user) => {
   const userKey = `user:${user.id}`;
-  const redisUser = await redis.hmset(userKey, {
-    id: user.id,
+  const redisUser = await redis.hset(userKey, {
+    id: user.id.toString(),
     nickname: user.nickname,
-    myClass: user.myClass,
+    myClass: user.myClass.toString(),
     locationType: user.locationType,
   });
 
@@ -13,51 +13,55 @@ const addRedisUser = async (user) => {
 };
 
 const removeRedisUser = async (socket) => {
-  const keys = await redis.keys('user:*');
+  const userKey = `user:${socket.id}`;
+  const user = await redis.hgetall(userKey);
 
-  for (const key of keys) {
-    const user = await redis.hgetall(key);
-
-    if (Number(user.id) === socket.id) {
-      // 인덱스 삭제
-      await redis.del(key);
-
-      return user;
-    }
+  if (Object.keys(user).length === 0) {
+    return null;
   }
 
-  return null;
+  await redis.del(userKey);
+  return user;
 };
 
 const getRedisUsers = async () => {
-  try {
-    const userKeys = await redis.keys('user:*');
+  // keys - 데이터 많으면 불안전. 대신 scan 사용으로 변경.
+  const userKeys = await redis.keys('user:*');
 
-    const users = await Promise.all(
-      userKeys.map(async (key) => {
-        const user = await redis.hgetall(key);
-
-        return {
-          id: user.id,
-          nickname: user.nickname,
-          myClass: parseInt(user.myClass),
-          locationType: user.locationType,
-        }
-      }),
-    );
-
-    return users;
-  } catch (err) {
-    console.error('모든 유저 불러오기(레디스) 오류: ', err);
-    throw err;
+  if (!userKeys.length) {
+    return null;
   }
+
+  const pipeline = redis.pipeline();
+  userKeys.forEach((key) => pipeline.hgetall(key));
+
+  const results = await pipeline.exec();
+
+  return results.map(([err, data]) => {
+    if (err || !data) return null;
+    return {
+      id: data.id,
+      nickname: data.nickname,
+      myClass: parseInt(data.myClass),
+      locationType: data.locationType,
+    };
+  });
 };
 
 const getRedisUserById = async (id) => {
   const userKey = `user:${id}`;
   const user = await redis.hgetall(userKey);
 
-  return Object.keys(user).length > 0 ? user : null;
+  if (!user || Object.keys(user).length === 0) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    nickname: user.nickname,
+    myClass: parseInt(user.myClass, 10),
+    locationType: user.locationType,
+  };
 };
 
 export { addRedisUser, removeRedisUser, getRedisUsers, getRedisUserById };

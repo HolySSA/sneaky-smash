@@ -42,18 +42,18 @@ const logInHandler = async (socket, payload) => {
       return;
     }
 
-    // 로그인 검증에 통과되었으므로 해당 socket에 id 부여
-    socket.id = existUser.id;
+    // 로그인 검증에 통과되었으므로 해당 socket에 id 부여 - redis에 저장된 유저 정보 조회 시 사용
+    socket.id = existUser.id.toString();
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
     let character = await getCharacterByUserId(existUser.id);
-    
+
     if (character) {
       // 일단 user 테이블 id로
-      const user = new User(socket.id, character.myClass, character.nickname);
+      const user = new User(existUser.id, character.myClass, character.nickname);
 
       // redis, session에 저장
-      const userRedis = await addRedisUser(user);
+      await addRedisUser(user);
       addUserSession(socket, user);
 
       return await enterLogic(socket, user);

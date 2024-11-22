@@ -8,7 +8,13 @@ const addRedisParty = async (id, dungeonLevel, userId) => {
   // 파티 리스트
   await redis.sadd('partyList', id);
   // 파티 던전 난이도
-  await redis.hset(`party:${id}:info`, 'dungeonLevel', dungeonLevel, 'owner', userId);
+  await redis.hset(
+    `party:${id}:info`,
+    'dungeonLevel',
+    dungeonLevel.toString(),
+    'owner',
+    userId.toString(),
+  );
 
   const party = {
     roomId: id,
@@ -75,7 +81,7 @@ const getRedisParty = async (id) => {
   const party = {
     roomId: id,
     members,
-    dungeonLevel: info.dungeonLevel ? parseInt(info.dungeonLevel, 10) : null,
+    dungeonLevel: info.dungeonLevel ? parseInt(info.dungeonLevel) : null,
     owner: info.owner ? parseInt(info.owner, 10) : null,
   };
 
@@ -94,7 +100,7 @@ const getRedisParties = async () => {
       return {
         roomId: roomId,
         members: members,
-        dungeonLevel: info.dungeonLevel ? parseInt(info.dungeonLevel, 10) : null,
+        dungeonLevel: info.dungeonLevel ? parseInt(info.dungeonLevel) : null,
       };
     }),
   );

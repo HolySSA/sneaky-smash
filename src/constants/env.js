@@ -14,7 +14,7 @@ export const DB_PASSWORD = process.env.DB_PASSWORD || 'password';
 export const DB_HOST = process.env.DB_HOST || 'localhost';
 export const DB_PORT = process.env.DB_PORT || 3000;
 
-export const REDIS_URL = process.env.REDIS_URL || undefined;
+export const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6396';
 export const REDIS_PORT = process.env.REDIS_PORT || 6396;
 export const REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD || 'password';

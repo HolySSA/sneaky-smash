@@ -30,6 +30,7 @@ const getRedisUsers = async () => {
 
   if (!userKeys.length) {
     return null;
+  }
 
   // pipeline - 명령 묶어서 실행(최적화)
   const pipeline = redis.pipeline();

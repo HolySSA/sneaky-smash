@@ -1,5 +1,6 @@
 import { PACKET_ID } from '../../constants/packetId.js';
 import { getRedisParties } from '../../sessions/redis/redis.party.js';
+import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
 
 // // 파티 창 입장
@@ -14,20 +15,22 @@ import createResponse from '../../utils/response/createResponse.js';
 // }
 
 const partyHandler = async (socket, payload) => {
-  const parties = await getRedisParties();
+  try {
+    const parties = await getRedisParties();
 
-  parties.forEach((party) => {
-    const partyPayload = {
-      playerId: party.members,
-      roomId: party.roomId,
-      dungeonLevel: party.dungeonLevel,
-    };
+    parties.forEach((party) => {
+      const partyPayload = {
+        playerId: party.members.map((m) => parseInt(m)),
+        roomId: party.roomId,
+        dungeonLevel: party.dungeonLevel,
+      };
 
-    console.log("partyHandler" + JSON.stringify(partyPayload));
-    const packet = createResponse(PACKET_ID.S_Party, partyPayload);
-
-    socket.write(packet);
-  });
+      const response = createResponse(PACKET_ID.S_Party, partyPayload);
+      socket.write(response);
+    });
+  } catch (e) {
+    handleError(socket, e);
+  }
 };
 
 export default partyHandler;

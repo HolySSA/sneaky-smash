@@ -1,14 +1,11 @@
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getRedisUserById, getRedisUsers } from '../../sessions/redis/redis.user.js';
 import { getUserSessions } from '../../sessions/user.session.js';
 
 const animationHandler = async (socket, payload) => {
   try {
     const { animCode } = payload;
-
-    const user = await getRedisUserById(socket.id);
 
     const animationPayload = {
       playerId: socket.id,

@@ -12,18 +12,16 @@ const enterHandler = async (socket, payload) => {
     await addRedisUser(user);
     addUserSession(socket, user);
 
-    // 캐릭터 생성 로직
-    let character = await getCharacterByUserId(socket.id);
-    if (character) {
-      return;
+    const character = await getCharacterByUserId(parseInt(socket.id));
+    if (!character) {
+      // sql에서 gold default 선언해서 만들면 gold 입력 빼도 됨
+      await addCharacter(user.id, user.nickname, user.myClass, 0);
     }
-
-    // sql에서 gold default 선언해서 만들면 gold 입력 빼도 됨
-    await addCharacter(user.id, user.nickname, user.myClass, 0);
 
     await enterLogic(socket, user);
   } catch (e) {
     handleError(socket, e);
   }
 };
+
 export default enterHandler;

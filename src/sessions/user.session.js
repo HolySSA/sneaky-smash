@@ -5,7 +5,7 @@ const addUserSession = (socket, user) => {
     throw new Error('세션 중복');
   }
 
-  userSessions.set(socket.id, { socket, transform: user.transform });
+  userSessions.set(socket.id, { socket, transform: user.transform, inventory: [] });
   return user;
 };
 

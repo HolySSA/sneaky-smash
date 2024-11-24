@@ -62,7 +62,7 @@ const dungeonStartHandler = async (socket, payload) => {
 
     const members = await getRedisParty(roomdId);
 
-    // 그 소켓들에 S_EnterDungeon던지기
+    // 그 소켓들에 S_EnterDungeon 던지기
 
     const response = createResponse(PACKET_ID.S_EnterDungeon, partyPayload);
     socket.write(response);

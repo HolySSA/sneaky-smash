@@ -38,7 +38,7 @@ const partyLeaveHandler = async (socket, payload) => {
       await removeRedisParty(roomId);
 
       const payload = {
-        playerId: {},
+        playerId: parseInt(socket.id),
         roomId,
       };
 

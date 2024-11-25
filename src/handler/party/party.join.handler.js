@@ -27,10 +27,10 @@ import { addDungeonSession } from '../../sessions/dungeon.session.js';
 
 const partyJoinHandler = async (socket, payload) => {
   try {
-    const { dungeonLevel, roomId, isOner } = payload;
+    const { dungeonLevel, roomId, isOwner } = payload;
 
     let party = null;
-    if (isOner) {
+    if (isOwner) {
       party = await addRedisParty(roomId, dungeonLevel, socket.id);
     } else {
       party = await joinRedisParty(roomId, socket.id);

@@ -1,7 +1,7 @@
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getGameAssets } from '../loadAsset.js';
+import { getGameAssets } from '../../init/loadAsset.js';
 // 패킷명세
 // message S_MonsterSpawn {
 //     repeated MonsterStatus monsters = 1; // 몬스터 정보

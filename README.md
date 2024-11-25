@@ -74,7 +74,6 @@ src/
 ├── .env
 ├── .gitignore
 ├── .prettierrc
-├── client.js
 ├── package-lock.json
 ├── package.json
 └── client.js
@@ -153,16 +152,20 @@ S_MonsterSpawn: 51,
 
 ## boss
 
-S_Phase: 60, -> 이거 c가 없음
 C_BossSpawn: 52,
 S_BossSpawn: 53,
 C_TargetPlayer: 54,
 S_TargetPlayer: 55,
 C_ActionBoss: 58,
 S_ActionBoss: 59,
+S_Phase: 60, -> 이거 c가 없음
 
 ## party
 
-C_PartyJoin: 61,
-C_PartyLeave: 62,
-S_Party: 63,
+C_Party: 61,
+S_Party: 62,
+C_PartyJoin: 63,
+S_PartyJoin: 64,
+C_PartyLeave: 65,
+S_PartyLeave: 66,
+C_MatchStart: 67

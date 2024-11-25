@@ -34,10 +34,10 @@ import actionBossHandler from './boss/ActionBoss.handler.js';
 import bossSpawnHandler from './boss/bossSpawn.handler.js';
 import targetPlayerHandler from './boss/targetPlayer.handler.js';
 // party
-import { partyJoinHandler } from './party/party.join.handler.js';
 import partyLeaveHandler from './party/party.leave.handler.js';
 import partyHandler from './party/party.handler.js';
-import enterDungeonHandler from './town/enterDungeon.handler.js';
+import dungeonStartHandler from './party/dungeon.start.handler.js';
+import partyJoinHandler from './party/party.join.handler.js';
 
 const handlers = {
   // town
@@ -130,7 +130,7 @@ const handlers = {
     handler: partyJoinHandler,
   },
   [PACKET_ID.C_MatchStart]: {
-    handler: enterDungeonHandler,
+    handler: dungeonStartHandler,
   },
   [PACKET_ID.C_PartyLeave]: {
     handler: partyLeaveHandler,

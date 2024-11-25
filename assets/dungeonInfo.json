@@ -17,6 +17,27 @@
             { "monster_id": 103, "count": 4 },
             { "monster_id": 104, "count": 2 }
           ]
+        },
+        {
+          "stage_id": 3,
+          "monsters": [
+            { "monster_id": 103, "count": 4 },
+            { "monster_id": 104, "count": 2 }
+          ]
+        },
+        {
+          "stage_id": 4,
+          "monsters": [
+            { "monster_id": 103, "count": 4 },
+            { "monster_id": 104, "count": 2 }
+          ]
+        },
+        {
+          "stage_id": 5,
+          "monsters": [
+            { "monster_id": 103, "count": 4 },
+            { "monster_id": 104, "count": 2 }
+          ]
         }
       ]
     },
@@ -37,7 +58,18 @@
         },
         {
           "stage_id": 3,
-          "monsters": [{ "monster_id": 204, "count": 1 }]
+          "monsters": [{ "monster_id": 204, "count": 3 }]
+        },
+        {
+          "stage_id": 4,
+          "monsters": [
+            { "monster_id": 202, "count": 3 },
+            { "monster_id": 204, "count": 2 }
+          ]
+        },
+        {
+          "stage_id": 5,
+          "monsters": [{ "monster_id": 205, "count": 5 }]
         }
       ]
     }

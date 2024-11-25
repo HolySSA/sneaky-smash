@@ -1,11 +1,11 @@
-const userSessions = new Map();
+import { userSessions } from './sessions.js';
 
 const addUserSession = (socket, user) => {
   if (userSessions.has(socket.id)) {
     throw new Error('세션 중복');
   }
 
-  userSessions.set(socket.id, { socket, transform: user.transform });
+  userSessions.set(socket.id, { socket, transform: user.transform, inventory: [] });
   return user;
 };
 
@@ -20,11 +20,13 @@ const getUserSessions = () => {
 };
 
 const getUserSessionById = (id) => {
-  return userSessions.get(id) || null;
+  const userId = id.toString();
+  return userSessions.get(userId) || null;
 };
 
 const getUserTransformById = (id) => {
-  if (userSessions.has(id)) return userSessions.get(id).transform;
+  const userId = id.toString();
+  if (userSessions.has(userId)) return userSessions.get(userId).transform;
 
   return { posX: -5, posY: 0.5, posZ: 135, rot: 0 };
 };
@@ -32,7 +34,8 @@ const getUserTransformById = (id) => {
 const updateUserTransformById = (id, posX, posY, posZ, rot) => {
   const newTransform = { posX, posY, posZ, rot };
 
-  const session = userSessions.get(id);
+  const userId = id.toString();
+  const session = userSessions.get(userId);
   if (session) session.transform = newTransform;
 
   return newTransform;

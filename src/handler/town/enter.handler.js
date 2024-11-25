@@ -16,9 +16,9 @@ const enterHandler = async (socket, payload) => {
     let character = await findCharacterByUserId(parseInt(socket.id));
     if (!character) {
       // sql에서 gold default 선언해서 만들면 gold 입력 빼도 됨
-      await createCharacter(user.id, user.nickname, user.myClass, 0);
+      await addCharacter(user.id, user.nickname, user.myClass, 0);
     }
-
+    
     await enterLogic(socket, user);
   } catch (e) {
     handleError(socket, e);

@@ -114,7 +114,7 @@ const dungeonStartHandler = async (socket, payload) => {
       if (user) user.socket.write(partyResponse);
     });
 
-    // stageInfo => stageId로 변경 예정.
+    // stageInfo => stageId로 변경 예정
 
     const infoText = '던전에 입장했습니다!';
 

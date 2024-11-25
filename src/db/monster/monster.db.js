@@ -1,13 +1,18 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './monster.query.js';
-import handleDbQuery from '../../utils/db/dbHelper.js'; // DB 처리 함수 임포트
+import SQL_QUERIES from './monster.queries.js';
+import toCamelCase from '../../utils/transformCase.js';
 
 // 몬스터 생성
-export const createMonster = async (monster) => {
-  const { maxHp, atk, def, criticalProbability, criticalDamageRate, moveSpeed, attackSpeed } =
-    monster;
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [
-    SQL_QUERIES.CREATE_MONSTER,
+export const createMonster = async (
+  maxHp,
+  atk,
+  def,
+  criticalProbability,
+  criticalDamageRate,
+  moveSpeed,
+  attackSpeed,
+) => {
+  const [result] = await dbPool.query(SQL_QUERIES.CREATE_MONSTER, [
     maxHp,
     atk,
     def,
@@ -16,32 +21,33 @@ export const createMonster = async (monster) => {
     moveSpeed,
     attackSpeed,
   ]);
-  return { id: result.insertId, ...monster }; // 생성된 몬스터 ID를 포함하여 반환
+  return { insertId: result.insertId };
 };
 
 // 몬스터를 ID로 찾기
 export const findMonsterById = async (id) => {
-  const row = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_MONSTER_BY_ID, id]);
-
-  return row.rows; // 이미 카멜케이스로 변환된 결과 반환
+  const [rows] = await dbPool.query(SQL_QUERIES.FIND_MONSTER_BY_ID, [id]);
+  return rows.length > 0 ? toCamelCase(rows[0]) : null;
 };
 
 // 모든 몬스터 조회
 export const findAllMonsters = async () => {
-  const rows = await handleDbQuery(
-    dbPool.query.bind(dbPool),
-    [SQL_QUERIES.FIND_ALL_MONSTERS],
-    true,
-  ); // 여러 결과 반환
-  return rows.rows; // 이미 카멜케이스로 변환된 결과 반환
+  const [rows] = await dbPool.query(SQL_QUERIES.FIND_ALL_MONSTERS);
+  return rows.map((row) => toCamelCase(row));
 };
 
 // 몬스터 수정
-export const updateMonster = async (id, updatedData) => {
-  const { maxHp, atk, def, criticalProbability, criticalDamageRate, moveSpeed, attackSpeed } =
-    updatedData;
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [
-    SQL_QUERIES.UPDATE_MONSTER,
+export const updateMonster = async (
+  id,
+  maxHp,
+  atk,
+  def,
+  criticalProbability,
+  criticalDamageRate,
+  moveSpeed,
+  attackSpeed,
+) => {
+  const [result] = await dbPool.query(SQL_QUERIES.UPDATE_MONSTER, [
     maxHp,
     atk,
     def,
@@ -51,17 +57,11 @@ export const updateMonster = async (id, updatedData) => {
     attackSpeed,
     id,
   ]);
-  if (result.affectedRows === 0) {
-    throw new Error(`Monster with ID ${id} not found or no changes made.`);
-  }
-  return { id, ...updatedData }; // 수정된 데이터 반환
+  return { affectedRows: result.affectedRows };
 };
 
 // 몬스터 삭제
 export const deleteMonster = async (id) => {
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.DELETE_MONSTER, id]);
-  if (result.affectedRows === 0) {
-    throw new Error(`Monster with ID ${id} not found.`);
-  }
-  return { id }; // 삭제된 몬스터의 ID 반환
+  const [result] = await dbPool.query(SQL_QUERIES.DELETE_MONSTER, [id]);
+  return { affectedRows: result.affectedRows };
 };

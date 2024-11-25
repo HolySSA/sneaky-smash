@@ -1,80 +1,71 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './equipment.query.js';
-import handleDbQuery from '../../utils/db/dbHelper.js'; // DB 처리 함수 임포트
+import SQL_QUERIES from './equipment.queries.js';
+import toCamelCase from '../../utils/transformCase.js';
 
 // 장비 생성 (INSERT)
-export const createEquipment = async (equipment) => {
-  const { gold, ATK, DEF, MaxHp, CriticalDamageRate, CriticalProbability, CurHp, MoveSpeed } =
-    equipment;
-
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [
-    SQL_QUERIES.CREATE_EQUIPMENT,
+export const createEquipment = async (
+  gold,
+  atk = 0,
+  def = 0,
+  maxHp = 0,
+  criticalDamageRate = 0,
+  criticalProbability = 0,
+  curHp = 0,
+  moveSpeed = 0,
+) => {
+  const [result] = await dbPool.query(SQL_QUERIES.CREATE_EQUIPMENT, [
     gold,
-    ATK,
-    DEF,
-    MaxHp,
-    CriticalDamageRate,
-    CriticalProbability,
-    CurHp,
-    MoveSpeed,
+    atk,
+    def,
+    maxHp,
+    criticalDamageRate,
+    criticalProbability,
+    curHp,
+    moveSpeed,
   ]);
-
-  return { id: result.insertId, ...equipment }; // 생성된 장비 반환
+  return { insertId: result.insertId };
 };
 
 // 장비 조회 (단일)
 export const findEquipmentById = async (id) => {
-  const row = await handleDbQuery(dbPool.query.bind(dbPool), [
-    SQL_QUERIES.FIND_EQUIPMENT_BY_ID,
-    id,
-  ]);
-
-  return row.rows; // 단일 장비 반환 (toCamelCase로 변환됨)
+  const [rows] = await dbPool.query(SQL_QUERIES.FIND_EQUIPMENT_BY_ID, [id]);
+  return rows.length > 0 ? toCamelCase(rows[0]) : null;
 };
 
 // 모든 장비 조회
 export const findAllEquipments = async () => {
-  const rows = await handleDbQuery(
-    dbPool.query.bind(dbPool),
-    [SQL_QUERIES.FIND_ALL_EQUIPMENTS],
-    true, // isArray = true
-  );
-
-  return rows.rows; // 모든 장비 반환 (toCamelCase로 변환됨)
+  const [rows] = await dbPool.query(SQL_QUERIES.FIND_ALL_EQUIPMENTS);
+  return rows.map((row) => toCamelCase(row));
 };
 
 // 장비 수정 (UPDATE)
-export const updateEquipment = async (id, equipment) => {
-  const { gold, ATK, DEF, MaxHp, CriticalDamageRate, CriticalProbability, CurHp, MoveSpeed } =
-    equipment;
-
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [
-    SQL_QUERIES.UPDATE_EQUIPMENT,
+export const updateEquipment = async (
+  id,
+  gold,
+  atk = 0,
+  def = 0,
+  maxHp = 0,
+  criticalDamageRate = 0,
+  criticalProbability = 0,
+  curHp = 0,
+  moveSpeed = 0,
+) => {
+  const [result] = await dbPool.query(SQL_QUERIES.UPDATE_EQUIPMENT, [
     gold,
-    ATK,
-    DEF,
-    MaxHp,
-    CriticalDamageRate,
-    CriticalProbability,
-    CurHp,
-    MoveSpeed,
+    atk,
+    def,
+    maxHp,
+    criticalDamageRate,
+    criticalProbability,
+    curHp,
+    moveSpeed,
     id,
   ]);
-
-  if (result.affectedRows === 0) {
-    throw new Error(`Equipment with ID ${id} not found or no changes made.`);
-  }
-
-  return { id, ...equipment }; // 수정된 장비 반환
+  return { affectedRows: result.affectedRows };
 };
 
 // 장비 삭제 (DELETE)
 export const deleteEquipment = async (id) => {
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.DELETE_EQUIPMENT, id]);
-
-  if (result.affectedRows === 0) {
-    throw new Error(`Equipment with ID ${id} not found.`);
-  }
-
-  return { id }; // 삭제된 장비의 ID 반환
+  const [result] = await dbPool.query(SQL_QUERIES.DELETE_EQUIPMENT, [id]);
+  return { affectedRows: result.affectedRows };
 };

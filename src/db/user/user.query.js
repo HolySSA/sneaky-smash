@@ -1,8 +1,3 @@
-// export const SQL_QUERIES = {
-//   CREATE_USER: 'INSERT INTO User (account, password) VALUES (?, ?)',
-//   FIND_USER_BY_ACCOUNT: 'SELECT * FROM User WHERE account = ?',
-// };
-
 const SQL_QUERIES = {
   // 사용자 생성
   CREATE_USER: `

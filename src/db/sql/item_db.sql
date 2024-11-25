@@ -1,4 +1,4 @@
--- SQLBook: Code
+
 CREATE TABLE IF NOT EXISTS item (
   id INT AUTO_INCREMENT PRIMARY KEY,        -- 아이템 고유 ID
   gold INT NOT NULL,                        -- 아이템 가격 또는 금액

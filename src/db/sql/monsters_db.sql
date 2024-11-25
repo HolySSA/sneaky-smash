@@ -1,4 +1,3 @@
--- SQLBook: Code
 CREATE TABLE IF NOT EXISTS monsters (
   id INT AUTO_INCREMENT PRIMARY KEY,              -- 몬스터 고유 ID
   MaxHp INT NOT NULL,                             -- 최대 HP

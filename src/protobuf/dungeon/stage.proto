@@ -14,7 +14,10 @@ message S_EnterPortal {
 
 message DungeonInfo {
     int32 dungeonCode = 1;    // 던전 코드
-    repeated StageInfo stage = 2;
+    string dungeonName = 2;
+    repeated int32 stageList = 3;
+
+    // repeated StageInfo stage = 3;
 }
 
 message StageInfo {

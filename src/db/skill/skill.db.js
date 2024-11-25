@@ -1,46 +1,44 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './skill.query.js';
-import handleDbQuery from '../../utils/dbHelper.js';  // DB 처리 함수 임포트
+import SQL_QUERIES from './skill.queries.js';
+import toCamelCase from '../../utils/transformCase.js';
 
 // 스킬 생성
-export const createSkill = async (DamageRate, CoolTime, IncreasePercent, DecreasePercent) => {
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [
-    SQL_QUERIES.CREATE_SKILL, DamageRate, CoolTime, IncreasePercent, DecreasePercent
+export const createSkill = async (damageRate, coolTime, increasePercent, decreasePercent) => {
+  const [result] = await dbPool.query(SQL_QUERIES.CREATE_SKILL, [
+    damageRate,
+    coolTime,
+    increasePercent,
+    decreasePercent,
   ]);
-  return { id: result.insertId, DamageRate, CoolTime, IncreasePercent, DecreasePercent };  // 생성된 스킬 반환
+  return { insertId: result.insertId };
 };
 
 // 스킬 조회
 export const findSkillById = async (id) => {
-  const skill = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_SKILL_BY_ID, id]);
-  if (!skill) {
-    throw new Error(`Skill with ID ${id} not found.`);
-  }
-  return skill;  // 이미 카멜케이스로 변환된 결과 반환
+  const [rows] = await dbPool.query(SQL_QUERIES.FIND_SKILL_BY_ID, [id]);
+  return rows.length > 0 ? toCamelCase(rows[0]) : null;
 };
 
 // 모든 스킬 조회
 export const findAllSkills = async () => {
-  const skills = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.FIND_ALL_SKILLS], true); // 여러 결과 반환
-  return skills;  // 이미 카멜케이스로 변환된 결과 반환
+  const [rows] = await dbPool.query(SQL_QUERIES.FIND_ALL_SKILLS);
+  return rows.map((row) => toCamelCase(row));
 };
 
 // 스킬 수정
-export const updateSkill = async (id, DamageRate, CoolTime, IncreasePercent, DecreasePercent) => {
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [
-    SQL_QUERIES.UPDATE_SKILL, DamageRate, CoolTime, IncreasePercent, DecreasePercent, id
+export const updateSkill = async (id, damageRate, coolTime, increasePercent, decreasePercent) => {
+  const [result] = await dbPool.query(SQL_QUERIES.UPDATE_SKILL, [
+    damageRate,
+    coolTime,
+    increasePercent,
+    decreasePercent,
+    id,
   ]);
-  if (result.affectedRows === 0) {
-    throw new Error(`Skill with ID ${id} not found or no changes made.`);
-  }
-  return { id, DamageRate, CoolTime, IncreasePercent, DecreasePercent };  // 수정된 스킬 반환
+  return { affectedRows: result.affectedRows };
 };
 
 // 스킬 삭제
 export const deleteSkill = async (id) => {
-  const result = await handleDbQuery(dbPool.query.bind(dbPool), [SQL_QUERIES.DELETE_SKILL, id]);
-  if (result.affectedRows === 0) {
-    throw new Error(`Skill with ID ${id} not found.`);
-  }
-  return { id };  // 삭제된 스킬의 ID 반환
+  const [result] = await dbPool.query(SQL_QUERIES.DELETE_SKILL, [id]);
+  return { affectedRows: result.affectedRows };
 };

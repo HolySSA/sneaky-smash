@@ -1,4 +1,3 @@
--- SQLBook: Code
 CREATE TABLE IF NOT EXISTS equipment (
   id INT AUTO_INCREMENT PRIMARY KEY,        -- 장비 고유 ID
   gold INT NOT NULL,                        -- 장비 가격 (금액)

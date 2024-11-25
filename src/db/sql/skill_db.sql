@@ -1,4 +1,3 @@
--- SQLBook: Code
 CREATE TABLE IF NOT EXISTS skill (
     id INT AUTO_INCREMENT PRIMARY KEY,           -- 스킬 고유 ID (자동 증가)
     DamageRate INT NOT NULL,                     -- 데미지 배율

@@ -4,7 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import { findUserByAccount } from '../../db/user/user.db.js';
-import { getCharacterByUserId } from '../../db/character/character.db.js';
+import { findCharacterByUserId } from '../../db/character/characters.db.js';
 import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
 import User from '../../classes/model/user.class.js';
@@ -55,7 +55,7 @@ const logInHandler = async (socket, payload) => {
     // 로그인 검증 통과 - socket.id 할당
     socket.id = existUser.id.toString();
 
-    const character = await getCharacterByUserId(existUser.id);
+    const character = await findCharacterByUserId(existUser.id);
 
     if (character) {
       const user = new User(existUser.id, character.myClass, character.nickname);

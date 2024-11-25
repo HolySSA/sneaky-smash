@@ -16,7 +16,7 @@ const despawnLogic = async (socket) => {
   await removeRedisUser(socket);
 
   const party = await getRedisPartyByUserId(socket.id);
-  if (!party) {
+  if (party) {
     await removeRedisParty(party.roomId);
   }
 

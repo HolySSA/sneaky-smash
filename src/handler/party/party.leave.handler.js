@@ -23,6 +23,16 @@ const partyLeaveHandler = async (socket, payload) => {
     const { roomId } = payload;
 
     const party = await getRedisParty(roomId);
+    if (!party) {
+      const errorPayload = {
+        playerId: {},
+        roomId,
+      };
+      const errorResponse = createResponse(PACKET_ID.S_PartyLeave, errorPayload);
+      socket.write(errorResponse);
+      return;
+    }
+
     if (party.owner === socket.id) {
       await removeRedisParty(roomId);
 

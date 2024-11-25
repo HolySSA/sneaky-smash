@@ -30,21 +30,18 @@ const partyJoinHandler = async (socket, payload) => {
       party = await joinRedisParty(roomId, socket.id);
     }
 
-    // C_Party로 파티 요청 -> S_Party로 해당 파티원들에게 패킷 전달.
-    // 방장이 매치 시작하면, 해당 파티원들에게 S_던전들어가기 패킷 전달.
-
-    const userSessions = await getUserSessions();
+    const userSessions = getUserSessions();
 
     const partyPayload = {
-      playerId: socket.id,
+      playerId: parseInt(socket.id),
       roomId,
       dungeonLevel,
     };
 
     const notification = createNotificationPacket(PACKET_ID.S_PartyJoin, partyPayload);
 
-    userSessions.forEach((userSession) => {
-      userSession.socket.write(notification);
+    userSessions.forEach((session) => {
+      session.socket.write(notification);
     });
   } catch (e) {
     handleError(socket, e);

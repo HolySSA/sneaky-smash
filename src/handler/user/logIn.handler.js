@@ -10,6 +10,17 @@ import { addUserSession } from '../../sessions/user.session.js';
 import User from '../../classes/model/user.class.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 
+// message C_Login {
+//     string account = 1;  // 아이디
+//     string password = 2;  // 비밀번호
+// }
+
+// message S_Login {
+//     bool success = 1;     // 성공 여부
+//     string message = 2;   // 메시지
+//     string token = 3;     // 토큰
+// }
+
 const writeLoginResponse = (socket, success, message, token) => {
   const loginPayload = { success, message, token };
 
@@ -17,7 +28,6 @@ const writeLoginResponse = (socket, success, message, token) => {
   socket.write(response);
 };
 
-// 로그인 핸들러
 const logInHandler = async (socket, payload) => {
   try {
     const { account, password } = payload;
@@ -47,18 +57,16 @@ const logInHandler = async (socket, payload) => {
       return;
     }
 
-    // 로그인 검증에 통과되었으므로 해당 socket에 id 부여
-    socket.id = existUser.id;
+    // 로그인 검증 통과 - socket.id 할당
+    socket.id = existUser.id.toString();
 
     // db 캐릭터 테이블에서 해당 유저 캐릭터 찾고, 있으면 바로 S_Enter, S_Spawn
-    let character = await findCharacterByUserId(existUser.id);
+    const character = await findCharacterByUserId(existUser.id);
 
     if (character) {
-      // 일단 user 테이블 id로
-      const user = new User(socket.id, character.myClass, character.nickname);
+      const user = new User(existUser.id, character.myClass, character.nickname);
 
-      // redis, session에 저장
-      const userRedis = await addRedisUser(user);
+      await addRedisUser(user);
       addUserSession(socket, user);
 
       return await enterLogic(socket, user);
@@ -67,7 +75,7 @@ const logInHandler = async (socket, payload) => {
     // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)
     const TMP_SECRET_KEY = 'tmp_secret_key';
 
-    const token = jwt.sign(existUser, TMP_SECRET_KEY, { expiresIn: '24h' });
+    const token = jwt.sign({ id: existUser.id }, TMP_SECRET_KEY, { expiresIn: '24h' });
     const bearerToken = `Bearer ${token}`;
 
     writeLoginResponse(socket, true, '로그인에 성공했습니다.', bearerToken);

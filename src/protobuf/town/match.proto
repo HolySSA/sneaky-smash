@@ -15,7 +15,7 @@ message S_Party {
 message C_PartyJoin {
   int32 dungeonLevel = 1;  // 던전 난이도
   int32 roomId = 2;
-  bool isOner = 3;
+  bool isOwner = 3;
 }
 
 message S_PartyJoin {

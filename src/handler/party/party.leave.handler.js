@@ -8,13 +8,32 @@ import {
   removeRedisParty,
 } from '../../sessions/redis/redis.party.js';
 
+// // **C_PartyLeave** - 파티에서 나가기 요청 메시지
+// message C_PartyLeave {
+//   int32 roomId = 1;  // 방 번호
+// }
+
+// message S_PartyLeave {
+// 	int32 playerId = 1;
+// 	int32 roomId = 2;
+// }
+
 const partyLeaveHandler = async (socket, payload) => {
   try {
     const { roomId } = payload;
 
     const party = await getRedisParty(roomId);
+    if (!party) {
+      const errorPayload = {
+        playerId: {},
+        roomId,
+      };
+      const errorResponse = createResponse(PACKET_ID.S_PartyLeave, errorPayload);
+      socket.write(errorResponse);
+      return;
+    }
+
     if (party.owner === socket.id) {
-      // 현재 파티 목록에서 제거
       await removeRedisParty(roomId);
 
       const payload = {
@@ -24,34 +43,32 @@ const partyLeaveHandler = async (socket, payload) => {
 
       const response = createResponse(PACKET_ID.S_PartyLeave, payload);
 
-      party.members.forEach((member) => {
-        const user = getUserSessionById(member);
+      party.members.forEach((memberId) => {
+        const user = getUserSessionById(parseInt(memberId));
+        user?.socket.write(response);
+      });
+    } else {
+      const remainMembers = await leaveRedisParty(roomId, socket.id);
 
+      const payload = {
+        playerId: parseInt(socket.id),
+        roomId,
+      };
+
+      const response = createResponse(PACKET_ID.S_PartyLeave, payload);
+
+      remainMembers.members.forEach((memberId) => {
+        const user = getUserSessionById(parseInt(memberId));
         user?.socket.write(response);
       });
 
-      return;
-    }
-
-    // 해당 유저를 뺀 파티원들
-    const members = await leaveRedisParty(roomId, socket.id);
-
-    // 페이로드
-    const partyPayload = {
-      playerId: members,
-      roomId,
-    };
-
-    const response = createResponse(PACKET_ID.S_PartyLeave, partyPayload);
-
-    members.forEach((member) => {
-      if (member !== socket.id) {
-        const user = getUserSessionById(member);
-    console.log("partyLeaveHandler : user" + user);
-
+      /*
+      party.members.forEach((memberId) => {
+        const user = getUserSessionById(parseInt(memberId));
         user?.socket.write(response);
-      }
-    });
+      });
+      */
+    }
   } catch (e) {
     handleError(socket, e);
   }

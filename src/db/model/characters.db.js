@@ -1,5 +1,5 @@
 import dbPool from '../database.js'; // DB 커넥션
-import SQL_QUERIES from './characters.query.js'; // Character 관련 SQL 쿼리들
+import SQL_QUERIES from '../query/characters.query.js'; // Character 관련 SQL 쿼리들
 import toCamelCase from '../../utils/transformCase.js'; // toCamelCase import
 
 // 캐릭터 생성

@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './item.queries.js';
+import SQL_QUERIES from '../query/item.queries.js';
 import toCamelCase from '../../utils/transformCase.js';
 
 // 아이템 생성 (INSERT)

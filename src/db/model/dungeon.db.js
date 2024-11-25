@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './dungeon.queries.js';
+import SQL_QUERIES from '../query/dungeon.queries.js';
 import toCamelCase from '../../utils/transformCase.js';
 
 // 던전 생성

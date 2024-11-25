@@ -1,5 +1,5 @@
 import handleError from '../../utils/error/errorHandler.js';
-import { createCharacter, findCharacterByUserId } from '../../db/character/characters.db.js';
+import { createCharacter, findCharacterByUserId } from '../../db/model/characters.db.js';
 import { addRedisUser } from '../../sessions/redis/redis.user.js';
 import User from '../../classes/model/user.class.js';
 import { addUserSession } from '../../sessions/user.session.js';

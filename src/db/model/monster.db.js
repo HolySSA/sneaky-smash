@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './monster.queries.js';
+import SQL_QUERIES from '../query/monster.queries.js';
 import toCamelCase from '../../utils/transformCase.js';
 
 // 몬스터 생성

@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './stage.queries.js';
+import SQL_QUERIES from '../query/stage.queries.js';
 import toCamelCase from '../../utils/transformCase.js';
 
 // 스테이지 생성

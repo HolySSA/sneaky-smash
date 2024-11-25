@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './skill.queries.js';
+import SQL_QUERIES from '../query/skill.queries.js';
 import toCamelCase from '../../utils/transformCase.js';
 
 // 스킬 생성

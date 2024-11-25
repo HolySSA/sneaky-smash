@@ -1,5 +1,5 @@
 import dbPool from '../database.js';
-import SQL_QUERIES from './equipment.queries.js';
+import SQL_QUERIES from '../query/equipment.queries.js';
 import toCamelCase from '../../utils/transformCase.js';
 
 // 장비 생성 (INSERT)

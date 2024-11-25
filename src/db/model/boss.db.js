@@ -1,5 +1,5 @@
 import dbPool from '../database.js'; // 데이터베이스 연결
-import BOSS_SQL_QUERIES from './boss.queries.js';
+import BOSS_SQL_QUERIES from '../query/boss.queries.js';
 import toCamelCase from '../../utils/transformCase.js'; // toCamelCase import
 
 export const createBoss = async (

@@ -22,10 +22,15 @@ const partyLeaveHandler = async (socket, payload) => {
   try {
     const { roomId } = payload;
 
+    const payload = {
+      playerId: parseInt(socket.id),
+      roomId,
+    };
+
     const party = await getRedisParty(roomId);
     if (!party) {
       const errorPayload = {
-        playerId: {},
+        playerId: -1,
         roomId,
       };
 
@@ -36,11 +41,6 @@ const partyLeaveHandler = async (socket, payload) => {
 
     if (party.owner === socket.id) {
       await removeRedisParty(roomId);
-
-      const payload = {
-        playerId: parseInt(socket.id),
-        roomId,
-      };
 
       const response = createResponse(PACKET_ID.S_PartyLeave, payload);
 
@@ -57,11 +57,6 @@ const partyLeaveHandler = async (socket, payload) => {
       */
     } else {
       const remainMembers = await leaveRedisParty(roomId, socket.id);
-
-      const payload = {
-        playerId: parseInt(socket.id),
-        roomId,
-      };
 
       const response = createResponse(PACKET_ID.S_PartyLeave, payload);
 

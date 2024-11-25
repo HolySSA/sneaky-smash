@@ -27,6 +27,21 @@ class Dungeon {
     return selectedStages;
   }
 
+  getCurrentStage() {
+    return this.stages[this.currentStage];
+  }
+
+  getAllStages() {
+    return this.stages.map((stage) => ({
+      stageId: stage.stageId,
+      monsters: stage.monsters,
+    }));
+  }
+
+  getStageIdList() {
+    return this.stages.map((stage) => stage.stageId);
+  }
+
   addDungeonUser(userSession) {
     if (!userSession.socket.id) {
       throw new Error('유효하지 않은 유저 세션입니다.');

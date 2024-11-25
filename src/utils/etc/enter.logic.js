@@ -30,12 +30,12 @@ const enterLogic = async (socket, user) => {
     const otherUserPayload = {
       players: [
         ...users
-          .filter((player) => parseInt(player.id) !== parseInt(key))
+          .filter((player) => player.id !== key)
           .map((player) => ({
             playerId: parseInt(player.id),
             nickname: player.nickname,
             class: parseInt(player.myClass),
-            transform: getUserTransformById(parseInt(player.id)),
+            transform: getUserTransformById(player.id),
           })),
       ],
     };

@@ -34,9 +34,10 @@ import actionBossHandler from './boss/ActionBoss.handler.js';
 import bossSpawnHandler from './boss/bossSpawn.handler.js';
 import targetPlayerHandler from './boss/targetPlayer.handler.js';
 // party
-import { partyJoinHandler, dungeonStartHandler } from './party/party.join.handler.js';
 import partyLeaveHandler from './party/party.leave.handler.js';
 import partyHandler from './party/party.handler.js';
+import dungeonStartHandler from './party/dungeon.start.handler.js';
+import partyJoinHandler from './party/party.join.handler.js';
 
 const handlers = {
   // town

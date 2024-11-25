@@ -1,11 +1,13 @@
 import { createReverseMapping } from '../constants/packetId.js';
 import testConnection from '../utils/db/testConnection.js';
+import { loadGameAssets } from './loadAsset.js';
 import { loadProtos } from './loadProtos.js';
 
 const initServer = async () => {
   try {
     createReverseMapping();
     await loadProtos();
+    await loadGameAssets();
     await testConnection();
   } catch (err) {
     console.error(err);

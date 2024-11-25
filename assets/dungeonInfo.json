@@ -6,7 +6,6 @@
       "stages": [
         {
           "stage_id": 1,
-          "description": "동굴 입구",
           "monsters": [
             { "monster_id": 101, "count": 5 },
             { "monster_id": 102, "count": 3 }
@@ -14,7 +13,27 @@
         },
         {
           "stage_id": 2,
-          "description": "어둠의 골짜기",
+          "monsters": [
+            { "monster_id": 103, "count": 4 },
+            { "monster_id": 104, "count": 2 }
+          ]
+        },
+        {
+          "stage_id": 3,
+          "monsters": [
+            { "monster_id": 103, "count": 4 },
+            { "monster_id": 104, "count": 2 }
+          ]
+        },
+        {
+          "stage_id": 4,
+          "monsters": [
+            { "monster_id": 103, "count": 4 },
+            { "monster_id": 104, "count": 2 }
+          ]
+        },
+        {
+          "stage_id": 5,
           "monsters": [
             { "monster_id": 103, "count": 4 },
             { "monster_id": 104, "count": 2 }
@@ -28,12 +47,10 @@
       "stages": [
         {
           "stage_id": 1,
-          "description": "숲의 가장자리",
           "monsters": [{ "monster_id": 201, "count": 6 }]
         },
         {
           "stage_id": 2,
-          "description": "깊은 숲",
           "monsters": [
             { "monster_id": 202, "count": 3 },
             { "monster_id": 203, "count": 2 }
@@ -41,8 +58,18 @@
         },
         {
           "stage_id": 3,
-          "description": "숲의 심장부",
-          "monsters": [{ "monster_id": 204, "count": 1 }]
+          "monsters": [{ "monster_id": 204, "count": 3 }]
+        },
+        {
+          "stage_id": 4,
+          "monsters": [
+            { "monster_id": 202, "count": 3 },
+            { "monster_id": 204, "count": 2 }
+          ]
+        },
+        {
+          "stage_id": 5,
+          "monsters": [{ "monster_id": 205, "count": 5 }]
         }
       ]
     }

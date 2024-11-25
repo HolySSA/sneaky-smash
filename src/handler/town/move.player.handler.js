@@ -18,7 +18,7 @@ export const movePlayerHandler = async (socket, payload) => {
       throw new Error('유저를 찾을 수 없습니다.');
     }
 
-    const transform = updateUserTransformById(parseInt(socket.id), posX, posY, posZ, rot);
+    const transform = updateUserTransformById(socket.id, posX, posY, posZ, rot);
 
     if (!transform) {
       throw new Error('위치정보를 찾을 수 없습니다.');
@@ -39,7 +39,7 @@ export const movePlayerHandler = async (socket, payload) => {
 
     // 로케이션 타입 확인 후 같은 로케이션의 유저들에게 패킷 전송
     allUsers.forEach((value, targetUserId) => {
-      if (parseInt(targetUserId) !== parseInt(user.id)) {
+      if (targetUserId !== user.id) {
         value.socket.write(moveResponsePayload);
       }
     });

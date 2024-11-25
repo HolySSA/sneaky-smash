@@ -16,7 +16,7 @@ import { getUserSessionById } from '../../sessions/user.session.js';
 const inventoryHandler = (socket, payload) => {
   try {
     // userSession에 저장했을 경우
-    const userSession = getUserSessionById(parseInt(socket.id));
+    const userSession = getUserSessionById(socket.id);
 
     if (!userSession.inventory) {
       return;

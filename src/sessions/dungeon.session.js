@@ -9,7 +9,7 @@ const addDungeonSession = (dungeonId) => {
 
   const gameAssets = getGameAssets();
   const dungeonInfo = gameAssets.dungeonInfo.dungeons.find(
-    (dungeon) => dungeon.dungeon_id === dungeonId,
+    (dungeon) => dungeon.dungeonId === dungeonId,
   );
 
   if (!dungeonInfo) {

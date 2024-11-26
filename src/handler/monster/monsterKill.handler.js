@@ -10,6 +10,21 @@ import handleError from '../../utils/error/errorHandler.js';
 //   int32 monsterId = 1; // 몬스터 식별 ID
 //   int32 itemId = 2; // 아이템 식별 ID
 // }
+// const monsterKillHandler = async (socket, payload) => {
+//   try {
+//     const { monsterId, itemId } = payload;
+
+//     const monsterKillPayload = {
+//       monsterId,
+//       itemId,
+//     };
+//     const response = createResponse(PACKET_ID.S_MonsterKill, monsterKillPayload);
+//     socket.write(response);
+//   } catch (e) {
+//     handleError(socket, e);
+//   }
+// };
+
 const monsterKillHandler = async (socket, payload) => {
   try {
     const { monsterId, itemId } = payload;
@@ -20,8 +35,19 @@ const monsterKillHandler = async (socket, payload) => {
     };
     const response = createResponse(PACKET_ID.S_MonsterKill, monsterKillPayload);
     socket.write(response);
+
+    // 주변에도 알람 전송
+    global.connectedSockets.forEach((clientSocket) => {
+      if (clientSocket !== socket) {
+        clientSocket.write(response);
+      }
+    });
+
+  
+
   } catch (e) {
     handleError(socket, e);
   }
 };
+
 export default monsterKillHandler;

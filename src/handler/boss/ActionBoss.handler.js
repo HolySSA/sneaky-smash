@@ -17,6 +17,13 @@ const actionBossHandler = async (socket, payload) => {
     };
     const response = createResponse(PACKET_ID.S_ActionBoss, actionBossPayload);
     socket.write(response);
+
+    global.connectedSockets.forEach((clientSocket) => {
+      if (clientSocket !== socket) {
+        clientSocket.write(response);
+      }
+    });
+
   } catch (e) {
     handleError(socket, e);
   }

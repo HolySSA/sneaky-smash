@@ -1,4 +1,4 @@
-import fs from 'fs'; 
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dbPool from '../database.js';
@@ -10,6 +10,9 @@ const createSchemas = async () => {
   const sqlDir = path.join(__dirname, '../sql');
 
   const sqlFiles = [
+    'user_db.sql',
+    'character_db.sql',
+    'inventoryItem_db.sql',
     'boss_db.sql',
     'dungeon_db.sql',
     'equipment_db.sql',
@@ -17,8 +20,7 @@ const createSchemas = async () => {
     'monsters_db.sql',
     'skill_db.sql',
     'stage_db.sql',
-    'user_db.sql',
-]; // 여러 SQL 파일을 처리
+  ]; // 여러 SQL 파일을 처리
 
   try {
     const sql = fs.readFileSync(path.join(sqlDir, sqlFiles), 'utf8');

@@ -11,7 +11,7 @@ const createSchemas = async () => {
 
   const sqlFiles = [
     'user_db.sql',
-    'character_db.sql',
+    'characters_db.sql',
     'inventoryItem_db.sql',
     'boss_db.sql',
     'dungeon_db.sql',
@@ -23,7 +23,26 @@ const createSchemas = async () => {
   ]; // 여러 SQL 파일을 처리
 
   try {
-    const sql = fs.readFileSync(path.join(sqlDir, sqlFiles), 'utf8');
+    // 먼저 데이터베이스가 존재하는지 확인
+    const [rows] = await dbPool.query("SHOW DATABASES LIKE 'USER_DB'");
+    if (rows.length === 0) {
+      // 데이터베이스가 없다면 생성
+      await dbPool.query('CREATE DATABASE USER_DB');
+      console.log('USER_DB 데이터베이스가 생성되었습니다.');
+    } else {
+      console.log('USER_DB 데이터베이스가 이미 존재합니다.');
+    }
+
+    // 이제 USER_DB 데이터베이스를 사용하도록 설정
+    await dbPool.query('USE USER_DB');
+
+    let sql = '';
+    // sqlFiles 배열의 모든 파일을 읽고 sql 변수에 합침
+    for (const file of sqlFiles) {
+      const filePath = path.join(sqlDir, file);
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      sql += fileContent + '\n'; // 파일 내용 합치기
+    }
     const queries = sql
       .split(';')
       .map((query) => query.trim())

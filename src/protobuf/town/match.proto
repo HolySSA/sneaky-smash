@@ -36,5 +36,5 @@ message S_PartyLeave {
 
 message  C_MatchStart {
 	int32 dungeonLevel = 1; // 던전 들어가기
-	int32 roomdId = 2; // 방번호
+	int32 roomId = 2; // 방번호
 }

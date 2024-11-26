@@ -17,6 +17,14 @@ const updatePlayerMpHandler = async (socket, payload) => {
 
     const response = createResponse(PACKET_ID.S_UpdatePlayerMp, updatePlayerMpPayload);
     socket.write(response);
+
+    // 주변 유저에게 전송
+    global.connectedSockets.forEach((clientSocket) => {
+      if (clientSocket !== socket) {
+        clientSocket.write(response);
+      }
+    });
+
   } catch (e) {
     handleError(socket, e);
   }

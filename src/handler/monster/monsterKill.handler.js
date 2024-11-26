@@ -43,8 +43,6 @@ const monsterKillHandler = async (socket, payload) => {
       }
     });
 
-  
-
   } catch (e) {
     handleError(socket, e);
   }

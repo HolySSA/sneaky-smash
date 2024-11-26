@@ -1,25 +1,90 @@
 import Redis from 'ioredis';
-import { REDIS_HOST, REDIS_PORT } from '../../constants/env.js';
 
-const redis = new Redis({
-  host: REDIS_HOST,
-  port: REDIS_PORT,
-});
+let redisClient = null;
 
-redis.on('connect', () => {
-  console.log('Redis 연결.');
-});
+function createRedisClient() {
+  console.log('Redis 클러스터 연결 시도...');
 
-redis.on('ready', () => {
-  console.log('Redis 준비.');
-});
+  if (redisClient) return redisClient;
 
-redis.on('error', (err) => {
-  console.error('Redis 연결 에러:', err);
-});
+  try {
+    const nodes = [
+      { host: '127.0.0.1', port: 6379 },
+      { host: '127.0.0.1', port: 6380 },
+      { host: '127.0.0.1', port: 6381 },
+    ];
 
-redis.on('end', () => {
-  console.log('Redis 연결 종료.');
-});
+    console.log('Redis 클러스터 노드 설정:', nodes);
 
+    redisClient = new Redis.Cluster(nodes, {
+      redisOptions: {
+        connectTimeout: 30000,
+        maxRetriesPerRequest: 3,
+        retryStrategy(times) {
+          const delay = Math.min(times * 100, 3000);
+          return delay;
+        },
+      },
+      clusterRetryStrategy(times) {
+        console.log(`클러스터 재연결 시도 ${times}번째...`);
+        if (times >= 3) {
+          console.error('클러스터 연결 실패, 재시도 중단');
+          return null;
+        }
+        return Math.min(times * 100, 3000);
+      },
+      scaleReads: 'master',
+      enableReadyCheck: true,
+      maxRedirections: 16,
+      natMap: {
+        '172.20.0.2:6379': { host: '127.0.0.1', port: 6379 },
+        '172.20.0.3:6379': { host: '127.0.0.1', port: 6380 },
+        '172.20.0.4:6379': { host: '127.0.0.1', port: 6381 },
+      },
+    });
+
+    console.log('Redis 클라이언트 인스턴스 생성됨');
+
+    redisClient.on('connect', () => {
+      console.log('Redis 클러스터 노드에 연결됨');
+    });
+
+    redisClient.on('ready', () => {
+      console.log('Redis 클러스터 준비 완료!');
+      // 연결 테스트
+      redisClient
+        .ping()
+        .then(() => {
+          console.log('Redis 클러스터 PING 성공');
+        })
+        .catch((err) => {
+          console.error('Redis 클러스터 PING 실패:', err);
+        });
+    });
+
+    redisClient.on('error', (err) => {
+      console.error('Redis 클러스터 에러:', err.message);
+    });
+
+    redisClient.on('end', () => {
+      console.log('Redis 클러스터 연결 종료');
+      redisClient = null;
+    });
+
+    redisClient.on('node error', (err, node) => {
+      if (node && node.options) {
+        console.error(`노드 ${node.options.host}:${node.options.port} 에러:`, err);
+      } else {
+        console.error('Redis 노드 에러:', err);
+      }
+    });
+
+    return redisClient;
+  } catch (error) {
+    console.error('Redis 클라이언트 생성 중 에러:', error);
+    throw error;
+  }
+}
+
+const redis = createRedisClient();
 export default redis;

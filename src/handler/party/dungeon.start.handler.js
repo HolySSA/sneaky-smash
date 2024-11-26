@@ -93,7 +93,7 @@ const dungeonStartHandler = async (socket, payload) => {
           playerId: parseInt(memberId),
           nickname: userRedis.nickname,
           class: parseInt(userRedis.myClass),
-          transform: { posX: 0, posY: 0, posZ: 0, rot: 0 },
+          transform: { posX: 2.75, posY: -4.65, posZ: 73, rot: 0 },
           statInfo,
         };
       }),

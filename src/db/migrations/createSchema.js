@@ -12,11 +12,11 @@ const createSchemas = async () => {
   const sqlFiles = [
     'user_db.sql',
     'characters_db.sql',
+    'item_db.sql',
     'inventoryItem_db.sql',
     'boss_db.sql',
     'dungeon_db.sql',
     'equipment_db.sql',
-    'item_db.sql',
     'monsters_db.sql',
     'skill_db.sql',
     'stage_db.sql',

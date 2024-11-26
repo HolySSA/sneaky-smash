@@ -1,6 +1,6 @@
-import dbPool from '../database.js'; // DB 커넥션
-import SQL_QUERIES from '../query/user.query.js'; // User 관련 SQL 쿼리들
-import toCamelCase from '../../utils/transformCase.js'; // toCamelCase import
+import dbPool from '../database.js';
+import SQL_QUERIES from '../query/user.query.js';
+import toCamelCase from '../../utils/transformCase.js';
 
 // 사용자 생성
 export const createUser = async (account, password) => {

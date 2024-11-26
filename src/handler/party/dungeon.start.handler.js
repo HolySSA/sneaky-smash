@@ -47,6 +47,11 @@ import createResponse from '../../utils/response/createResponse.js';
 //     StatInfo statInfo = 5;          // 플레이어 스탯 정보
 // }
 
+// message  C_MatchStart {
+// 	int32 dungeonLevel = 1; // 던전 들어가기
+// 	int32 roomId = 2; // 방번호
+// }
+
 const dungeonStartHandler = async (socket, payload) => {
   try {
     const { dungeonLevel, roomId } = payload;

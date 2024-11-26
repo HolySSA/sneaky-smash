@@ -1,0 +1,77 @@
+{
+  "dungeons": [
+    {
+      "dungeonId": 1,
+      "name": "잊혀진 동굴",
+      "stages": [
+        {
+          "stageId": 1,
+          "monsters": [
+            { "monster_id": 101, "count": 5 },
+            { "monster_id": 102, "count": 3 }
+          ]
+        },
+        {
+          "stageId": 2,
+          "monsters": [
+            { "monster_id": 103, "count": 4 },
+            { "monster_id": 104, "count": 2 }
+          ]
+        },
+        {
+          "stageId": 3,
+          "monsters": [
+            { "monster_id": 105, "count": 3 },
+            { "monster_id": 106, "count": 3 }
+          ]
+        },
+        {
+          "stageId": 4,
+          "monsters": [
+            { "monster_id": 107, "count": 7 },
+            { "monster_id": 108, "count": 3 }
+          ]
+        },
+        {
+          "stageId": 5,
+          "monsters": [
+            { "monster_id": 109, "count": 5 },
+            { "monster_id": 110, "count": 5 }
+          ]
+        }
+      ]
+    },
+    {
+      "dungeonId": 2,
+      "name": "저주받은 숲",
+      "stages": [
+        {
+          "stageId": 1,
+          "monsters": [{ "monster_id": 201, "count": 6 }]
+        },
+        {
+          "stageId": 2,
+          "monsters": [
+            { "monster_id": 202, "count": 3 },
+            { "monster_id": 203, "count": 5 }
+          ]
+        },
+        {
+          "stageId": 3,
+          "monsters": [{ "monster_id": 204, "count": 3 }]
+        },
+        {
+          "stageId": 4,
+          "monsters": [
+            { "monster_id": 202, "count": 3 },
+            { "monster_id": 204, "count": 2 }
+          ]
+        },
+        {
+          "stageId": 5,
+          "monsters": [{ "monster_id": 205, "count": 5 }]
+        }
+      ]
+    }
+  ]
+}

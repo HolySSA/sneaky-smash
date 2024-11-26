@@ -3,7 +3,7 @@ import createResponse from '../../utils/response/createResponse.js';
 import joiUtils from '../../utils/joi/joiUtils.js';
 import config from '../../config/config.js';
 import { PACKET_ID } from '../../constants/packetId.js';
-import { findUserByAccount, createUser } from '../../db/user/user.db.js';
+import { findUserByAccount, createUser } from '../../db/model/user.db.js';
 import bcrypt from 'bcrypt';
 
 //const packetType = config.packet.type;

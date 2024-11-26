@@ -1,7 +1,7 @@
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getUserSessionById } from '../../sessions/user.session.js';
+import { getUserSessionById, getUserSessions } from '../../sessions/user.session.js';
 import {
   getRedisParty,
   leaveRedisParty,
@@ -22,12 +22,18 @@ const partyLeaveHandler = async (socket, payload) => {
   try {
     const { roomId } = payload;
 
+    const leavePayload = {
+      playerId: parseInt(socket.id),
+      roomId,
+    };
+
     const party = await getRedisParty(roomId);
     if (!party) {
       const errorPayload = {
-        playerId: {},
+        playerId: -1,
         roomId,
       };
+
       const errorResponse = createResponse(PACKET_ID.S_PartyLeave, errorPayload);
       socket.write(errorResponse);
       return;
@@ -36,29 +42,26 @@ const partyLeaveHandler = async (socket, payload) => {
     if (party.owner === socket.id) {
       await removeRedisParty(roomId);
 
-      const payload = {
-        playerId: {},
-        roomId,
-      };
-
-      const response = createResponse(PACKET_ID.S_PartyLeave, payload);
+      const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
 
       party.members.forEach((memberId) => {
-        const user = getUserSessionById(parseInt(memberId));
+        const user = getUserSessionById(memberId);
         user?.socket.write(response);
       });
+
+      /*
+      const users = getUserSessions();
+      users.forEach((user) => {
+        user.socket.write(response);
+      });
+      */
     } else {
       const remainMembers = await leaveRedisParty(roomId, socket.id);
 
-      const payload = {
-        playerId: parseInt(socket.id),
-        roomId,
-      };
-
-      const response = createResponse(PACKET_ID.S_PartyLeave, payload);
+      const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
 
       remainMembers.members.forEach((memberId) => {
-        const user = getUserSessionById(parseInt(memberId));
+        const user = getUserSessionById(memberId);
         user?.socket.write(response);
       });
 

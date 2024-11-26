@@ -1,4 +1,3 @@
--- SQLBook: Code
 CREATE TABLE IF NOT EXISTS boss (
   id INT AUTO_INCREMENT PRIMARY KEY,          -- 고유 ID (자동 증가)
   MaxHp INT NOT NULL,                         -- 최대 HP

@@ -117,7 +117,7 @@ const dungeonStartHandler = async (socket, payload) => {
 
         const enterDungeonPayload = {
           dungeonInfo,
-          playerInfo,
+          player: playerInfo,
           infoText,
         };
 

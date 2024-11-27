@@ -14,15 +14,18 @@ const monsterSpawnHandler = async (socket, payload) => {
     console.log('payload:', payload);
 
     const gameAssets = getGameAssets();
-
     const monsterAssets = gameAssets.monster.data;
 
-    // const dungeonInfo = getDungeonSession(socket.id).dungeonInfo;
-    // const stage = dungeonInfo.stages.find((s) => s.stageId === stageId);
-    const dungeonInfo = gameAssets.dungeonInfo.dungeons;
+    // const dungeonSession = getDungeonSession(socket.id);
+    // const dungeonInstance = new Dungeon(dungeonSession.dungeonInfo, dungeonSession.dungeonLevel);
+    // const stage = dungeonInstance.getCurrentStage();
 
-    const dungeon = dungeonInfo.find((d) => d.stages.some((stage) => stage.stageId === stageId));
-    const stage = dungeon.stages.find((s) => s.stageId === stageId);
+    const dungeonInfo = getDungeonSession(socket.id).dungeonInfo;
+    const stage = dungeonInfo.stages.find((s) => s.stageId === stageId);
+
+    // const dungeonInfo = gameAssets.dungeonInfo.dungeons;
+    // const dungeon = dungeonInfo.find((d) => d.stages.some((stage) => stage.stageId === stageId));
+    // const stage = dungeon.stages.find((s) => s.stageId === stageId);
 
     let monsterWithTransform = [];
     let uniqueid = 0;
@@ -56,10 +59,25 @@ const monsterSpawnHandler = async (socket, payload) => {
     console.log('monsterSpawnPayload:', monsterSpawnPayload);
     const response = createResponse(PACKET_ID.S_EnterStage, monsterSpawnPayload);
 
-    socket.write(response);
+    const allUsers = getUserSessions();
+    if (!allUsers || allUsers.length === 0) {
+      console.error('유저세션이 없습니다.');
+      return;
+    }
+
+    allUsers.forEach((value, targetUserId) => {
+      if (targetUserId !== user.id) {
+        value.socket.write(monsterSpawnPayload);
+      }
+    });
   } catch (e) {
     handleError(socket, e);
   }
 };
 
 export default monsterSpawnHandler;
+
+// 저희가 몬스터 스폰을 만들었어요!
+// 이제 이 스폰한 몬스터들이 공격하고, 죽고, 움직이는 핸들러를 하기위해선,
+// 이 스폰한 몬스터들을 관리한 세션이 필요해요
+// 그래서 클래스를 사용해서 세션에 넣고 세션에서 관리를 해줍니다.

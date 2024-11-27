@@ -1,7 +1,7 @@
 import { PACKET_ID } from '../../constants/packetId.js';
 import { addDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
+import { getRedisUserById, getStatsByUserId } from '../../sessions/redis/redis.user.js';
 import { getUserSessionById, getUserSessions } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
@@ -63,30 +63,18 @@ const dungeonStartHandler = async (socket, payload) => {
 
     const stageList = dungeon.getStageIdList();
     const dungeonInfo = {
-      dungeonCode: dungeonLevel,
+      dungeonCode: dungeon.dungeonId,
       stageList,
     };
 
-    const infoText = '던전에 입장하셨습니다!';
+    const infoText = dungeon.name;
 
-    // 임시 스탯
-    const statInfo = {
-      level: 1, // 플레이어 레벨
-      hp: 10.0, // 현재 체력
-      maxHp: 10.0, // 최대 체력
-      mp: 10.0, // 현재 마나
-      maxMp: 10.0, // 최대 마나
-      atk: 1.0, // 공격력
-      def: 1.0, // 방어력
-      speed: 1.0, // 속도
-      criticalProbability: 10.0, // 크리티컬 확률
-      criticalDamageRate: 10.0, // 크리티컬 데미지 비율
-    };
-
-    // 파티원 모두의 정보를 전송할 때
+    // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
         const userRedis = await getRedisUserById(memberId);
+        const statInfo = await getStatsByUserId(memberId);
+
         return {
           playerId: parseInt(memberId),
           nickname: userRedis.nickname,
@@ -102,18 +90,6 @@ const dungeonStartHandler = async (socket, payload) => {
       if (userSession) {
         // 던전 세션 유저 추가
         dungeon.addDungeonUser(userSession);
-
-        /* 각자 정보를 전송할 때
-        const userRedis = await getRedisUserById(memberId);
-        // 임시 플레이어 정보
-        const playerInfo = {
-          playerId: parseInt(memberId),
-          nickname: userRedis.nickname,
-          class: userRedis.myClass,
-          transform: { posX: 0, posY: 0, posZ: 0, rot: 0 },
-          statInfo,
-        };
-        */
 
         const enterDungeonPayload = {
           dungeonInfo,
@@ -137,6 +113,7 @@ const dungeonStartHandler = async (socket, payload) => {
     // 파티 세션 삭제
     await removeRedisParty(roomId);
 
+    // 모든 유저에게 파티 퇴장 패킷 전송
     const userSessions = getUserSessions();
     userSessions.forEach((session) => {
       session.socket.write(partyResponse);

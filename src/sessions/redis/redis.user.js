@@ -8,6 +8,7 @@ const addRedisUser = async (user) => {
     nickname: user.nickname,
     myClass: user.myClass.toString(),
     locationType: user.locationType,
+    sessionId: 0,
   });
 
   return redisUser;
@@ -46,6 +47,7 @@ const getRedisUsers = async () => {
       nickname: data.nickname,
       myClass: parseInt(data.myClass),
       locationType: data.locationType,
+      sessionId: data.sessionId,
     };
   });
 };
@@ -63,6 +65,7 @@ const getRedisUserById = async (id) => {
     nickname: user.nickname,
     myClass: parseInt(user.myClass),
     locationType: user.locationType,
+    sessionId: user.sessionId,
   };
 };
 
@@ -82,4 +85,22 @@ const getStatsByUserId = async (userId) => {
   return classInfos.stats;
 };
 
-export { addRedisUser, removeRedisUser, getRedisUsers, getRedisUserById, getStatsByUserId };
+const setSessionId = async (userId, sessionId) => {
+  const userKey = `user:${userId}`;
+  const user = await redis.exists(userKey);
+
+  if (!user) {
+    throw new Error(`유저 레디스 데이터가 존재하지 않습니다.`);
+  }
+
+  await redis.hset(userKey, 'sessionId', sessionId.toString());
+};
+
+export {
+  addRedisUser,
+  removeRedisUser,
+  getRedisUsers,
+  getRedisUserById,
+  getStatsByUserId,
+  setSessionId,
+};

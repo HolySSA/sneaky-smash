@@ -1,3 +1,6 @@
+import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
+import MonsterLogic from './monsterLogic.class.js';
+
 class Dungeon {
   constructor(dungeonInfo, dungeonLevel) {
     this.dungeonId = dungeonInfo.dungeonId;
@@ -5,6 +8,7 @@ class Dungeon {
     this.stages = this.getRandomStages(dungeonInfo.stages, 3);
     this.currentStage = 0;
     this.users = new Map();
+    this.monsterLogic = new MonsterLogic();
     this.dungeonLevel = dungeonLevel;
   }
 
@@ -53,7 +57,7 @@ class Dungeon {
     });
   }
 
-  addDungeonUser(userSession) {
+  async addDungeonUser(userSession) {
     if (!userSession.socket.id) {
       throw new Error('유효하지 않은 유저 세션입니다.');
     }
@@ -68,6 +72,7 @@ class Dungeon {
       userId: userId,
       socket: userSession.socket,
       transform: { posX: 0, posY: 0, posZ: 0, rot: 0 }, // 던전 입장 시 초기 위치
+      stats: await getStatsByUserId(userId),
     };
 
     this.users.set(userId, dungeonUser);

@@ -5,8 +5,11 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import Dungeon from '../../classes/model/dungeon.class.js';
 import { getUserSessions } from '../../sessions/user.session.js';
+import Monster from '../../classes/model/monster.class.js';
+import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 
 const randomfunction = (ain) => Math.floor(Math.random() * ain.length);
+let uniqueid = 0;
 
 const monsterSpawnHandler = async (socket, payload) => {
   try {
@@ -19,27 +22,29 @@ const monsterSpawnHandler = async (socket, payload) => {
     // const dungeonSession = getDungeonSession(socket.id);
     // const dungeonInstance = new Dungeon(dungeonSession.dungeonInfo, dungeonSession.dungeonLevel);
     // const stage = dungeonInstance.getCurrentStage();
-
-    const dungeonInfo = getDungeonSession(socket.id).dungeonInfo;
-    const stage = dungeonInfo.stages.find((s) => s.stageId === stageId);
+    const sessionId = getRedisUserById(socket.id).sessionId;
+    const dungeon = getDungeonSession(sessionId);
+    const stage = dungeon.dungeonInfo.stages.find((s) => s.stageId === stageId);
 
     // const dungeonInfo = gameAssets.dungeonInfo.dungeons;
     // const dungeon = dungeonInfo.find((d) => d.stages.some((stage) => stage.stageId === stageId));
     // const stage = dungeon.stages.find((s) => s.stageId === stageId);
 
     let monsterWithTransform = [];
-    let uniqueid = 0;
     stage.monsters.forEach((monsterData) => {
       const matchedMonster = monsterAssets.find((monster) => monster.id === monsterData.monsterId);
       if (!matchedMonster) {
         throw new Error(`요청한 몬스터 ID가 없음. ${monsterData.monsterId}`);
       }
 
+      const uniqueId = dungeon.monsterLogic.addUniqueId();
+      dungeon.monsterLogic.addMonster(uniqueId, monster);
+
       for (let i = 0; i < monsterData.count; i++) {
         const monsterPosition = transform[randomfunction(transform)];
         monsterWithTransform.push({
           monsters: {
-            monsterId: uniqueid++,
+            monsterId: uniqueId,
             monsterModel: matchedMonster.id,
             monsterName: matchedMonster.name,
             monsterHp: matchedMonster.MaxHp,

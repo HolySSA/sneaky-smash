@@ -1,11 +1,9 @@
 import Dungeon from '../classes/model/dungeon.class.js';
 import { getGameAssets } from '../init/loadAsset.js';
 import { dungeonSessions } from './sessions.js';
-import { v4 as uuidv4 } from 'uuid';
 
-const addDungeonSession = (dungeonLevel) => {
-  const dungeonSessionId = uuidv4();
-  if (dungeonSessions.has(dungeonSessionId)) {
+const addDungeonSession = (sessionId, dungeonLevel) => {
+  if (dungeonSessions.has(sessionId)) {
     throw new Error('세션 중복');
   }
 

@@ -1,5 +1,5 @@
 import { PACKET_ID } from '../../../../constants/packetId.js';
-import { getRedisUsers } from '../../../../sessions/redis/redis.user.js';
+import { getRedisUserById, getRedisUsers } from '../../../../sessions/redis/redis.user.js';
 import {
   getUserSessionById,
   getUserSessions,
@@ -31,27 +31,39 @@ enterQueue.process(async (job) => {
     const userSessions = getUserSessions();
 
     for (const [key, value] of userSessions) {
-      const otherUserPayload = {
-        players: [
-          ...users
-            .filter((player) => player.id !== key)
-            .map((player) => ({
-              playerId: parseInt(player.id),
-              nickname: player.nickname,
-              class: parseInt(player.myClass),
-              transform: getUserTransformById(player.id),
-            })),
-        ],
-      };
-
-      if (otherUserPayload.players.length === 0) continue;
-
-      const notification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
-      value.socket.write(notification);
+      console.log(`Key: ${key} `);
     }
 
-    const newUserSessions = getUserSessions();
-    newUserSessions.forEach((u) => {
+    // 해당 유저에게는 다른 유저 정보를 S_Spawn으로 전달.
+    const otherUserPayload = {
+      players: users
+        .filter((player) => player.id !== socketId)
+        .map((player) => ({
+          playerId: parseInt(player.id),
+          nickname: player.nickname,
+          class: player.myClass,
+          transform: getUserTransformById(player.id),
+        })),
+    };
+
+    if (otherUserPayload.players.length > 0) {
+      const notification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
+      userSession.socket.write(notification);
+    }
+
+    const userNotification = createNotificationPacket(PACKET_ID.S_Spawn, {
+      players: [playerPayload],
+    });
+
+    userSessions.forEach((u) => {
+      if (u.socket.id !== socketId) {
+        u.socket.write(userNotification);
+      }
+    });
+
+    //================================================================================================
+
+    userSessions.forEach((u) => {
       const chatPayload = {
         playerId: user.id,
         chatMsg: `${user.nickname}님이 게임에 입장하셨습니다!`,

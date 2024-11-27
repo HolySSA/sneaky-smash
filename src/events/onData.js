@@ -12,7 +12,8 @@ const onData = (socket) => async (data) => {
     const packetType = socket.buffer.readUInt8(config.packet.length);
 
     if (socket.buffer.length >= packetLength) {
-      const packet = socket.buffer.subarray(totalHeaderLength, packetLength);
+      // const packet = socket.buffer.subarray(totalHeaderLength, packetLength);
+      const packet = socket.buffer.subarray(totalHeaderLength, totalHeaderLength + packetLength);
       socket.buffer = socket.buffer.subarray(packetLength);
 
       try {

@@ -31,5 +31,5 @@ message C_EnterStage {
 }
 
 message S_EnterStage {
-	SpawnMonster monsters = 1;
+	repeated SpawnMonster monsters = 1;
 }

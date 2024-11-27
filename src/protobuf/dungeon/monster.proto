@@ -41,6 +41,6 @@ message S_MonsterKill {
 }
 
 message SpawnMonster {
-	repeated MonsterStatus monsters = 1;
-	repeated TransformInfo transform = 2;
+	MonsterStatus monsters = 1;
+	TransformInfo transform = 2;
 }

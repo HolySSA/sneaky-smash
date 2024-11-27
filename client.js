@@ -3,24 +3,23 @@ import protobuf from 'protobufjs';
 import config from './src/config/config.js';
 import { PACKET_ID } from './src/constants/packetId.js';
 
-const S_Register = `
+const S_EnterStage = `
 syntax = "proto3";
 
-message S_Register {
-    bool success = 1;
-    string message = 2;
+message S_EnterStage {
+    SpawnMonster monsters = 1;
 }
 `;
 
 // .proto 파일 경로
-const PROTO_PATH = './src/protobuf/town/login.proto';
+const PROTO_PATH = './src/protobuf/dungeon/stage.proto';
 
 // 패킷 생성 및 전송 함수
 async function loadProtoAndSend(packetType, messageType, payload) {
   try {
     // .proto 파일 로드
     const root = await protobuf.load(PROTO_PATH);
-    const Message = root.lookupType('C_Register');
+    const Message = root.lookupType('C_EnterStage');
 
     // 페이로드 검증
     const errMsg = Message.verify(payload);
@@ -49,7 +48,7 @@ async function loadProtoAndSend(packetType, messageType, payload) {
     });
 
     // 동적으로 프로토타입 로드
-    const S_RegisterMessage = root.lookupType('S_Register');
+    const S_RegisterMessage = root.lookupType('S_EnterStage');
 
     // 서버 응답 처리
     client.on('data', (data) => {
@@ -82,13 +81,27 @@ async function loadProtoAndSend(packetType, messageType, payload) {
 }
 
 // 사용 예제
+// float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
+//   float posY = 2;   // Y 좌표 (기본값 : 1)
+//   float posZ = 3;   // Z 좌표 (기본값 : -8 ~ 8)
+//   float rot = 4;
 (async () => {
-  const messageType = 'C_Register'; // 전송할 메시지 타입
+  const transforms = [
+    { posX: -8, posY: 1, posZ: -7, rot: 45 },
+    { posX: -5, posY: 1, posZ: -5, rot: 90 },
+    { posX: -2, posY: 1, posZ: -3, rot: 135 },
+    { posX: 0, posY: 1, posZ: 0, rot: 180 },
+    { posX: 2, posY: 1, posZ: 3, rot: 225 },
+    // { posX: 5, posY: 1, posZ: 5, rot: 270 },
+    // { posX: 8, posY: 1, posZ: 7, rot: 315 },
+    // 필요한 만큼 추가 가능
+  ];
+  const messageType = 'C_EnterStage'; // 전송할 메시지 타입
   const payload = {
-    account: 'testPlayer1',
-    password: 'testPassword',
+    stageId: 1,
+    transform: transforms,
   };
-  const packetType = PACKET_ID.C_Register; // 패킷 타입
+  const packetType = PACKET_ID.C_EnterStage; // 패킷 타입
 
   await loadProtoAndSend(packetType, messageType, payload);
 })();

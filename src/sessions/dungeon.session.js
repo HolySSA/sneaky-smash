@@ -28,10 +28,19 @@ const addDungeonSession = (dungeonLevel) => {
 };
 
 const getDungeonSession = (dungeonId) => {
-  return dungeonSessions.get(dungeonId);
+  const session = dungeonSessions.get(dungeonId);
+  if (!session) {
+    throw new Error(`던전 세션이 존재하지 않습니다.`);
+  }
+
+  return session;
 };
 
 const removeDungeonSession = (dungeonId) => {
+  if (!dungeonSessions.has(dungeonId)) {
+    throw new Error(`던전 세션이 존재하지 않습니다.`);
+  }
+
   return dungeonSessions.delete(dungeonId);
 };
 

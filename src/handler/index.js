@@ -100,7 +100,7 @@ const handlers = {
     handler: useSkillHandler,
   },
   // monster
-  [PACKET_ID.C_MonsterDamage]: {
+  [PACKET_ID.C_MonsterAttack]: {
     handler: monsterDamageHandler,
   },
   [PACKET_ID.C_MonsterMove]: {
@@ -109,7 +109,7 @@ const handlers = {
   [PACKET_ID.C_MonsterKill]: {
     handler: monsterKillHandler,
   },
-  [PACKET_ID.C_MonsterSpawn]: {
+  [PACKET_ID.C_EnterStage]: {
     handler: monsterSpawnHandler,
   },
   // boss

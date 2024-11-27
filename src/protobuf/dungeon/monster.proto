@@ -9,12 +9,12 @@ message MonsterStatus {
   float monsterHp = 4; // 몬스터 체력
 }
 
-message C_MonsterDamage {
+message C_MonsterAttack {
   int32 monsterId = 1; // 몬스터 식별 ID
   int32 damage = 2; // 데미지
 }
 
-message S_MonsterDamage {
+message S_MonsterAttack {
   int32 playerId = 1; // 플레이어 식별 ID
   int32 monsterId = 2; // 몬스터 식별 ID
   int32 damage = 3; // 데미지
@@ -41,6 +41,6 @@ message S_MonsterKill {
 }
 
 message SpawnMonster {
-	MonsterStatus monsters = 1;
-	TransformInfo transform = 2;
+	repeated MonsterStatus monsters = 1;
+	repeated TransformInfo transform = 2;
 }

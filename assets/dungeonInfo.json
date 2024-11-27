@@ -7,36 +7,36 @@
         {
           "stageId": 1,
           "monsters": [
-            { "monster_id": 101, "count": 5 },
-            { "monster_id": 102, "count": 3 }
+            { "monsterId": 501, "count": 5 },
+            { "monsterId": 502, "count": 3 }
           ]
         },
         {
           "stageId": 2,
           "monsters": [
-            { "monster_id": 103, "count": 4 },
-            { "monster_id": 104, "count": 2 }
+            { "monsterId": 503, "count": 4 },
+            { "monsterId": 504, "count": 2 }
           ]
         },
         {
           "stageId": 3,
           "monsters": [
-            { "monster_id": 105, "count": 3 },
-            { "monster_id": 106, "count": 3 }
+            { "monsterId": 505, "count": 3 },
+            { "monsterId": 506, "count": 3 }
           ]
         },
         {
           "stageId": 4,
           "monsters": [
-            { "monster_id": 107, "count": 7 },
-            { "monster_id": 108, "count": 3 }
+            { "monsterId": 507, "count": 7 },
+            { "monsterId": 508, "count": 3 }
           ]
         },
         {
           "stageId": 5,
           "monsters": [
-            { "monster_id": 109, "count": 5 },
-            { "monster_id": 110, "count": 5 }
+            { "monsterId": 509, "count": 5 },
+            { "monsterId": 510, "count": 5 }
           ]
         }
       ]
@@ -46,30 +46,30 @@
       "name": "저주받은 숲",
       "stages": [
         {
-          "stageId": 1,
-          "monsters": [{ "monster_id": 201, "count": 6 }]
+          "stageId": 6,
+          "monsters": [{ "monsterId": 511, "count": 6 }]
         },
         {
-          "stageId": 2,
+          "stageId": 7,
           "monsters": [
-            { "monster_id": 202, "count": 3 },
-            { "monster_id": 203, "count": 5 }
+            { "monsterId": 512, "count": 3 },
+            { "monsterId": 513, "count": 5 }
           ]
         },
         {
-          "stageId": 3,
-          "monsters": [{ "monster_id": 204, "count": 3 }]
+          "stageId": 8,
+          "monsters": [{ "monsterId": 514, "count": 3 }]
         },
         {
-          "stageId": 4,
+          "stageId": 9,
           "monsters": [
-            { "monster_id": 202, "count": 3 },
-            { "monster_id": 204, "count": 2 }
+            { "monsterId": 515, "count": 3 },
+            { "monsterId": 516, "count": 2 }
           ]
         },
         {
-          "stageId": 5,
-          "monsters": [{ "monster_id": 205, "count": 5 }]
+          "stageId": 10,
+          "monsters": [{ "monsterId": 517, "count": 5 }]
         }
       ]
     }

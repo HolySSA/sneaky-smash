@@ -50,7 +50,8 @@ enterQueue.process(async (job) => {
       value.socket.write(notification);
     }
 
-    userSessions.forEach((u) => {
+    const newUserSessions = getUserSessions();
+    newUserSessions.forEach((u) => {
       const chatPayload = {
         playerId: user.id,
         chatMsg: `${user.nickname}님이 게임에 입장하셨습니다!`,

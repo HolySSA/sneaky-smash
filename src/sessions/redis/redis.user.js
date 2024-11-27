@@ -1,3 +1,4 @@
+import { getGameAssets } from '../../init/loadAsset.js';
 import redis from '../../utils/redis/redisManager.js';
 
 const addRedisUser = async (user) => {
@@ -65,4 +66,20 @@ const getRedisUserById = async (id) => {
   };
 };
 
-export { addRedisUser, removeRedisUser, getRedisUsers, getRedisUserById };
+const getStatsByUserId = async (userId) => {
+  const userKey = `user:${userId}`;
+  const user = await redis.hgetall(userKey);
+
+  if (!user || Object.keys(user).length === 0) {
+    return null;
+  }
+
+  const classId = parseInt(user.myClass);
+  const classInfos = getGameAssets().classInfo.data.find(
+    (classInfo) => classInfo.classId === classId,
+  );
+
+  return classInfos.stats;
+};
+
+export { addRedisUser, removeRedisUser, getRedisUsers, getRedisUserById, getStatsByUserId };

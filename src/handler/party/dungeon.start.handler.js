@@ -63,13 +63,13 @@ const dungeonStartHandler = async (socket, payload) => {
 
     const stageList = dungeon.getStageIdList();
     const dungeonInfo = {
-      dungeonCode: dungeonLevel,
+      dungeonCode: dungeon.dungeonId,
       stageList,
     };
 
-    const infoText = '던전에 입장하셨습니다!';
+    const infoText = dungeon.name;
 
-    // 파티원 모두의 정보를 전송할 때
+    // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
         const userRedis = await getRedisUserById(memberId);
@@ -90,18 +90,6 @@ const dungeonStartHandler = async (socket, payload) => {
       if (userSession) {
         // 던전 세션 유저 추가
         dungeon.addDungeonUser(userSession);
-
-        /* 각자 정보를 전송할 때
-        const userRedis = await getRedisUserById(memberId);
-        // 임시 플레이어 정보
-        const playerInfo = {
-          playerId: parseInt(memberId),
-          nickname: userRedis.nickname,
-          class: userRedis.myClass,
-          transform: { posX: 0, posY: 0, posZ: 0, rot: 0 },
-          statInfo,
-        };
-        */
 
         const enterDungeonPayload = {
           dungeonInfo,

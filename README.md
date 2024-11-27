@@ -141,8 +141,8 @@ S_UseSkill: 43,
 
 ## monster
 
-C_MonsterDamage: 44,
-S_MonsterDamage: 45,
+C_MonsterAttack: 44,
+S_MonsterAttack: 45,
 C_MonsterMove: 46,
 S_MonsterMove: 47,
 C_MonsterKill: 48,

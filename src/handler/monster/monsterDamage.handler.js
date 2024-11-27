@@ -41,7 +41,7 @@ const monsterDamageHandler = async (socket, payload) => {
     // socket에서 playerId 추출
     const playerId = socket.playerId;
     if (!playerId) {
-      throw new Error(`소켓 안에 플레이어 정보가 없습니다.`)
+      throw new Error(`소켓 안에 플레이어 정보가 없습니다.`);
     }
 
     // 몬스터가 유저에게 데미지를 입힐 때
@@ -51,7 +51,7 @@ const monsterDamageHandler = async (socket, payload) => {
       damage,
     };
 
-    const response = createResponse(PACKET_ID.S_MonsterDamage, monsterDamagePayload);
+    const response = createResponse(PACKET_ID.S_MonsterAttack, monsterDamagePayload);
 
     socket.write(response);
 
@@ -61,7 +61,6 @@ const monsterDamageHandler = async (socket, payload) => {
         clientSocket.write(response);
       }
     });
-
   } catch (e) {
     handleError(socket, e);
   }

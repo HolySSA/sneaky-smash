@@ -1,8 +1,4 @@
-import { PACKET_ID } from '../../constants/packetId.js';
-import { getRedisUsers } from '../../sessions/redis/redis.user.js';
-import { getUserSessions, getUserTransformById } from '../../sessions/user.session.js';
-import createNotificationPacket from '../notification/createNotification.js';
-import createResponse from '../response/createResponse.js';
+import { addEnterJob } from '../redis/bull/enter/add.enter.queue.js';
 
 // message S_Enter {
 //     PlayerInfo player = 1;      // 플레이어 정보 (추후 정의 예정)
@@ -12,40 +8,12 @@ import createResponse from '../response/createResponse.js';
 // }
 
 const enterLogic = async (socket, user) => {
-  const playerPayload = {
-    playerId: user.id,
-    nickname: user.nickname,
-    class: user.myClass,
-    transform: getUserTransformById(user.id),
-  };
+  const job = await addEnterJob(socket, user);
 
-  const response = createResponse(PACKET_ID.S_Enter, { player: playerPayload });
-  socket.write(response);
+  const result = await job.finished();
 
-  const users = await getRedisUsers();
-  const userSessions = getUserSessions();
-
-  // 모든 유저들에게 현재 접속 중인 유저 정보 전송
-  for (const [key, value] of userSessions) {
-    const otherUserPayload = {
-      players: [
-        ...users
-          .filter((player) => player.id !== key)
-          .map((player) => ({
-            playerId: parseInt(player.id),
-            nickname: player.nickname,
-            class: parseInt(player.myClass),
-            transform: getUserTransformById(player.id),
-          })),
-      ],
-    };
-
-    if (otherUserPayload.players.length === 0) {
-      continue;
-    }
-
-    const otherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
-    value.socket.write(otherUsernotification);
+  if (!result.success) {
+    console.error(`유저 ${user.id} 접속 실패.`);
   }
 };
 

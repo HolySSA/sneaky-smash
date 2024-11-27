@@ -2,6 +2,7 @@ import net from 'net';
 import initServer from './init/index.js';
 import onConnection from './events/onConnection.js';
 import config from './config/config.js';
+import { closeAllQueues } from './utils/redis/bull/bullManager.js';
 
 const server = net.createServer(onConnection);
 
@@ -16,3 +17,18 @@ initServer()
     console.error(err);
     process.exit(1); // 오류 발생 시 프로세스 종료
   });
+
+const shutDownServer = async () => {
+  server.close(() => {
+    console.log('TCP 서버 종료.');
+  });
+
+  await closeAllQueues();
+  console.log('Bull Queue 정리 완료');
+
+  process.exit(0);
+};
+
+process.on('SIGTERM', shutDownServer); // 시스템 종료
+process.on('SIGINT', shutDownServer); // Ctrl+C
+process.on('SIGHUP', shutDownServer); // 터미널 종료

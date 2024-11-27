@@ -7,7 +7,7 @@ const queues = new Map();
 const defaultOptions = {
   redis: {
     host: REDIS_HOST,
-    port: REDIS_PORT,
+    port: 6400,
   },
   // 기본 작업 옵션
   defaultJobOptions: {
@@ -70,9 +70,27 @@ const removeQueue = async (queueName) => {
 
 // 모든 큐 종료
 const closeAllQueues = async () => {
-  const closePromises = Array.from(queues.values()).map((queue) => queue.close());
-  await Promise.all(closePromises);
+  for (const queue of queues.values()) {
+    // 각 작업 비동기로 실행
+    await queue.pause(true);
+    await queue.empty();
+
+    // 모든 작업 삭제
+    await Promise.all([
+      queue.clean(0, 'completed'),
+      queue.clean(0, 'failed'),
+      queue.clean(0, 'delayed'),
+      queue.clean(0, 'wait'),
+      queue.clean(0, 'active'),
+    ]);
+
+    // 모든 키 삭제
+    await queue.obliterate({ force: true });
+    await queue.close();
+  }
+
   queues.clear();
+  console.log('모든 Bull Queue 정리.');
 };
 
 export { createQueue, getQueue, getAllQueues, removeQueue, closeAllQueues };

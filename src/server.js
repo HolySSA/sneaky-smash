@@ -19,12 +19,18 @@ initServer()
   });
 
 const shutDownServer = async () => {
-  server.close(() => {
-    console.log('TCP 서버 종료.');
+  await new Promise((resolve) => {
+    server.close(() => {
+      console.log('TCP 서버 종료.');
+      resolve();
+    });
   });
 
   await closeAllQueues();
-  console.log('Bull Queue 정리 완료');
+  console.log('Bull Queue 정리.');
+
+  // 모든 작업이 완료될 때까지 잠시 대기
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   process.exit(0);
 };

@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # Redis (6379) - Cluster 적용 (다른 브랜치에서 병합 예정)
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  # Bull Queue Redis (6400)
+  redis-bull:
+    image: redis:latest
+    ports:
+      - '6400:6379' # 6400포트 컨테이너 6379 매핑
+    volumes:
+      - redis_bull_data:/data
+    networks:
+      - app_network
+
+volumes:
+  redis_data:
+  redis_bull_data:
+
+networks:
+  app_network:
+    driver: bridge

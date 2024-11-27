@@ -31,8 +31,6 @@ enterQueue.process(async (job) => {
     const userSessions = getUserSessions();
 
     for (const [key, value] of userSessions) {
-      console.log('user id: ', value.socket.id);
-
       const otherUserPayload = {
         players: [
           ...users
@@ -50,15 +48,16 @@ enterQueue.process(async (job) => {
 
       const notification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
       value.socket.write(notification);
+    }
 
+    userSessions.forEach((u) => {
       const chatPayload = {
         playerId: user.id,
         chatMsg: `${user.nickname}님이 게임에 입장하셨습니다!`,
       };
 
-      const chatResponse = createResponse(PACKET_ID.S_Chat, chatPayload);
-      value.socket.write(chatResponse);
-    }
+      u.socket.write(createResponse(PACKET_ID.S_Chat, chatPayload));
+    });
 
     return { success: true };
   } catch (err) {

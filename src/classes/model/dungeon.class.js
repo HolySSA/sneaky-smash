@@ -1,10 +1,11 @@
 class Dungeon {
-  constructor(dungeonInfo) {
-    this.dungeonId = dungeonInfo.dungeon_id;
+  constructor(dungeonInfo, dungeonLevel) {
+    this.dungeonId = dungeonInfo.dungeonId;
     this.name = dungeonInfo.name;
     this.stages = this.getRandomStages(dungeonInfo.stages, 3);
     this.currentStage = 0;
     this.users = new Map();
+    this.dungeonLevel = dungeonLevel;
   }
 
   getRandomStages(allStages, count) {
@@ -16,7 +17,7 @@ class Dungeon {
 
       const selectedStage = stages.splice(index, 1)[0];
       selectedStages.push({
-        stageId: selectedStage.stage_id,
+        stageId: selectedStage.stageId,
         monsters: selectedStage.monsters.map((monster) => ({
           monsterId: monster.monster_id,
           count: monster.count,
@@ -39,7 +40,17 @@ class Dungeon {
   }
 
   getStageIdList() {
-    return this.stages.map((stage) => stage.stageId);
+    if (!this.stages) {
+      throw new Error('던전 스테이지 정보가 존재하지 않습니다.');
+    }
+
+    return this.stages.map((stage) => {
+      if (!stage) {
+        throw new Error('던전 스테이지 정보가 존재하지 않습니다.');
+      }
+
+      return stage.stageId;
+    });
   }
 
   addDungeonUser(userSession) {

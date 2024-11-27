@@ -1,9 +1,17 @@
 class Monster{
-    constructor(id, name, hp, position, atk, def, criticalProbability, criticalDamageRate, moveSpeed, attackSpeed){
+    constructor(id, modelId, name, hp, atk, def, criticalProbability, criticalDamageRate, moveSpeed, attackSpeed){
         this.id = id;
+        this.modelId = modelId;
         this.name = name;
         this.hp = hp;
-        this.position = position;
+
+        this.transform = {
+            posX: 0,
+            posY: 0,
+            posZ: 0,
+            rot: 0,
+          };
+
         this.atk = atk;
         this.def = def;
         this.criticalProbability = criticalProbability;

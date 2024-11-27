@@ -27,9 +27,9 @@ message StageInfo {
 
 message C_EnterStage {
 	int32 stageId = 1;
-	TransformInfo transform = 2;
+	repeated TransformInfo transform = 2;
 }
 
 message S_EnterStage {
-	SpawnMonster monsters = 1;
+	repeated SpawnMonster monsters = 1;
 }

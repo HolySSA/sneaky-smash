@@ -72,7 +72,7 @@ const monsterSpawnHandler = async (socket, payload) => {
 
     allUsers.forEach((value, targetUserId) => {
       if (targetUserId !== user.id) {
-        value.socket.write(monsterSpawnPayload);
+        value.socket.write(response);
       }
     });
   } catch (e) {

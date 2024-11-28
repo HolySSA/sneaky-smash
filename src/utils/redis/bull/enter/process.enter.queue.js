@@ -61,7 +61,9 @@ enterQueue.process(async (job) => {
       }
     });
 
-    //================================================================================================
+    // Sleep 함수 - 1초 대기 후 실행
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(1000);
 
     userSessions.forEach((u) => {
       const chatPayload = {

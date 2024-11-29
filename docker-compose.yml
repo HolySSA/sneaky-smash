@@ -1,16 +1,42 @@
 version: '3.8'
 
 services:
-  # Redis (6379) - Cluster 적용 (다른 브랜치에서 병합 예정)
-  redis:
+  redis-node-1:
     image: redis:latest
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
     ports:
       - '6379:6379'
+      - '16379:16379'
     volumes:
-      - redis_data:/data
+      - redis-node-1-data:/data
     networks:
-      - app_network
+      redis-cluster:
+        ipv4_address: 172.20.0.2
 
+  redis-node-2:
+    image: redis:latest
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    ports:
+      - '6380:6379'
+      - '16380:16379'
+    volumes:
+      - redis-node-2-data:/data
+    networks:
+      redis-cluster:
+        ipv4_address: 172.20.0.3
+
+  redis-node-3:
+    image: redis:latest
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    ports:
+      - '6381:6379'
+      - '16381:16379'
+    volumes:
+      - redis-node-3-data:/data
+    networks:
+      redis-cluster:
+        ipv4_address: 172.20.0.4
+     
   # Bull Queue Redis (6400)
   redis-bull:
     image: redis:latest
@@ -21,10 +47,16 @@ services:
     networks:
       - app_network
 
-volumes:
-  redis_data:
-  redis_bull_data:
-
 networks:
-  app_network:
+  redis-cluster:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  redis-node-1-data:
+  redis-node-2-data:
+  redis-node-3-data:
+  redis_bull_data:

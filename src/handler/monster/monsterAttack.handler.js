@@ -59,7 +59,7 @@ const monsterAttackHandler = async (socket, payload) => {
       }
     }
     // const playerId = '1'; // 테스트용
-    const playerId = socket.playerId; // 실전용
+    const playerId = socket.id; // 실전용
     console.log('playerId', playerId);
     //     socket에서 playerId 추출
     const dungeonSession = getDungeonSession(socket.dungeonId);

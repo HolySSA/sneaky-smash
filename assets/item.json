@@ -2,6 +2,7 @@
     "name": "Item",
     "version": "1.0.0",
     "data": [
+      { "itemid": 99, "curHp": 50},
       { "itemId": 100, "itemName": "회복 엘릭서", "CurHp": 30, "gold": 50, "description": "고대의 연금술사가 만든 마법 물약으로, 즉시 체력을 회복시켜줍니다." },
       { "itemId": 101, "itemName": "전사의 엘릭서", "ATK": 15, "gold": 70, "description": "힘의 기운을 증폭시키는 물약으로 전투력을 단시간에 강화시킵니다." },
       { "itemId": 102, "itemName": "방어 엘릭서", "DEF": 10, "gold": 60, "description": "강철 같은 피부를 만들어 적의 공격으로부터 몸을 보호합니다." },

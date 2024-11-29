@@ -3,24 +3,23 @@ import protobuf from 'protobufjs';
 import config from './src/config/config.js';
 import { PACKET_ID } from './src/constants/packetId.js';
 
-const S_MonsterAttack = `
+const S_UseItem = `
 syntax = "proto3";
 
-message S_MonsterAttack {
-  int32 playerId = 1; 
-  int32 hp = 2;
+message S_UseItem {
+  int32 hp = 1;
 }
 `;
 
 // .proto 파일 경로
-const PROTO_PATH = './src/protobuf/dungeon/monster.proto';
+const PROTO_PATH = './src/protobuf/user/item.proto';
 
 // 패킷 생성 및 전송 함수
 async function loadProtoAndSend(packetType, messageType, payload) {
   try {
     // .proto 파일 로드
     const root = await protobuf.load(PROTO_PATH);
-    const Message = root.lookupType('C_MonsterAttack');
+    const Message = root.lookupType('C_UseItem');
 
     // 페이로드 검증
     const errMsg = Message.verify(payload);
@@ -49,7 +48,7 @@ async function loadProtoAndSend(packetType, messageType, payload) {
     });
 
     // 동적으로 프로토타입 로드
-    const S_MonsterKillMessage = root.lookupType('S_MonsterAttack');
+    const S_MonsterKillMessage = root.lookupType('S_UseItem');
 
     // 서버 응답 처리
     client.on('data', (data) => {
@@ -95,11 +94,11 @@ async function loadProtoAndSend(packetType, messageType, payload) {
   // { posX: 5, posY: 1, posZ: 5, rot: 270 },
   // { posX: 8, posY: 1, posZ: 7, rot: 315 },
   // 필요한 만큼 추가 가능
-  const messageType = 'C_MonsterAttack'; // 전송할 메시지 타입
+  const messageType = 'C_UseItem'; // 전송할 메시지 타입
   const payload = {
-    monsterId: 1,
+    itemId: 99,
   };
-  const packetType = PACKET_ID.C_MonsterAttack; // 패킷 타입
+  const packetType = PACKET_ID.C_UseItem; // 패킷 타입
 
   await loadProtoAndSend(packetType, messageType, payload);
 })();

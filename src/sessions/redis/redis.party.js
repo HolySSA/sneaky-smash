@@ -4,6 +4,11 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
 
+  const existingParty = await redis.exists(partyKey);
+  if (existingParty) {
+    throw new Error('이미 존재하는 레디스 파티입니다.');
+  }
+
   // 파티 생성
   await redis.sadd(partyKey, userId.toString());
   // 파티 리스트
@@ -27,6 +32,11 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
 const removeRedisParty = async (roomId) => {
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
+
+  const existingParty = await redis.exists(partyKey);
+  if (!existingParty) {
+    throw new Error('존재하지 않는 레디스 파티입니다.');
+  }
 
   // 멤버 제거
   await redis.del(partyKey);

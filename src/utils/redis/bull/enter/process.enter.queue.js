@@ -10,29 +10,25 @@ import createResponse from '../../../response/createResponse.js';
 import { enterQueue } from '../queues.js';
 
 enterQueue.process(async (job) => {
-  const { socketId, user } = job.data;
+  const { socketId } = job.data;
 
   try {
+    const userRedis = await getRedisUserById(socketId);
     const userSession = getUserSessionById(socketId);
 
     const playerPayload = {
-      playerId: user.id,
-      nickname: user.nickname,
-      class: user.myClass,
-      transform: getUserTransformById(user.id),
+      playerId: parseInt(socketId),
+      nickname: userRedis.nickname,
+      class: userRedis.myClass,
+      transform: getUserTransformById(userRedis.id),
     };
 
     // 접속한 유저에게 응답
     const response = createResponse(PACKET_ID.S_Enter, { player: playerPayload });
     userSession.socket.write(response);
 
-    // 다른 유저들에게 새로운 유저 알림
     const users = await getRedisUsers();
     const userSessions = getUserSessions();
-
-    for (const [key, value] of userSessions) {
-      console.log(`Key: ${key} `);
-    }
 
     // 해당 유저에게는 다른 유저 정보를 S_Spawn으로 전달.
     const otherUserPayload = {
@@ -67,8 +63,8 @@ enterQueue.process(async (job) => {
 
     userSessions.forEach((u) => {
       const chatPayload = {
-        playerId: user.id,
-        chatMsg: `${user.nickname}님이 게임에 입장하셨습니다!`,
+        playerId: userRedis.id,
+        chatMsg: `${userRedis.nickname}님이 게임에 입장하셨습니다!`,
       };
 
       u.socket.write(createResponse(PACKET_ID.S_Chat, chatPayload));

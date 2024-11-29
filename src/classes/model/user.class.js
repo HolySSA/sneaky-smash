@@ -1,19 +1,20 @@
 import Inventory from './inventory.class.js';
 
 class User {
-  constructor(id, myClass, nickname) {
-    this.id = id;
-    this.myClass = myClass;
-    this.nickname = nickname;
+  constructor(socket) {
+    this.socket = socket;
+    this.id = socket.id;
     this.transform = {
-      posX: 0,
-      posY: 0,
-      posZ: 0,
+      posX: -5,
+      posY: 0.5,
+      posZ: 135,
       rot: 0,
     };
-    this.locationType = 'town';
-    this.Inventory = new Inventory();
     this.skillList = [];
+  }
+
+  updateUserTransform(posX, posY, posZ, rot) {
+    this.transform = { posX, posY, posZ, rot };
   }
 }
 

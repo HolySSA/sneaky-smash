@@ -7,7 +7,6 @@ import { findUserByAccount } from '../../db/model/user.db.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
-import User from '../../classes/model/user.class.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 
 // message C_Login {
@@ -46,24 +45,15 @@ const logInHandler = async (socket, payload) => {
       return;
     }
 
-    const connectedUser = await getRedisUserById(existUser.id);
-    if (connectedUser) {
-      writeLoginResponse(socket, false, '이미 접속 중인 유저입니다.', null);
-      return;
-    }
-
     // 로그인 검증 통과 - socket.id 할당
     socket.id = existUser.id.toString();
 
     const character = await findCharacterByUserId(existUser.id);
-
     if (character) {
-      const user = new User(existUser.id, character.myClass, character.nickname);
+      await addRedisUser(existUser.id, character.nickname, character.myClass);
+      addUserSession(socket);
 
-      await addRedisUser(user);
-      addUserSession(socket, user);
-
-      return await enterLogic(socket, user);
+      return await enterLogic(socket);
     }
 
     // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)

@@ -25,8 +25,10 @@ const despawnLogic = async (socket) => {
   const response = createNotificationPacket(PACKET_ID.S_Despawn, payload);
 
   const sessions = getUserSessions();
-  for (const [key, value] of sessions) {
-    value.socket.write(response);
+  if (sessions) {
+    for (const [key, value] of sessions) {
+      value.socket.write(response);
+    }
   }
 };
 

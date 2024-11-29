@@ -1,44 +1,64 @@
+import User from '../classes/model/user.class.js';
 import { userSessions } from './sessions.js';
 
-const addUserSession = (socket, user) => {
+const addUserSession = (socket) => {
   if (userSessions.has(socket.id)) {
-    throw new Error('세션 중복');
+    throw new Error('이미 존재하는 유저 세션입니다.');
   }
 
-  userSessions.set(socket.id, { socket, transform: user.transform, inventory: [] });
+  const user = new User(socket);
+  userSessions.set(socket.id, user);
+
   return user;
 };
 
-const removeUserSession = async (socket) => {
-  if (userSessions.has(socket.id)) {
-    userSessions.delete(socket.id);
+const removeUserSession = (socket) => {
+  if (!userSessions.has(socket.id)) {
+    throw new Error('존재하지 않는 유저 세션입니다.');
   }
+
+  userSessions.delete(socket.id);
 };
 
 const getUserSessions = () => {
+  if (userSessions.size === 0) {
+    return null;
+  }
+
   return userSessions;
 };
 
 const getUserSessionById = (id) => {
   const userId = id.toString();
-  return userSessions.get(userId) || null;
+
+  if (!userSessions.has(userId)) {
+    throw new Error('존재하지 않는 유저 세션입니다.');
+  }
+
+  return userSessions.get(userId);
 };
 
 const getUserTransformById = (id) => {
   const userId = id.toString();
-  if (userSessions.has(userId)) return userSessions.get(userId).transform;
 
-  return { posX: -5, posY: 0.5, posZ: 135, rot: 0 };
+  if (!userSessions.has(userId)) {
+    throw new Error('존재하지 않는 유저 세션입니다.');
+  }
+
+  return userSessions.get(userId).transform;
 };
 
 const updateUserTransformById = (id, posX, posY, posZ, rot) => {
-  const newTransform = { posX, posY, posZ, rot };
-
   const userId = id.toString();
-  const session = userSessions.get(userId);
-  if (session) session.transform = newTransform;
+  if (!userSessions.has(userId)) {
+    throw new Error('존재하지 않는 유저 세션입니다.');
+  }
 
-  return newTransform;
+  const user = userSessions.get(userId);
+  user.updateUserTransform(posX, posY, posZ, rot);
+
+  const transform = { posX, posY, posZ, rot };
+  return transform;
 };
 
 export {

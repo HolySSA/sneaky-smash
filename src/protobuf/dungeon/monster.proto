@@ -11,13 +11,11 @@ message MonsterStatus {
 
 message C_MonsterAttack {
   int32 monsterId = 1; // 몬스터 식별 ID
-  int32 damage = 2; // 데미지
 }
 
 message S_MonsterAttack {
   int32 playerId = 1; // 플레이어 식별 ID
-  int32 monsterId = 2; // 몬스터 식별 ID
-  int32 damage = 3; // 데미지
+  int32 hp = 2; // 몬스터 식별 ID
 }
 
 message C_MonsterMove {

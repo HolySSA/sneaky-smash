@@ -25,7 +25,7 @@ import enterPortalHandler from './game/enterPortal.handler.js';
 import inventoryHandler from './game/inventory.handler.js';
 import useSkillHandler from './game/useSkill.handler.js';
 // monster
-import monsterDamageHandler from './monster/monsterDamage.handler.js';
+import monsterAttackeHandler from './monster/monsterAttack.handler.js';
 import monsterKillHandler from './monster/monsterKill.handler.js';
 import monsterMoveHandler from './monster/monsterMove.handler.js';
 import monsterSpawnHandler from './monster/monsterSpawn.handler.js';
@@ -38,6 +38,7 @@ import partyLeaveHandler from './party/party.leave.handler.js';
 import partyHandler from './party/party.handler.js';
 import dungeonStartHandler from './party/dungeon.start.handler.js';
 import partyJoinHandler from './party/party.join.handler.js';
+import monsterAttackHandler from './monster/monsterAttack.handler.js';
 
 const handlers = {
   // town
@@ -101,7 +102,7 @@ const handlers = {
   },
   // monster
   [PACKET_ID.C_MonsterAttack]: {
-    handler: monsterDamageHandler,
+    handler: monsterAttackHandler,
   },
   [PACKET_ID.C_MonsterMove]: {
     handler: monsterMoveHandler,

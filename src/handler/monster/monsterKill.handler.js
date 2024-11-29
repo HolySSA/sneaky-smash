@@ -5,12 +5,15 @@ import { addDungeonSession, getDungeonSession } from '../../sessions/dungeon.ses
 import { getGameAssets } from '../../init/loadAsset.js';
 
 // 패킷명세
-// message S_MonsterKill {
-//   int32 monsterId = 1; // 몬스터 식별 ID
-//   int32 itemId = 2; // 아이템 식별 ID
-// }
 // message C_MonsterKill {
 //   int32 monsterId = 1; // 몬스터 식별 ID
+//   TransformInfo transform = 2;
+// }
+
+// message S_MonsterKill {
+//   int32 monsterId = 1; // 몬스터 식별 ID
+//   int32 itemId = 2;
+//   TransformInfo transform = 3;
 // }
 
 const monsterKillHandler = async (socket, payload) => {

@@ -7,7 +7,8 @@ const S_UseItem = `
 syntax = "proto3";
 
 message S_UseItem {
-  int32 hp = 1;
+  int32 playerId = 1;
+  int32 hp = 2;
 }
 `;
 

@@ -8,6 +8,7 @@ import { addDungeonSession, getDungeonSession } from '../../sessions/dungeon.ses
 const useItemHandler = async (socket, payload) => {
   try {
     const { itemId } = payload;
+    console.log('payload:', payload);
     const playerId = 1;
     if (!socket.dungeonId) {
       const testSessionId = 'test-dungeon-1';
@@ -56,7 +57,7 @@ const useItemHandler = async (socket, payload) => {
     console.log('dungeonSession:', dungeonSession);
     const currentHp = dungeonSession.getUserHp(playerId);
     console.log('currentHp:', currentHp);
-    const hp = currentHp + item.curHp;
+    const hp = currentHp + item.CurHp;
     console.log('hp:', hp);
     // 사용한 아이템 정보를 받는다 ( 현재는 체력 회복 포션 )
     // itemId를 토대로 정보를 가져온다 ( Json이나 DB에 저장된 데이터)
@@ -65,6 +66,7 @@ const useItemHandler = async (socket, payload) => {
     // 여기서 적용되는 HP를 updatePlayerHp로 보내준다
     //
     const useItemPayload = {
+      playerId,
       hp,
     };
 

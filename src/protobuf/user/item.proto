@@ -10,7 +10,8 @@ message C_UseItem {
 }
 
 message S_UseItem {
-  int32 hp = 1; // 사용 후 남은 아이템 정보
+  int32 playerId = 1; //사용한 유저정보
+  int32 hp = 2; // 사용 후 남은 아이템 정보
 }
 
 message C_DropItem {

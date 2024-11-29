@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "client": "node client.js",
-    "migrate": "node src/db/migrations/createSchema.js"
+    "migrate": "node src/db/migrations/createSchema.js",
+    "docker": "docker-compose up -d"
   },
   "repository": "https://github.com/803571/tmfinal.git",
   "author": "SSA <158470963+shinseongan@users.noreply.github.com>",

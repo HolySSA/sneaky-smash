@@ -13,6 +13,13 @@ const bossSpawnHandler = async (socket, payload) => {
     const bossSpawnPayload = { boss };
     const response = createResponse(PACKET_ID.S_BossSpawn, bossSpawnPayload);
     socket.write(response);
+
+    global.connectedSockets.forEach((clientSocket) => {
+      if (clientSocket !== socket) {
+        clientSocket.write(response);
+      }
+    });
+
   } catch (e) {
     handleError(socket, e);
   }

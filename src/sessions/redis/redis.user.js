@@ -1,12 +1,19 @@
+import { getGameAssets } from '../../init/loadAsset.js';
 import redis from '../../utils/redis/redisManager.js';
 
-const addRedisUser = async (user) => {
-  const userKey = `user:${user.id}`;
+const addRedisUser = async (userId, nickname, myClass) => {
+  const userKey = `user:${userId}`;
+
+  const existingUser = await redis.exists(userKey);
+  if (existingUser) {
+    throw new Error('이미 존재하는 레디스 유저입니다.');
+  }
+
   const redisUser = await redis.hset(userKey, {
-    id: user.id.toString(),
-    nickname: user.nickname,
-    myClass: user.myClass.toString(),
-    locationType: user.locationType,
+    id: userId.toString(),
+    nickname: nickname,
+    myClass: myClass.toString(),
+    locationType: 'town',
   });
 
   return redisUser;
@@ -16,8 +23,8 @@ const removeRedisUser = async (socket) => {
   const userKey = `user:${socket.id}`;
   const user = await redis.hgetall(userKey);
 
-  if (Object.keys(user).length === 0) {
-    return null;
+  if (!user || Object.keys(user).length === 0) {
+    throw new Error('존재하지 않는 레디스 유저입니다.');
   }
 
   await redis.del(userKey);
@@ -29,7 +36,7 @@ const getRedisUsers = async () => {
   const userKeys = await redis.keys('user:*');
 
   if (!userKeys.length) {
-    return null;
+    throw new Error('레디스 유저가 존재하지 않습니다.');
   }
 
   // pipeline - 명령 묶어서 실행(최적화)
@@ -40,6 +47,7 @@ const getRedisUsers = async () => {
 
   return results.map(([err, data]) => {
     if (err || !data) return null;
+
     return {
       id: data.id,
       nickname: data.nickname,
@@ -54,7 +62,7 @@ const getRedisUserById = async (id) => {
   const user = await redis.hgetall(userKey);
 
   if (!user || Object.keys(user).length === 0) {
-    return null;
+    throw new Error('존재하지 않는 레디스 유저입니다.');
   }
 
   return {
@@ -65,4 +73,20 @@ const getRedisUserById = async (id) => {
   };
 };
 
-export { addRedisUser, removeRedisUser, getRedisUsers, getRedisUserById };
+const getStatsByUserId = async (userId) => {
+  const userKey = `user:${userId}`;
+  const user = await redis.hgetall(userKey);
+
+  if (!user || Object.keys(user).length === 0) {
+    throw new Error('존재하지 않는 레디스 유저입니다.');
+  }
+
+  const classId = parseInt(user.myClass);
+  const classInfos = getGameAssets().classInfo.data.find(
+    (classInfo) => classInfo.classId === classId,
+  );
+
+  return classInfos.stats;
+};
+
+export { addRedisUser, removeRedisUser, getRedisUsers, getRedisUserById, getStatsByUserId };

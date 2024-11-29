@@ -65,6 +65,11 @@ const partyLeaveHandler = async (socket, payload) => {
         user?.socket.write(response);
       });
 
+      const users = getUserSessions();
+      users.forEach((user) => {
+        user.socket.write(response);
+      });
+
       /*
       party.members.forEach((memberId) => {
         const user = getUserSessionById(parseInt(memberId));

@@ -36,6 +36,16 @@ services:
     networks:
       redis-cluster:
         ipv4_address: 172.20.0.4
+     
+  # Bull Queue Redis (6400)
+  redis-bull:
+    image: redis:latest
+    ports:
+      - '6400:6379' # 6400포트 컨테이너 6379 매핑
+    volumes:
+      - redis_bull_data:/data
+    networks:
+      - app_network
 
 networks:
   redis-cluster:
@@ -49,3 +59,4 @@ volumes:
   redis-node-1-data:
   redis-node-2-data:
   redis-node-3-data:
+  redis_bull_data:

@@ -14,15 +14,7 @@ export const movePlayerHandler = async (socket, payload) => {
 
     // 소켓에서 유저 정보 가져오기
     const user = await getRedisUserById(socket.id);
-    if (!user) {
-      throw new Error('유저를 찾을 수 없습니다.');
-    }
-
     const transform = updateUserTransformById(socket.id, posX, posY, posZ, rot);
-
-    if (!transform) {
-      throw new Error('위치정보를 찾을 수 없습니다.');
-    }
 
     const movePayload = {
       playerId: parseInt(user.id),
@@ -32,10 +24,6 @@ export const movePlayerHandler = async (socket, payload) => {
     const moveResponsePayload = createResponse(PACKET_ID.S_Move, movePayload);
 
     const allUsers = getUserSessions();
-    if (!allUsers || allUsers.length === 0) {
-      console.error('유저세션이 없습니다.');
-      return;
-    }
 
     // 로케이션 타입 확인 후 같은 로케이션의 유저들에게 패킷 전송
     allUsers.forEach((value, targetUserId) => {

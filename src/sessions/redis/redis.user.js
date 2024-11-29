@@ -32,8 +32,21 @@ const removeRedisUser = async (socket) => {
 };
 
 const getRedisUsers = async () => {
-  // keys - 데이터 많으면 불안전. 대신 scan 사용으로 변경.
-  const userKeys = await redis.keys('user:*');
+  // scan으로 모든 키 수집
+  const getAllKeys = async () => {
+    let cursor = '0';
+    const keys = [];
+
+    do {
+      const [newCursor, matchedKeys] = await redis.scan(cursor, 'MATCH', 'user:*', 'COUNT', 100);
+      cursor = newCursor;
+      keys.push(...matchedKeys);
+    } while (cursor !== '0');
+
+    return keys;
+  };
+
+  const userKeys = await getAllKeys();
 
   if (!userKeys.length) {
     throw new Error('레디스 유저가 존재하지 않습니다.');

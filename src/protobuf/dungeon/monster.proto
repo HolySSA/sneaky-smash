@@ -41,10 +41,9 @@ message S_MonsterKill {
 }
 
 message C_MonsterSpawn {
-  int32 stageId = 1; // 해당 스테이지의 아이디
+  repeated TransformInfo transform = 1;
 }
 
 message S_MonsterSpawn {
   repeated MonsterStatus monsters = 1; // 몬스터 정보
-  repeated int32 amount = 2; // 몬스터 마리수
 }

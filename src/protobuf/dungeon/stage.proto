@@ -5,12 +5,4 @@ import "../dungeon/monster.proto";
 message DungeonInfo {
     int32 dungeonCode = 1;    // 던전 코드
     string dungeonName = 2;
-    repeated int32 stageList = 3;
-
-    // repeated StageInfo stage = 3;
-}
-
-message StageInfo {
-    int32 stageId = 1;                        // 스테이지 ID
-    repeated MonsterStatus monsters = 2;      // 던전에 등장하는 몬스터들의 상태
 }

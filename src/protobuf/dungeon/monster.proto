@@ -34,11 +34,6 @@ message S_MonsterSpawn{
 	MonsterStatus monsters = 1;
 	TransformInfo transform = 2;
 }
-
-message C_MonsterSpawn{
-	int32 stageId = 1;
-	repeated TransformInfo transform = 2;
-}
 	
 message C_GetNavPath{
   TransformInfo playerPosition = 1;
@@ -48,3 +43,4 @@ message C_GetNavPath{
 message S_GetNavPath{
   TransformInfo pathPosition = 1;
 }
+

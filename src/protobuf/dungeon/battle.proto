@@ -27,31 +27,31 @@ message S_LevelUp {
   StatInfo statInfo = 2; // 레벨
 }
 
-message C_DestroyNexus {
+message C_AttackedNexus {
   int32 damage = 1;    // 데미지
 }
 
-message S_DestroyNexus {
+message S_AttackedNexus {
   int32 playerId = 1;  // 공격 유저ID
   int32 damage = 2;    // 데미지
 }
 
-message C_PlayerAttackToPlayer {
+message C_HitPlayer {
   int32 playerId = 1;  // 공격자 ID
   int32 damage = 2;    // 데미지
 }
 // 플레이어 공격 알림
-message S_PlayerAttackToPlayer {
+message S_HitPlayer {
   int32 playerId = 1;  // 공격자 ID
   int32 damage = 2;    // 데미지
 }
 
-message C_PlayerAttackToMonster {
+message C_HitMonster {
   int32 monsterId = 1;  // 플레이어 ID
   int32 damage = 2;    // 데미지
 }
 // 몬스터 공격 알림
-message S_PlayerAttackToMonster {
+message S_HitMonster {
   int32 monsterId = 1;  // 플레이어 ID
   int32 damage = 2;    // 데미지
 }

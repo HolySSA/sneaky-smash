@@ -1,0 +1,9 @@
+{
+    "name": "skillInfo",
+    "data":[
+        { "skillId": 1, "damageRate": 1, "coolTime": 10},
+        { "skillId": 2, "damageRate": 1, "coolTime": 10},
+        { "skillId": 3, "damageRate": 1, "coolTime": 10},
+        { "skillId": 4, "damageRate": 1, "coolTime": 10}
+    ]
+}

@@ -9,9 +9,9 @@ import chatHandler from './town/chat.handler.js';
 // user
 import registerHandler from './user/register.handler.js';
 import logInHandler from './user/logIn.handler.js';
-// battle
-import leaveDungeonHandler from './battle/leaveDungeon.handler.js';
-import monsterActionHandler from './battle/monsterAction.handler.js';
+// dungeon
+import leaveDungeonHandler from './dungeon/leaveDungeon.handler.js';
+import monsterActionHandler from './dungeon/monsterAction.handler.js';
 // item
 import useItemHandler from './item/useItem.handler.js';
 // game
@@ -47,7 +47,7 @@ const handlers = {
   [PACKET_ID.C_Login]: {
     handler: logInHandler,
   },
-  // battle
+  // dungeon
   [PACKET_ID.C_LeaveDungeon]: {
     handler: leaveDungeonHandler,
   },
@@ -63,10 +63,13 @@ const handlers = {
   },
   // monster
   [PACKET_ID.C_MonsterAttack]: {
-    handler: monsterAttackHandler,
+    handler: undefined,
   },
   [PACKET_ID.C_MonsterKill]: {
-    handler: monsterKillHandler,
+    handler: undefined,
+  },
+  [PACKET_ID.C_MonsterKill]: {
+    handler: undefined,
   },
   [PACKET_ID.C_EnterStage]: {
     handler: monsterSpawnHandler,

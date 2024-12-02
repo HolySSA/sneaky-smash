@@ -28,15 +28,18 @@ const readFileAsync = (filename) => {
 
 const loadGameAssets = async () => {
   try {
-    const [dungeonInfo, equipment, item, monster, classInfo, navmesh] = await Promise.all([
+    const [dungeonInfo, equipment, item, monster, classInfo, navmesh, levelperStats, skillInfo, projectile] = await Promise.all([
       readFileAsync('dungeonInfo.json'),
       readFileAsync('equipment.json'),
       readFileAsync('item.json'),
       readFileAsync('monster.json'),
       readFileAsync('classInfo.json'),
       readFileAsync('navmesh.json'),
+      readFileAsync('levelperStats.json'),
+      readFileAsync('skill.json'),
+      readFileAsync('projectile.json'),
     ]);
-    gameAssets = { dungeonInfo, equipment, item, monster, classInfo, navmesh };
+    gameAssets = { dungeonInfo, equipment, item, monster, classInfo, navmesh, levelperStats, skillInfo, projectile};
     return gameAssets;
   } catch (error) {
     throw new Error('Failed to load game assets: ' + error.message);

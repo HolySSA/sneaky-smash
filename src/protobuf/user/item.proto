@@ -2,6 +2,13 @@ syntax = "proto3";
 
 message ItemInfo {
   int32 itemId = 1; // 아이템 ID
+  int32 atk = 2;
+  int32 def = 3; 
+  int32 curHp = 4;
+  int32 maxHp = 5; 
+  int32 moveSpeed = 6;
+  int32 criticalProbability = 7;
+  int32 criticalDamageRate = 8;
 }
 
 message C_UseItem {

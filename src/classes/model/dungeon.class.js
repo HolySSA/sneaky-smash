@@ -89,15 +89,6 @@ class Dungeon {
 
     return this.users.get(userIdStr) || null;
   }
-  getUserStats(userId) {
-    const user = this.getDungeonUser(userId);
-    return user.stats;
-  }
-
-  getUserHp(userId) {
-    const stats = this.getUserStats(userId);
-    return stats.hp;
-  }
 
   getAllDungeonUsers() {
     return Array.from(this.users.values());

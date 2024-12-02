@@ -11,7 +11,6 @@ class Monster {
     this.criticalDamageRate = monster.CriticalDamageRate;
     this.moveSpeed = monster.MoveSpeed;
     this.attackSpeed = monster.attackSpeed;
-    this.isDead = false;
 
     this.transform = {
       posX: 0,
@@ -39,24 +38,9 @@ class Monster {
 
   attack() {}
 
-  death() {
-    this.curHp <= 0;
-    this.isDead = true;
-    const dropRate = Math.random();
-    if (dropRate < 0.2) {
-      return Math.floor(Math.random() * 20) + 100;
-    }
-    return 0;
-  }
+  death() {}
 
-  hit(damage) {
-    if (this.isDead) return;
-    this.curHp -= Math.max(0, damage - this.def); // 방어력이 공격력보다 커도 최소뎀 0
-    if (this.curHp <= 0) {
-      return this.death();
-    }
-    return 0;
-  }
+  hit() {}
 }
 
 export default Monster;

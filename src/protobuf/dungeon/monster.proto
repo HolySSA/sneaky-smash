@@ -43,3 +43,26 @@ message SpawnMonster {
 	MonsterStatus monsters = 1;
 	TransformInfo transform = 2;
 }
+
+// 스테이지 or 던전 입장 시 몬스터 스폰 ( 수정 필요 )
+message C_MonsterSpawn {
+  int32 stageId = 1;
+	repeated TransformInfo transform = 2;
+}
+
+message S_MonsterSpawn {
+  repeated SpawnMonster monsters = 1; // 몬스터 정보
+}
+
+message DungeonInfo {
+    int32 dungeonCode = 1;    // 던전 코드
+    string dungeonName = 2;
+    repeated int32 stageList = 3;
+
+    // repeated StageInfo stage = 3;
+}
+
+message StageInfo {
+    int32 stageId = 1;                        // 스테이지 ID
+    repeated MonsterStatus monsters = 2;      // 던전에 등장하는 몬스터들의 상태
+}

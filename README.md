@@ -96,76 +96,51 @@ S_EnterDungeon: 10,-> 이거 c가 없음
 
 ## battle
 
-C_LeaveDungeon: 12,
-S_LeaveDungeon: 13,
-S_UpdatePlayerHp: 14, -> 이거 c가 없음
-S_UpdatePlayerMp: 15, -> 이거 c가 없음
-S_UpdateMonsterHp: 16,-> 이거 c가 없음
-C_MonsterAction: 17,
-S_MonsterAction: 18,
+C_LeaveDungeon: 11,
+S_LeaveDungeon: 12,
+S_UpdatePlayerHp: 13, -> 이거 c가 없음
+S_UpdateMonsterHp: 14,-> 이거 c가 없음
+S_UpdateNexusHp = 15,
+C_MonsterAction: 16,
+S_MonsterAction: 17,
+S_LevelUp = 18,
+C_DestroyNexus = 19,
+S_DestroyNexus = 20,
+C_PlayerAttack = 21,
+S_PlayerAttack = 22,
 
 ## user
 
-C_Register: 19,
-S_Register: 20,
-C_LogIn: 21,
-S_LogIn: 22,
+C_Register: 23,
+S_Register: 24,
+C_LogIn: 25,
+S_LogIn: 26,
 
 ## item
 
 C_UseItem: 27,
 S_UseItem: 28,
-C_PurchaseItem: 29,
-S_PurchaseItem: 30,
-C_SellItem: 32,
-S_SellItem: 33,
-C_GetItem: 34,
-S_GetItem: 35,
-C_DropItem: 36,
-S_DropItem: 37,
-C_EquipEquipment: 38,
-S_EquipEquipment: 39,
-C_UnequipWeapon: 40,
-S_UnequipWeapon: 41,
-
-S_ItemSoldOut: 31, -> 이거 c가 없음
 
 ## game
 
-C_EnterPortal: 23,
-S_EnterPortal: 24,
-S_Inventory: 25,
-C_Inventory: 26,
-C_UseSkill: 42,
-S_UseSkill: 43,
+C_EquipSkill = 29,
+S_EquipSkill = 30,
+C_UseSkill = 31,
+S_UseSkill = 32,
 
 ## monster
 
-C_MonsterAttack: 44,
-S_MonsterAttack: 45,
-C_MonsterMove: 46,
-S_MonsterMove: 47,
-C_MonsterKill: 48,
-S_MonsterKill: 49,
-C_MonsterSpawn: 50,
-S_MonsterSpawn: 51,
-
-## boss
-
-C_BossSpawn: 52,
-S_BossSpawn: 53,
-C_TargetPlayer: 54,
-S_TargetPlayer: 55,
-C_ActionBoss: 58,
-S_ActionBoss: 59,
-S_Phase: 60, -> 이거 c가 없음
+C_MonsterAttack: 33,
+S_MonsterAttack: 34,
+C_MonsterMove: 35,
+S_MonsterMove: 36,
+C_MonsterKill: 37,
+S_MonsterKill: 38,
+C_MonsterSpawn: 39,
+S_MonsterSpawn: 40,
 
 ## party
 
-C_Party: 61,
-S_Party: 62,
-C_PartyJoin: 63,
-S_PartyJoin: 64,
-C_PartyLeave: 65,
-S_PartyLeave: 66,
-C_MatchStart: 67
+C_PartyJoin = 41,
+C_PartyLeave = 42,
+S_Party = 43

@@ -1,16 +1,26 @@
 syntax = "proto3";
 
-// C_UseSkill: 스킬 사용 요청 메시지 (클라이언트 -> 서버)
-message C_UseSkill {
-  int32 skillId = 1;           // 스킬 ID
-  int32 targetPlayerId = 2;    // 적용될 플레이어 ID (선택적)
-  int32 targetMonsterId = 3;   // 적용될 몬스터 ID (선택적)
+message SkillInfo {
+  int32 skillId = 1;     // 스킬 ID
+  float power = 2;       // 스킬 계수
+  float cooltime = 3;    // 스킬 쿨타임
 }
 
-// S_UseSkill: 스킬 사용 결과 메시지 (서버 -> 클라이언트)
+message C_EquipSkill {
+  int32 skillId = 1;     // 장착된 스킬 ID
+  int32 skillSlot = 2; // 스킬 슬롯 정보
+}
+
+message S_EquipSkill {
+  int32 skillId = 1;     // 장착된 스킬 ID
+  int32 skillSlot = 2; // 스킬 슬롯 정보
+}
+
+message C_UseSkill {
+  int32 skillId = 1;     // 사용할 스킬 ID
+}
+
 message S_UseSkill {
-  int32 playerId = 1;          // 플레이어 고유 ID
-  int32 skillId = 2;           // 스킬 ID
-  int32 targetPlayerId = 3;    // 스킬 사용된 플레이어 ID (선택적)
-  int32 targetMonsterId = 4;   // 적용된 몬스터 ID (선택적)
+  int32 playerId = 1;    // 플레이어 고유 ID
+  SkillInfo skillInfo = 2; // 사용된 스킬 정보
 }

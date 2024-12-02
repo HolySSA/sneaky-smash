@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-message C_Inventory {
-}
-
-message S_Inventory {
-    repeated ItemInfo items = 1;  // 인벤토리 내 아이템 리스트
-}

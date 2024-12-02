@@ -2,7 +2,6 @@ syntax = "proto3";
 
 message ItemInfo {
   int32 itemId = 1; // 아이템 ID
-  int32 quantity = 2; // 아이템 수량
 }
 
 message C_UseItem {
@@ -12,12 +11,4 @@ message C_UseItem {
 message S_UseItem {
   int32 playerId = 1; //사용한 유저정보
   int32 hp = 2; // 사용 후 남은 아이템 정보
-}
-
-message C_DropItem {
-  ItemInfo item = 1; // 버릴 아이템 정보
-}
-
-message S_DropItem {
-  ItemInfo item = 1; // 버린 아이템 정보
 }

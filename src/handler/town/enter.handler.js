@@ -6,7 +6,7 @@ import enterLogic from '../../utils/etc/enter.logic.js';
 
 const enterHandler = async (socket, payload) => {
   try {
-    await addRedisUser(socket.id, payload.nickname, payload.class);
+    const user = await addRedisUser(socket.id, payload.nickname, payload.class);
     addUserSession(socket);
 
     const character = await findCharacterByUserId(parseInt(socket.id));

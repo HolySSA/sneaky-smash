@@ -32,24 +32,12 @@ const removeRedisUser = async (socket) => {
 };
 
 const getRedisUsers = async () => {
-  // scan으로 모든 키 수집
-  const getAllKeys = async () => {
-    let cursor = '0';
-    const keys = [];
-
-    do {
-      const [newCursor, matchedKeys] = await redis.scan(cursor, 'MATCH', 'user:*', 'COUNT', 100);
-      cursor = newCursor;
-      keys.push(...matchedKeys);
-    } while (cursor !== '0');
-
-    return keys;
-  };
-
-  const userKeys = await getAllKeys();
+  // keys 명령어로 직접 조회
+  const userKeys = await redis.keys('user:*');
+  console.log('Redis 유저 키 조회 결과:', userKeys);
 
   if (!userKeys.length) {
-    throw new Error('레디스 유저가 존재하지 않습니다.');
+    return [];
   }
 
   // pipeline - 명령 묶어서 실행(최적화)
@@ -75,7 +63,7 @@ const getRedisUserById = async (id) => {
   const user = await redis.hgetall(userKey);
 
   if (!user || Object.keys(user).length === 0) {
-    throw new Error('존재하지 않는 레디스 유저입니다.');
+    return null;
   }
 
   return {

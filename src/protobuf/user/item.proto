@@ -2,7 +2,6 @@ syntax = "proto3";
 
 message ItemInfo {
   int32 itemId = 1; // 아이템 ID
-  int32 quantity = 2; // 아이템 수량
 }
 
 message C_UseItem {
@@ -10,65 +9,6 @@ message C_UseItem {
 }
 
 message S_UseItem {
-  ItemInfo item = 1; // 사용 후 남은 아이템 정보
-}
-
-message C_PurchaseItem {
-  ItemInfo item = 1; // 습득할 아이템 정보
-  int32 gold = 2; // 보유 골드
-}
-
-message S_PurchaseItem {
-  ItemInfo item = 1; // 습득할 아이템 정보
-  int32 gold = 2; // 보유 골드 - 아이템 골드
-  bool success = 3; // 성공여부
-  string message = 4; // 메시지
-}
-
-message S_ItemSoldOut {
-  ItemInfo item = 1; // 판매된 아이템
-}
-
-message C_SellItem {
-  ItemInfo item = 1; // 판매할 아이템 정보
-  int32 gold = 2; // 보유 골드
-}
-
-message S_SellItem {
-  ItemInfo item = 1; // 판매한 아이템 정보
-  int32 gold = 2; // 보유 골드 + 아이템 골드
-  bool success = 3; // 성공여부
-  string message = 4; // 메시지
-}
-
-message C_GetItem {
-  ItemInfo item = 1; // 습득할 아이템 정보
-}
-
-message S_GetItem {
-  ItemInfo item = 1; // 습득한 아이템 정보
-}
-
-message C_DropItem {
-  ItemInfo item = 1; // 버릴 아이템 정보
-}
-
-message S_DropItem {
-  ItemInfo item = 1; // 버린 아이템 정보
-}
-
-message C_EquipEquipment {
-  int32 itemId = 1; // 장착할 장비 ID
-}
-
-message S_EquipEquipment {
-  int32 itemId = 1; // 장착한 장비 ID
-}
-
-message C_UnequipWeapon {
-  string itemType = 1; // 탈착할 아이템 유형
-}
-
-message S_UnequipWeapon {
-  string itemType = 1; // 탈착한 아이템 유형
+	int32 playerId = 1; // 아이템 사용한 유저 ID
+  ItemInfo itemInfo = 2; // 사용 후 남은 아이템 정보
 }

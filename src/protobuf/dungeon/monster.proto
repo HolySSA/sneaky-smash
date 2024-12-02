@@ -9,20 +9,8 @@ message MonsterStatus {
   float monsterHp = 4; // 몬스터 체력
 }
 
-message C_MonsterAttack {
-  int32 monsterId = 1; // 몬스터 식별 ID
-  int32 damage = 2; // 데미지
-}
-
 message S_MonsterAttack {
-  int32 playerId = 1; // 플레이어 식별 ID
-  int32 monsterId = 2; // 몬스터 식별 ID
-  int32 damage = 3; // 데미지
-}
-
-message C_MonsterMove {
   int32 monsterId = 1; // 몬스터 식별 ID
-  TransformInfo transform = 2; // 몬스터 위치
 }
 
 message S_MonsterMove {
@@ -30,17 +18,33 @@ message S_MonsterMove {
   TransformInfo transform = 2; // 몬스터 위치
 }
 
-message C_MonsterKill {
-  int32 monsterId = 1; // 몬스터 식별 ID
-  int32 itemId = 2; // 아이템 식별 ID
-}
-
 message S_MonsterKill {
   int32 monsterId = 1; // 몬스터 식별 ID
-  int32 itemId = 2; // 아이템 식별 ID
+  int32 itemId = 2;
+  int32 skillId = 3;
+  TransformInfo transform = 4;
 }
 
-message SpawnMonster {
+message S_MonsterStatus {
+	int32 monsterId = 1;
+	MonsterStatus status = 2;
+}
+
+message S_MonsterSpawn{
 	MonsterStatus monsters = 1;
 	TransformInfo transform = 2;
+}
+
+message C_MonsterSpawn{
+	int32 stageId = 1;
+	repeated TransformInfo transform = 2;
+}
+	
+message C_GetNavPath{
+  TransformInfo playerPosition = 1;
+  TransformInfo enemyPosition = 2;
+}
+
+message S_GetNavPath{
+  TransformInfo pathPosition = 1;
 }

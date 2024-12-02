@@ -13,11 +13,8 @@ enterQueue.process(async (job) => {
   const { socketId } = job.data;
 
   try {
-    const userSession = getUserSessionById(socketId);
     const userRedis = await getRedisUserById(socketId);
-
-    console.log('userRedis: ', userRedis);
-    console.log('userSession: ', userSession);
+    const userSession = getUserSessionById(socketId);
 
     const playerPayload = {
       playerId: parseInt(socketId),

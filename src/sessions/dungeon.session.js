@@ -20,7 +20,7 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
   }
 
   const dungeon = new Dungeon(dungeonInfos, dungeonLevel);
-  dungeonSessions.set(dungeonSessionId, dungeon);
+  dungeonSessions.set(sessionId, dungeon);
 
   return dungeon;
 };

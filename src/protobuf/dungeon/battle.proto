@@ -12,14 +12,15 @@ message S_LeaveDungeon {
 message S_UpdatePlayerHp {
   float hp = 1;                // 플레이어의 체력
 }
-// 플레이어 마나 업데이트 (S_UpdatePlayerMp)
-message S_UpdatePlayerMp {
-  float mp = 1;                // 플레이어의 마나
-}
 // 몬스터 체력 업데이트 (S_UpdateMonsterHp)
 message S_UpdateMonsterHp {
   float hp = 1;                // 몬스터의 체력
 }
+// 넥서스 체력 업데이트 
+message S_UpdateNexusHp {
+	float hp = 1; // 넥서스의 체력
+}
+
 // 몬스터 액션 요청 (C_MonsterAction)
 message C_MonsterAction {
   int32 actionMonsterIdx = 1;  // 액션을 취하는 몬스터 인덱스
@@ -29,6 +30,32 @@ message C_MonsterAction {
 message S_MonsterAction {
   int32 actionMonsterIdx = 1;  // 액션을 취하는 몬스터 인덱스
   ActionSet actionSet = 2;     // 몬스터의 액션 설정
+}
+// 유저 레벨 업
+message S_LevelUp {
+	int32 playerId = 1; // 레벨업하는 유저 ID
+	StatInfo StatInfo = 2; // 레벨업할 때 적용되는 스텟정보
+}
+
+// 타워 부수기 요청
+message C_DestroyNexus {
+	int32 damage = 1;
+}
+
+// 타워 부수기 응답
+message S_DestroyNexus {
+	int32 playerId = 1;
+	int32 damage = 2;
+}
+
+// 유저끼리 공격 요청
+message C_PlayerAttack {
+	int32 playerId = 1;
+}
+// 유저끼리 공격 응답
+message S_PlayerAttack {
+	int32 playerId = 1;
+	int32 hp = 2;
 }
 // 액션셋
 message ActionSet {

@@ -1,3 +1,4 @@
+import { getStatsByUserId } from "../../sessions/redis/redis.user.js";
 import MonsterLogic from "./monsterLogic.class.js";
 
 class Dungeon {
@@ -8,6 +9,9 @@ class Dungeon {
     this.currentStage = 0;
     this.users = new Map();
     this.monsterLogic = new MonsterLogic();
+
+    this.nexusCurrentHp = 100;
+    this.nexusMaxHp = 100;
   }
 
   getRandomStages(allStages, count) {
@@ -45,7 +49,7 @@ class Dungeon {
     return this.stages.map((stage) => stage.stageId);
   }
 
-  addDungeonUser(userSession) {
+  async addDungeonUser(userSession) {
     if (!userSession.socket.id) {
       throw new Error('유효하지 않은 유저 세션입니다.');
     }
@@ -56,10 +60,13 @@ class Dungeon {
       throw new Error('이미 던전에 참여 중인 유저입니다.');
     }
 
+    const statsInfo = await getStatsByUserId(userId);
+
     const dungeonUser = {
-      userId: userId,
       socket: userSession.socket,
+      currentHp: statsInfo.maxHp,
       transform: { posX: 0, posY: 0, posZ: 0, rot: 0 }, // 던전 입장 시 초기 위치
+      statsInfo
     };
 
     this.users.set(userId, dungeonUser);
@@ -76,18 +83,43 @@ class Dungeon {
 
     return this.users.get(userIdStr) || null;
   }
+
+  getAllUsers() {
+    return this.users;
+  }
+
   getUserStats(userId) {
     const user = this.getDungeonUser(userId);
-    return user.stats;
+    return user.statsInfo;
+  }
+
+  setUserStats(userId) {
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    if(!user){
+      throw new Error("유저가 존재하지 않습니다.");
+    }
+
+    // 레벨 퍼당 스탯을 가져와서 @@@@@@@@@@@@@@ 밑에 스탯에 추가 해주면 됨.
+
+    user.statsInfo = {
+      level: user.statsInfo.level + 1,
+        hp: user.statsInfo.hp,
+        maxHp: user.statsInfo.maxHp,
+        atk: user.statsInfo.atk,
+        def: user.statsInfo.def,
+        speed: user.statsInfo.speed,
+        criticalProbability: user.statsInfo.criticalProbability,
+        criticalDamageRate: user.statsInfo.criticalDamageRate      
+    }
+
+    return user;
   }
 
   getUserHp(userId) {
     const stats = this.getUserStats(userId);
     return stats.hp;
-  }
-
-  getAllDungeonUsers() {
-    return Array.from(this.users.values());
   }
 
   getCurrentStage() {
@@ -100,8 +132,85 @@ class Dungeon {
     }
   }
 
-  // 스테이지 중 3개 할당해서 적용하기
-  getcurrentStages() {}
+  damagedUser(userId, damage){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    // 방어력 관련
+    user.currentHp -= damage;
+
+    return user.currentHp;
+  }
+
+  recoveryPlayerHp(userId, amount){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    // 방어력 관련
+    user.currentHp = Math.min(amount + user.currentHp, user.maxHp);
+
+    return user.currentHp;
+  }
+
+  increasePlayerAtk(userId, amount){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    user.atk = Math.min(amount + user.atk, user.atk);
+
+    return user.atk;
+  }
+
+  increasePlayerDef(userId, amount){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    user.def = Math.min(amount + user.def, user.def);
+
+    return user.def;
+  }
+
+  increasePlayerMaxHp(userId, amount){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    user.maxHp = Math.min(amount + user.maxHp, user.maxHp);
+
+    return user.maxHp;
+  }
+  
+  increasePlayerMoveSpeed(userId, amount){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    user.d = Math.min(amount + user.moveSpeed, user.moveSpeed);
+
+    return user.moveSpeed;
+  }
+
+  increasePlayerCriticalProbability(userId, amount){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    user.d = Math.min(amount + user.criticalProbability, user.criticalProbability);
+
+    return user.criticalProbability;
+  }
+
+  increasePlayerCriticalDamageRate(userId, amount){
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+
+    user.d = Math.min(amount + user.criticalDamageRate, user.criticalDamageRate);
+
+    return user.criticalDamageRate;
+  }
 }
+  
+  nexusDamaged(damage)
+  {
+    this.nexusCurrentHp -= damage;
+    return this.nexusCurrentHp;
+  }
 
 export default Dungeon;

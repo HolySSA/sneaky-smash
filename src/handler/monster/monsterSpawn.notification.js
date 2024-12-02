@@ -6,6 +6,16 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getUserSessions } from '../../sessions/user.session.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 
+// message S_MonsterSpawn{
+// 	MonsterStatus monsters = 1;
+// 	TransformInfo transform = 2;
+// }
+// message TransformInfo {
+//   float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
+//   float posY = 2;   // Y 좌표 (기본값 : 1)
+//   float posZ = 3;   // Z 좌표 (기본값 : -8 ~ 8)
+//   float rot = 4;    // 회전 값 (기본값 : 0 ~ 360)
+// }
 const randomfunction = (ain) => Math.floor(Math.random() * ain.length);
 
 const monsterSpawnHandler = async (socket, payload) => {
@@ -63,7 +73,7 @@ const monsterSpawnHandler = async (socket, payload) => {
       monsters,
     };
 
-    const response = createResponse(PACKET_ID.S_EnterStage, monsterSpawnPayload);
+    const response = createResponse(PACKET_ID.S_MonsterSpawn, monsterSpawnPayload);
 
     const allUsers = getUserSessions();
 

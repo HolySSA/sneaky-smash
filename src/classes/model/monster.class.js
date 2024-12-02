@@ -25,10 +25,11 @@ class Monster {
         };
 
         this.target = null; // 현재 타겟
+        this.isDead = false;
     }
 
     move(pathPoint) {
-        if (!pathPoint) return;
+        if (!pathPoint && this.isDead) return;
 
         const directionX = pathPoint.x - this.transform.posX;
         const directionY = pathPoint.y - this.transform.posY;
@@ -44,8 +45,12 @@ class Monster {
         }
     }
 
+    // message S_MonsterAttack {
+    //   int32 monsterId = 1; // 몬스터 식별 ID
+    // }
+
     attack() {
-        if (!this.target) return;
+        if (!this.target && this.isDead) return;
 
         const distanceToTarget = Math.sqrt(
             (this.target.posX - this.transform.posX) ** 2 +
@@ -54,11 +59,20 @@ class Monster {
         );
 
         if (distanceToTarget <= this.attackRange) {
-            console.log(`${this.name}이(가) ${this.target}를 공격합니다!`);
-            // 여기서 타겟의 HP 감소 또는 상태 변경 로직 추가 가능
+            console.log(`${this.name}이(가) ${this.target}를 공격합니다!`);          
             this.target = null; // 공격 후 타겟 초기화
+
+            const attackPayload = {
+              monsterId: this.id
+            };
+            const response = createResponse(PACKET_ID.S_MonsterAttack,attackPayload);
+            const allUsers = getUserSessions();
+            allUsers.forEach((value) => {
+                value.socket.write(response);
+            })
         }
     }
+
   death() {
     this.curHp <= 0;
     this.isDead = true;
@@ -72,10 +86,12 @@ class Monster {
   hit(damage) {
     if (this.isDead) return;
     this.curHp -= Math.max(0, damage - this.def); // 방어력이 공격력보다 커도 최소뎀 0
+
     if (this.curHp <= 0) {
       return this.death();
     }
-    return 0;
+
+    return this.curHp;
   }
 }
 

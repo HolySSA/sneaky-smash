@@ -30,6 +30,16 @@ class MonsterLogic {
         this.monsterLists.push(monster);
     }
 
+    getMonsterById(id) {
+        const currentMonster = monsterLists.find((monster) => monster.id === id);
+
+        if(!currentMonster){
+            throw new Error(`${id} 몬스터가 존재하지 않습니다.`);
+        };
+
+        return currentMonster;
+    }
+
     addUniqueId() {
         return this.monsterIndex++;
     }

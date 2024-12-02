@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "../dungeon/monster.proto";
+
+message C_EnterPortal {
+    int32 portalId = 1;  // 포탈 고유 ID
+}
+
+message S_EnterPortal {
+    int32 portalId = 1;  // 포탈 고유 ID
+    int32 statId = 2;   // 버프/디버프 ID
+    int32 stat = 3;     // 버프/디버프
+}
+
+message DungeonInfo {
+    int32 dungeonCode = 1;    // 던전 코드
+    string dungeonName = 2;
+    repeated int32 stageList = 3;
+
+    // repeated StageInfo stage = 3;
+}
+
+message StageInfo {
+    int32 stageId = 1;                        // 스테이지 ID
+    repeated MonsterStatus monsters = 2;      // 던전에 등장하는 몬스터들의 상태
+}
+
+message C_EnterStage {
+	int32 stageId = 1;
+	repeated TransformInfo transform = 2;
+}
+
+message S_EnterStage {
+	repeated SpawnMonster monsters = 1;
+}

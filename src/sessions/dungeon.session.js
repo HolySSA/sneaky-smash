@@ -10,8 +10,8 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
   // 일단 1 ~ 2 던전 중 하나
   const dungeonCode = Math.floor(Math.random() * 2) + 1;
 
-  const gameAssets = getGameAssets();
-  const dungeonInfos = gameAssets.dungeonInfo.dungeons.find(
+  const gameAssets = getGameAssets().dungeonInfo;
+  const dungeonInfos = gameAssets.dungeons.find(
     (dungeonInfo) => dungeonInfo.dungeonId === dungeonCode,
   );
 
@@ -20,7 +20,7 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
   }
 
   const dungeon = new Dungeon(dungeonInfos, dungeonLevel);
-  dungeonSessions.set(dungeonSessionId, dungeon);
+  dungeonSessions.set(sessionId, dungeon);
 
   return dungeon;
 };

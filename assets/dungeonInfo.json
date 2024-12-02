@@ -47,29 +47,29 @@
       "stages": [
         {
           "stageId": 6,
-          "monsters": [{ "monsterId": 511, "count": 6 }]
+          "monsters": [{ "monsterId": 0, "count": 6 }]
         },
         {
           "stageId": 7,
           "monsters": [
-            { "monsterId": 512, "count": 3 },
-            { "monsterId": 513, "count": 5 }
+            { "monsterId": 1, "count": 3 },
+            { "monsterId": 2, "count": 5 }
           ]
         },
         {
           "stageId": 8,
-          "monsters": [{ "monsterId": 514, "count": 3 }]
+          "monsters": [{ "monsterId": 3, "count": 3 }]
         },
         {
           "stageId": 9,
           "monsters": [
-            { "monsterId": 515, "count": 3 },
-            { "monsterId": 516, "count": 2 }
+            { "monsterId": 4, "count": 3 },
+            { "monsterId": 5, "count": 2 }
           ]
         },
         {
           "stageId": 10,
-          "monsters": [{ "monsterId": 517, "count": 5 }]
+          "monsters": [{ "monsterId": 6, "count": 5 }]
         }
       ]
     }

@@ -1,15 +1,13 @@
-import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
-import MonsterLogic from './monsterLogic.class.js';
+import MonsterLogic from "./monsterLogic.class.js";
 
 class Dungeon {
-  constructor(dungeonInfo, dungeonLevel) {
+  constructor(dungeonInfo) {
     this.dungeonId = dungeonInfo.dungeonId;
     this.name = dungeonInfo.name;
     this.stages = this.getRandomStages(dungeonInfo.stages, 3);
     this.currentStage = 0;
     this.users = new Map();
     this.monsterLogic = new MonsterLogic();
-    this.dungeonLevel = dungeonLevel;
   }
 
   getRandomStages(allStages, count) {
@@ -23,7 +21,7 @@ class Dungeon {
       selectedStages.push({
         stageId: selectedStage.stageId,
         monsters: selectedStage.monsters.map((monster) => ({
-          monsterId: monster.monster_id,
+          monsterId: monster.monsterId,
           count: monster.count,
         })),
       });
@@ -44,20 +42,10 @@ class Dungeon {
   }
 
   getStageIdList() {
-    if (!this.stages) {
-      throw new Error('던전 스테이지 정보가 존재하지 않습니다.');
-    }
-
-    return this.stages.map((stage) => {
-      if (!stage) {
-        throw new Error('던전 스테이지 정보가 존재하지 않습니다.');
-      }
-
-      return stage.stageId;
-    });
+    return this.stages.map((stage) => stage.stageId);
   }
 
-  async addDungeonUser(userSession) {
+  addDungeonUser(userSession) {
     if (!userSession.socket.id) {
       throw new Error('유효하지 않은 유저 세션입니다.');
     }
@@ -72,7 +60,6 @@ class Dungeon {
       userId: userId,
       socket: userSession.socket,
       transform: { posX: 0, posY: 0, posZ: 0, rot: 0 }, // 던전 입장 시 초기 위치
-      stats: await getStatsByUserId(userId),
     };
 
     this.users.set(userId, dungeonUser);
@@ -89,9 +76,22 @@ class Dungeon {
 
     return this.users.get(userIdStr) || null;
   }
+  getUserStats(userId) {
+    const user = this.getDungeonUser(userId);
+    return user.stats;
+  }
+
+  getUserHp(userId) {
+    const stats = this.getUserStats(userId);
+    return stats.hp;
+  }
 
   getAllDungeonUsers() {
     return Array.from(this.users.values());
+  }
+
+  getCurrentStage() {
+    return this.stages[this.currentStage];
   }
 
   nextStage() {

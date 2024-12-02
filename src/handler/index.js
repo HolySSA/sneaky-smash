@@ -14,25 +14,12 @@ import leaveDungeonHandler from './battle/leaveDungeon.handler.js';
 import monsterActionHandler from './battle/monsterAction.handler.js';
 // item
 import useItemHandler from './item/useItem.handler.js';
-import purchaseItemHandler from './item/purchaseItem.handler.js';
-import sellItemHandler from './item/sellItme.handler.js';
-import getItemHandler from './item/getItem.handler.js';
-import dropItemHandler from './item/dropItem.handler.js';
-import equipEquipmentHandler from './item/equipEquipment.handler.js';
-import unequipWeaponHandler from './item/unequipWeapon.handler.js';
 // game
-import enterPortalHandler from './game/enterPortal.handler.js';
-import inventoryHandler from './game/inventory.handler.js';
 import useSkillHandler from './game/useSkill.handler.js';
 // monster
-import monsterDamageHandler from './monster/monsterDamage.handler.js';
+import monsterAttackHandler from './monster/monsterAttack.handler.js';
 import monsterKillHandler from './monster/monsterKill.handler.js';
-import monsterMoveHandler from './monster/monsterMove.handler.js';
 import monsterSpawnHandler from './monster/monsterSpawn.handler.js';
-// boss
-import actionBossHandler from './boss/ActionBoss.handler.js';
-import bossSpawnHandler from './boss/bossSpawn.handler.js';
-import targetPlayerHandler from './boss/targetPlayer.handler.js';
 // party
 import partyLeaveHandler from './party/party.leave.handler.js';
 import partyHandler from './party/party.handler.js';
@@ -71,56 +58,18 @@ const handlers = {
   [PACKET_ID.C_UseItem]: {
     handler: useItemHandler,
   },
-  [PACKET_ID.C_PurchaseItem]: {
-    handler: purchaseItemHandler,
-  },
-  [PACKET_ID.C_SellItem]: {
-    handler: sellItemHandler,
-  },
-  [PACKET_ID.C_GetItem]: {
-    handler: getItemHandler,
-  },
-  [PACKET_ID.C_DropItem]: {
-    handler: dropItemHandler,
-  },
-  [PACKET_ID.C_EquipEquipment]: {
-    handler: equipEquipmentHandler,
-  },
-  [PACKET_ID.C_UnequipWeapon]: {
-    handler: unequipWeaponHandler,
-  },
-  //game
-  [PACKET_ID.C_EnterPortal]: {
-    handler: enterPortalHandler,
-  },
-  [PACKET_ID.C_Inventory]: {
-    handler: inventoryHandler,
-  },
   [PACKET_ID.C_UseSkill]: {
     handler: useSkillHandler,
   },
   // monster
   [PACKET_ID.C_MonsterAttack]: {
-    handler: monsterDamageHandler,
-  },
-  [PACKET_ID.C_MonsterMove]: {
-    handler: monsterMoveHandler,
+    handler: monsterAttackHandler,
   },
   [PACKET_ID.C_MonsterKill]: {
     handler: monsterKillHandler,
   },
   [PACKET_ID.C_EnterStage]: {
     handler: monsterSpawnHandler,
-  },
-  // boss
-  [PACKET_ID.C_BossSpawn]: {
-    handler: bossSpawnHandler,
-  },
-  [PACKET_ID.C_TargetPlayer]: {
-    handler: targetPlayerHandler,
-  },
-  [PACKET_ID.C_ActionBoss]: {
-    handler: actionBossHandler,
   },
   // party
   [PACKET_ID.C_Party]: {

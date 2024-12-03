@@ -2,7 +2,8 @@ import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
-
+import { getRedisUserById } from '../../sessions/redis/redis.user.js';
+import { getDungeonSession } from '../../sessions/dungeon.session.js';
 // message SkillInfo {
 // 	int32	skillId	= 1	// 스킬 ID
 // 	float	damageRate = 2	// 스킬 계수
@@ -21,7 +22,10 @@ const getSkillHandler = async (socket, payload) => {
   try {
     const { skillId } = payload;
 
-    const allUsers = getUserSessions(socket.id);
+    const redisUser = await getRedisUserById(playerId);
+    const dungeon = getDungeonSession(redisUser.sessionId);
+    const allUsers = dungeon.getAllUsers();
+
 
     const skillData = getGameAssets().skillInfo.data;
     
@@ -39,7 +43,7 @@ const getSkillHandler = async (socket, payload) => {
         value.socket.write(response)
     });
   } catch (err) {
-    handleError(err);
+    handleError(socket, err);
   }
 };
 

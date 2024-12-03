@@ -18,10 +18,11 @@ const attributeHandlers = {
 const useItemHandler = async (socket, payload) => {
   try {
     const { itemId } = payload;
+    const playerId = socket.id;
 
     const gameAssets = getGameAssets();
     const itemAssets = gameAssets.item.data;
-    const item = itemAssets.find((item) => item.itemid === itemId);
+    const item = itemAssets.find((item) => item.itemId === itemId);
 
     const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);

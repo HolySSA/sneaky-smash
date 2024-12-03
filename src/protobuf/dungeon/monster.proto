@@ -33,6 +33,7 @@ message S_MonsterStatus {
 message S_MonsterSpawn{
 	MonsterStatus monsters = 1;
 	TransformInfo transform = 2;
+	Stats stats = 3;
 }
 	
 message C_GetNavPath{
@@ -42,5 +43,15 @@ message C_GetNavPath{
 
 message S_GetNavPath{
   TransformInfo pathPosition = 1;
+}
+
+message Stats {
+  int32 atk = 1;
+  int32 def = 2; 
+  int32 curHp = 3;
+  int32 maxHp = 4; 
+  int32 moveSpeed = 5;
+  int32 criticalProbability = 6;
+  int32 criticalDamageRate = 7
 }
 

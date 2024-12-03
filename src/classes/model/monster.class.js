@@ -3,7 +3,7 @@ import { getUserSessions } from "../../sessions/user.session.js";
 import createResponse from "../../utils/response/createResponse.js";
 
 class Monster {
-    constructor(id, monster, transform) {
+    constructor(id, monster, transform, zoneId) {
         this.id = id;
         this.modelId = monster.monsterId;
         this.name = monster.name;
@@ -16,6 +16,7 @@ class Monster {
         this.moveSpeed = monster.MoveSpeed;
         this.attackSpeed = monster.attackSpeed;
         this.attackRange = monster.AttackRange || 1.5;
+        this.zoneId = zoneId;
 
         this.transform = {
             posX: transform.posX,
@@ -49,7 +50,7 @@ class Monster {
     //   int32 monsterId = 1; // 몬스터 식별 ID
     // }
 
-    attack() {
+    attack(users) {
         if (!this.target && this.isDead) return;
 
         const distanceToTarget = Math.sqrt(
@@ -65,9 +66,9 @@ class Monster {
             const attackPayload = {
               monsterId: this.id
             };
-            const response = createResponse(PACKET_ID.S_MonsterAttack,attackPayload);
-            const allUsers = getUserSessions();
-            allUsers.forEach((value) => {
+
+            const response = createResponse(PACKET_ID.S_MonsterAttack, attackPayload);
+            users.forEach((value) => {
                 value.socket.write(response);
             })
         }
@@ -85,11 +86,7 @@ class Monster {
 
   hit(damage) {
     if (this.isDead) return;
-    this.curHp -= Math.max(0, damage - this.def); // 방어력이 공격력보다 커도 최소뎀 0
-
-    if (this.curHp <= 0) {
-      return this.death();
-    }
+    this.curHp -= Math.max(0, damage - this.def); // 방어력이 공격력보다 커도 최소뎀
 
     return this.curHp;
   }

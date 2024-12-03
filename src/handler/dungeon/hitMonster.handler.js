@@ -13,7 +13,9 @@ import { PACKET_ID } from "../../constants/packetId.js";
 import { getDungeonSession } from "../../sessions/dungeon.session.js";
 import { getRedisUserById } from "../../sessions/redis/redis.user.js";
 import createResponse from "../../utils/response/createResponse.js";
-;
+import updateMonsterHpNotification from "./updatePlayerHp.notification.js";
+import handleError from '../../utils/error/errorHandler.js';
+import monsterKillNotification from "../monster/monsterKill.notification.js";
 
 const hitMonsterHandler = async (socket, payload) => {
     try {
@@ -31,14 +33,19 @@ const hitMonsterHandler = async (socket, payload) => {
 
         const currentHp = monster.hit(damage);
 
-        updateMonsterHpNotification(socket, { monsterId, currentHp });        
-        
-        allUsers.forEach((value) =>{
+        if(currentHp <= 0)
+            monsterKillNotification(socket, monster.id, monster.transform);        
+
+        // 몬스터 체력 업데이트 노티피케이션
+        const updateHpResponse = createResponse(PACKET_ID.S_UpdatePlayerHp, { monsterId, hp: currentHp });   
+    
+        allUsers.forEach((value) => {
             value.socket.write(response);
-        })
+            value.socket.write(updateHpResponse);
+        });
         
     } catch (err) {
-        handleError(err);
+        handleError(socket, err);
     }
 };
 

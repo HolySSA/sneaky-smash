@@ -12,6 +12,7 @@ import { getDungeonSession } from "../../sessions/dungeon.session.js";
 import { getRedisUserById } from "../../sessions/redis/redis.user.js";
 import createResponse from "../../utils/response/createResponse.js";
 import updatePlayerHpNotification from "./updatePlayerHp.notification.js";
+import handleError from '../../utils/error/errorHandler.js';
 
 const hitPlayerHandler = async (socket, payload ) => {
     try{
@@ -24,7 +25,8 @@ const hitPlayerHandler = async (socket, payload ) => {
         
         const currentHp = dungeon.damagedUser(playerId, damage);
 
-        updatePlayerHpNotification(socket, { playerId, hp: currentHp });
+        // updatePlayerHp 노티피케이션
+        const updatePlayerHpResponse = createResponse(PACKET_ID.S_UpdatePlayerHp, { playerId, hp: currentHp }); 
 
         const allUsers = dungeon.getAllUsers();
 
@@ -32,10 +34,11 @@ const hitPlayerHandler = async (socket, payload ) => {
 
         allUsers.forEach((value) => {
             value.socket.write(response);
-        });     
+            value.socket.write(updatePlayerHpResponse);
+        });
         
     } catch (err) {
-        handleError(socket, e);
+        handleError(socket, err);
     }
 }
 

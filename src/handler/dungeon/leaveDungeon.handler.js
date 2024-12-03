@@ -27,8 +27,8 @@ const leaveDungeonHandler = async (socket, payload) => {
       value.socket.write(response)
     });   
     
-  } catch (e) {
-    handleError(socket, e);
+  } catch (err) {
+    handleError(socket, err);
   }
 };
 

@@ -1,8 +1,9 @@
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getUserSessions } from '../../sessions/user.session.js';
 import { getGameAssets } from '../../init/loadAsset.js';
+import { getRedisUserById } from '../../sessions/redis/redis.user.js';
+import { getDungeonSession } from '../../sessions/dungeon.session.js';
 
 // message TransformInfo {
 //     float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
@@ -25,7 +26,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 //  float projectileSpeed = 5;
 // }
 
-const shootProjectileHandler = (socket, payload) => {
+const shootProjectileHandler = async (socket, payload) => {
   try {
     const { projectileId, transform, dir } = payload;
 
@@ -41,13 +42,16 @@ const shootProjectileHandler = (socket, payload) => {
     
     const response = createResponse(PACKET_ID.S_ShootProjectile, shootProjectilePayload);
 
-    const allUsers = getUserSessions();
+    const redisUser = await getRedisUserById(socket.id);
+    const dungeon = getDungeonSession(redisUser.sessionId);
+
+    const allUsers = dungeon.getAllUsers();
     
     allUsers.forEach((value) => {
         value.socket.write(response);
     });
   } catch (err) {
-    handleError(err);
+    handleError(socket, err);
   }
 };
 

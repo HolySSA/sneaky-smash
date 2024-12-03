@@ -8,7 +8,7 @@ class Dungeon {
     this.stages = this.getRandomStages(dungeonInfo.stages, 3);
     this.currentStage = 0;
     this.users = new Map();
-    this.monsterLogic = new MonsterLogic();
+    this.monsterLogic = new MonsterLogic(this);
 
     this.nexusCurrentHp = 100;
     this.nexusMaxHp = 100;

@@ -12,10 +12,14 @@ import handleError from '../../utils/error/errorHandler.js';
 // 	int32 monsterId = 1;
 // 	MonsterStatus status = 2;
 // }
-
-const monsterStatusNotification = async (socket, payload) => {
-    try {
-  
+const status = {
+  monsterId,
+  monsterModel,
+  monsterName,
+  monsterHp,
+};
+const monsterStatusNotification = async (socket, payload) => { 
+  try {      
       const monsterStatusPayload = {
         monsterId,
         status,
@@ -26,4 +30,5 @@ const monsterStatusNotification = async (socket, payload) => {
       handleError(socket, e);
     }
   };
+  
   export default monsterStatusNotification;

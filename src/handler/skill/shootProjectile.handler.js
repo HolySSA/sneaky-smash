@@ -30,7 +30,10 @@ const shootProjectileHandler = async (socket, payload) => {
   try {
     const { projectileId, transform, dir } = payload;
 
-    const projectileInfo = getGameAssets().projectile.data;
+    const playerId = 1;
+    const projectileInfo = getGameAssets().projectile.data.find(
+      (id) => id.projectileId === projectileId,
+    );
 
     const shootProjectilePayload = {
       playerId,

@@ -18,7 +18,7 @@ const removeUserSession = async (socket) => {
 const getUserSessions = () => {
   if (!userSessions || userSessions.size === 0) {
     console.error('유저세션이 없습니다.');
-    return;
+    return null;
   }
 
   return userSessions;

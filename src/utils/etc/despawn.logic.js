@@ -26,13 +26,12 @@ const despawnLogic = async (socket) => {
 
   const sessions = getUserSessions();
 
-  if(sessions.size <= 0)
-    return;
-
-  sessions.forEach((value) => {
-    value.socket.write(response);
-  })
-
+  if(sessions)
+  {
+    sessions.forEach((value) => {
+      value.socket.write(response);
+    })
+  }
 };
 
 export default despawnLogic;

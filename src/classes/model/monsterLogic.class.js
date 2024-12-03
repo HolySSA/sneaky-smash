@@ -19,16 +19,32 @@ class MonsterLogic {
         id: 1,
         maxCount: 5,
         transform: [
-          { posX: 0, posY: 0, posZ: 0 },
-          { posX: 0, posY: 0, posZ: 0 },
+          { posX: -5, posY: -4, posZ: 75 },
+          { posX: 5, posY: -4, posZ: 75 },
         ],
       },
       {
         id: 2,
         maxCount: 5,
         transform: [
-            { posX: 0, posY: 0, posZ: 0 },
-            { posX: 0, posY: 0, posZ: 0 },
+            { posX: 0, posY: -4, posZ: 55 },
+            { posX: 0, posY: -4, posZ: 45 },
+        ],
+      },
+      {
+        id: 3,
+        maxCount: 5,
+        transform: [
+            { posX: 10, posY: -4, posZ: 55 },
+            { posX: 10, posY: -4, posZ: 45 },
+        ],
+      },
+      {
+        id: 4,
+        maxCount: 5,
+        transform: [
+            { posX: 10, posY: -4, posZ: 30 },
+            { posX: 0, posY: -4, posZ: 30 },
         ],
       },
     ];

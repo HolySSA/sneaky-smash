@@ -1,5 +1,4 @@
 import { PACKET_ID } from "../../constants/packetId.js";
-import { getUserSessions } from "../../sessions/user.session.js";
 import createResponse from "../../utils/response/createResponse.js";
 
 class Monster {
@@ -29,7 +28,7 @@ class Monster {
         this.isDead = false;
     }
 
-    move(pathPoint) {
+    move(pathPoint, monsterLogicInterval) {
         if (!pathPoint && this.isDead) return;
 
         const directionX = pathPoint.x - this.transform.posX;
@@ -40,9 +39,9 @@ class Monster {
 
         if (length > 0) {
 
-            this.transform.posX += (directionX / length) * this.moveSpeed;
-            this.transform.posY += (directionY / length) * this.moveSpeed;
-            this.transform.posZ += (directionZ / length) * this.moveSpeed;
+            this.transform.posX += (directionX / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
+            this.transform.posY += (directionY / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
+            this.transform.posZ += (directionZ / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
         }
     }
 
@@ -69,7 +68,7 @@ class Monster {
 
             const response = createResponse(PACKET_ID.S_MonsterAttack, attackPayload);
             users.forEach((value) => {
-                value.socket.write(response);
+                value.userInfo.socket.write(response);
             })
         }
     }

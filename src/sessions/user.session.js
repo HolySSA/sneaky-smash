@@ -1,11 +1,12 @@
+import User from '../classes/model/user.class.js';
 import { userSessions } from './sessions.js';
 
-const addUserSession = (socket, user) => {
+const addUserSession = (socket) => {
   if (userSessions.has(socket.id)) {
     throw new Error('세션 중복');
   }
 
-  userSessions.set(socket.id, { socket, transform: user.transform });
+  const user = new User(socket);
   return user;
 };
 
@@ -40,8 +41,9 @@ const updateUserTransformById = (id, posX, posY, posZ, rot) => {
   const newTransform = { posX, posY, posZ, rot };
 
   const userId = id.toString();
-  const session = userSessions.get(userId);
-  if (session) session.transform = newTransform;
+
+  const user = userSessions.get(userId);
+  user.updateUserTransform(posX, posY, posZ, rot);
 
   return newTransform;
 };

@@ -7,7 +7,6 @@ import { findUserByAccount } from '../../db/model/user.db.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
-import User from '../../classes/model/user.class.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 
 // message C_Login {
@@ -58,10 +57,8 @@ const logInHandler = async (socket, payload) => {
     const character = await findCharacterByUserId(existUser.id);
 
     if (character) {
-      const user = new User(existUser.id, character.myClass, character.nickname);
-
+      addUserSession(socket);
       await addRedisUser(user);
-      addUserSession(socket, user);
 
       return await enterLogic(socket, user);
     }

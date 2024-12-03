@@ -24,18 +24,16 @@ message S_MonsterKill {
   int32 skillId = 3;
   TransformInfo transform = 4;
 }
-
-message S_MonsterStatus {
-	int32 monsterId = 1;
-	MonsterStatus status = 2;
+message C_MonsterSpawn{
+	int32 stageId = 1;
+	repeated TransformInfo transform = 2;
 }
-
 message S_MonsterSpawn{
 	MonsterStatus monsters = 1;
 	TransformInfo transform = 2;
 	Stats stats = 3;
 }
-	
+
 message C_GetNavPath{
   TransformInfo playerPosition = 1;
   TransformInfo enemyPosition = 2;

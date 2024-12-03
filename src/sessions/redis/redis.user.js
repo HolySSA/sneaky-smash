@@ -1,13 +1,13 @@
 import { getGameAssets } from '../../init/loadAsset.js';
 import redis from '../../utils/redis/redisManager.js';
 
-const addRedisUser = async (user) => {
+const addRedisUser = async (userId, nickname, myClass) => {
   const userKey = `user:${user.id}`;
   const redisUser = await redis.hset(userKey, {
-    id: user.id.toString(),
-    nickname: user.nickname,
-    myClass: user.myClass.toString(),
-    locationType: user.locationType,
+    id: userId.toString(),
+    nickname: nickname,
+    myClass: myClass.toString(),
+    locationType: 'town',
     sessionId: 0,
   });
 

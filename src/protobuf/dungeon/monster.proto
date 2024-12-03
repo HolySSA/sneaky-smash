@@ -52,6 +52,6 @@ message Stats {
   int32 maxHp = 4; 
   int32 moveSpeed = 5;
   int32 criticalProbability = 6;
-  int32 criticalDamageRate = 7
+  int32 criticalDamageRate = 7;
 }
 

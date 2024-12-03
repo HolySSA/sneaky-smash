@@ -71,7 +71,7 @@ const getRedisUserById = async (id) => {
 
 const getStatsByUserId = async (userId) => {
   const userKey = `user:${userId}`;
-  const user = await redis.hset(userKey);
+  const user = await redis.hgetall(userKey);
 
   if (!user || Object.keys(user).length === 0) {
     return null;

@@ -114,7 +114,7 @@ class MonsterLogic {
     let closestDistance = Infinity;
     let closestPlayer = null;
 
-    dungeonInstance.users.forEach((value) => {
+    this.dungeonInstance.users.forEach((value) => {
       const { posX, posY, posZ } = value.transform;
       const distance = Math.sqrt(
         (posX - monster.transform.posX) ** 2 +
@@ -181,11 +181,7 @@ class MonsterLogic {
   startGameLoop() {
     // 게임 루프 시작
     this.gameLoopInterval = setInterval(() => {
-      //몬스터 생성 로직
-      
-      const monsterSpawnNotification = monsterSpawnNotification(PACKET_ID.S_Spawn,Payload,);
 
-      value.socket.write(monsterSpawnNotification);
       this.monsterLists.forEach((monster) => {
         // 타겟이 없을 때 가장 가까운 적을 타겟으로 설정
         if (!monster.target) {

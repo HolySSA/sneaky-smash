@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // message DungeonInfo {
 //     int32 dungeonCode = 1;    // 던전 코드
-//     repeated int32 stageList = 2; // 스테이지 셔플 된 아이디 리스트
+//     string dungeonName = 2;
 // }
 
 // **StatInfo** - 플레이어의 상세 스탯 정보
@@ -67,10 +67,9 @@ const dungeonStartHandler = async (socket, payload) => {
     const sessionId = uuidv4();
     const dungeon = addDungeonSession(sessionId, dungeonLevel);
 
-    const stageList = dungeon.getStageIdList();
     const dungeonInfo = {
       dungeonCode: dungeon.dungeonId,
-      stageList,
+      dungeonName: dungeon.name,
     };
 
     const infoText = dungeon.name;

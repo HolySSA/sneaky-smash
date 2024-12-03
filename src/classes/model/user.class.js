@@ -1,5 +1,3 @@
-import Inventory from './inventory.class.js';
-
 class User {
   constructor(socket) {
     this.socket = socket;

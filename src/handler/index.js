@@ -11,20 +11,15 @@ import registerHandler from './user/register.handler.js';
 import logInHandler from './user/logIn.handler.js';
 // dungeon
 import leaveDungeonHandler from './dungeon/leaveDungeon.handler.js';
-import monsterActionHandler from './dungeon/monsterAction.handler.js';
 // item
 import useItemHandler from './item/useItem.handler.js';
 // game
-import useSkillHandler from './game/useSkill.handler.js';
-// monster
-import monsterAttackHandler from './monster/monsterAttack.handler.js';
-import monsterKillHandler from './monster/monsterKill.handler.js';
-import monsterSpawnHandler from './monster/monsterSpawn.handler.js';
-// party
+
 import partyLeaveHandler from './party/party.leave.handler.js';
 import partyHandler from './party/party.handler.js';
 import dungeonStartHandler from './party/dungeon.start.handler.js';
 import partyJoinHandler from './party/party.join.handler.js';
+import useSkillHandler from './skill/useSkill.handler.js';
 
 const handlers = {
   // town
@@ -51,28 +46,12 @@ const handlers = {
   [PACKET_ID.C_LeaveDungeon]: {
     handler: leaveDungeonHandler,
   },
-  [PACKET_ID.C_MonsterAction]: {
-    handler: monsterActionHandler,
-  },
   // item
   [PACKET_ID.C_UseItem]: {
     handler: useItemHandler,
   },
   [PACKET_ID.C_UseSkill]: {
     handler: useSkillHandler,
-  },
-  // monster
-  [PACKET_ID.C_MonsterAttack]: {
-    handler: undefined,
-  },
-  [PACKET_ID.C_MonsterKill]: {
-    handler: undefined,
-  },
-  [PACKET_ID.C_MonsterKill]: {
-    handler: undefined,
-  },
-  [PACKET_ID.C_EnterStage]: {
-    handler: monsterSpawnHandler,
   },
   // party
   [PACKET_ID.C_Party]: {

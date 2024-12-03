@@ -205,12 +205,12 @@ class Dungeon {
 
     return user.criticalDamageRate;
   }
-}
-  
+
   nexusDamaged(damage)
   {
     this.nexusCurrentHp -= damage;
     return this.nexusCurrentHp;
   }
+}  
 
 export default Dungeon;

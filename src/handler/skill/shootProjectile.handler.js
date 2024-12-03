@@ -33,22 +33,22 @@ const shootProjectileHandler = async (socket, payload) => {
     const projectileInfo = getGameAssets().projectile.data;
 
     const shootProjectilePayload = {
-        playerId,
-        projectileId,
-        transform,
-        dir,
-        projectileSpeed: projectileInfo.projectileSpeed,
+      playerId,
+      projectileId,
+      transform,
+      dir,
+      projectileSpeed: projectileInfo.projectileSpeed,
     };
-    
+
     const response = createResponse(PACKET_ID.S_ShootProjectile, shootProjectilePayload);
 
     const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
 
     const allUsers = dungeon.getAllUsers();
-    
+
     allUsers.forEach((value) => {
-        value.socket.write(response);
+      value.socket.write(response);
     });
   } catch (err) {
     handleError(socket, err);

@@ -3,6 +3,7 @@ import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import { getGameAssets } from '../../init/loadAsset.js';
 
 // message SkillInfo {
 // 	int32	skillId	= 1	// 스킬 ID
@@ -17,32 +18,31 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 //     int32 playerId = 1;    // 플레이어 고유 ID
 //     SkillInfo skillInfo = 2; // 사용된 스킬 정보
 //   }
-  
+
 const useSkillHandler = async (socket, payload) => {
   try {
     const { skillId } = payload;
 
     // 스킬 인포 정보 가져오기
-    const skillData = getGameAssets().skillInfo.data;    
+    const skillData = getGameAssets().skillInfo.data.find((id) => id.skillId === skillId);
 
     const skillPayload = {
-        playerId: socket.id,
-        skillInfo: {
-            skillId,
-            damageRate: skillData.damageRate,
-            coolTime: skillData.coolTime,
-        }
+      playerId: socket.id,
+      skillInfo: {
+        skillId,
+        damageRate: skillData.damageRate,
+        coolTime: skillData.coolTime,
+      },
     };
-    
+
     const response = createResponse(PACKET_ID.S_UseSkill, skillPayload);
-    const redisUser = await getRedisUserById(playerId);
+    const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
 
     allUsers.forEach((value) => {
-        value.socket.write(response);      
+      value.socket.write(response);
     });
-
   } catch (e) {
     handleError(socket, e);
   }

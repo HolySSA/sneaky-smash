@@ -8,7 +8,7 @@ import { getUserSessions, updateUserTransformById } from '../../sessions/user.se
  * @param {object} socket - 클라이언트 소켓
  * @param {object} payload - 클라이언트에서 전송한 데이터
  */
-export const movePlayerHandler = async (socket, payload) => {
+const movePlayerHandler = async (socket, payload) => {
   try {
     const { posX, posY, posZ, rot } = payload.transform;
 
@@ -47,3 +47,5 @@ export const movePlayerHandler = async (socket, payload) => {
     console.error('무브 핸들러 실행 중 오류 발생:', error.message);
   }
 };
+
+export default movePlayerHandler;

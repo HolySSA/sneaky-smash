@@ -3,6 +3,7 @@ import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
+
 // message C_LeaveDungeon {
 //   // 던전에서 나가기 요청
 // }
@@ -18,15 +19,14 @@ const leaveDungeonHandler = async (socket, payload) => {
     const playerId = socket.id;
     const redisUser = await getRedisUserById(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
-    const allUsers = dungeon.getAllUsers();    
-    
+    const allUsers = dungeon.getAllUsers();
+
     const response = createResponse(PACKET_ID.S_LeaveDungeon, { playerId });
-    
+
     // 클라이언트에서 나가기 처리를 따로 실시하면 내 유저 ID 제외하고 보내면 된다.
     allUsers.forEach((value) => {
-      value.socket.write(response)
-    });   
-    
+      value.socket.write(response);
+    });
   } catch (err) {
     handleError(socket, err);
   }

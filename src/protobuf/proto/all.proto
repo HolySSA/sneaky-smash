@@ -1,0 +1,328 @@
+syntax = "proto3";
+
+message C_LeaveDungeon {
+  // 던전에서 나가기 요청
+}
+
+message S_LeaveDungeon {
+  int32 playerId = 1; // 유저가 나갔는지 던전에서 나가는 메시지
+}
+
+message S_UpdatePlayerHp {
+  int32 playerId = 1; // 플레이어 식별 ID
+  float hp = 2;       // 플레이어의 체력
+}
+
+message S_UpdateMonsterHp {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  float hp = 2;        // 몬스터의 체력
+}
+
+message S_UpdateNexusHp {
+  float hp = 1;        // 넥서스의 체력
+}
+
+message S_LevelUp {
+  int32 playerId = 1;  // 레벨업하는 유저ID
+  StatInfo statInfo = 2; // 레벨
+}
+
+message C_AttackedNexus {
+  int32 damage = 1;    // 데미지
+}
+
+message S_AttackedNexus {
+  int32 playerId = 1;  // 공격 유저ID
+  int32 damage = 2;    // 데미지
+}
+
+// HP 변화 등 status 변할 때 알림
+message S_PlayerStatus {
+  int32 playerId = 1;   // 플레이어 ID
+  PlayerStatus status = 2; // 플레이어 상태
+}
+
+message C_HitPlayer {
+  int32 playerId = 1;  // 공격자 ID
+  int32 damage = 2;    // 데미지
+}
+
+// 플레이어 공격 알림
+message S_HitPlayer {
+  int32 playerId = 1;  // 공격자 ID
+  int32 damage = 2;    // 데미지
+}
+
+message C_HitMonster {
+  int32 monsterId = 1;  // 플레이어 ID
+  int32 damage = 2;    // 데미지
+}
+
+// 몬스터 공격 알림
+message S_HitMonster {
+  int32 monsterId = 1;  // 플레이어 ID
+  int32 damage = 2;    // 데미지
+}
+
+message ActionSet {
+  int32 animCode = 1;   // 애니메이션 코드
+  int32 effectCode = 2; // 효과 코드
+}
+
+// **PlayerStatus** - 플레이어 상태
+message PlayerStatus {
+  int32 playerClass = 1;      // 플레이어 클래스
+  int32 playerLevel = 2;      // 플레이어 레벨
+  string playerName = 3;      // 플레이어 이름
+  float playerFullHp = 4;     // 플레이어 최대 체력
+  float playerFullMp = 5;     // 플레이어 최대 마나
+  float playerCurHp = 6;      // 플레이어 현재 체력
+  float playerCurMp = 7;      // 플레이어 현재 마나
+}
+
+// **StatInfo** - 플레이어의 상세 스탯 정보
+message StatInfo {
+  int32 level = 1;                 // 플레이어 레벨
+  float hp = 2;                    // 현재 체력
+  float maxHp = 3;                 // 최대 체력
+  float mp = 4;                    // 현재 마나
+  float maxMp = 5;                 // 최대 마나
+  float atk = 6;                   // 공격력
+  float def = 7;                   // 방어력
+  float speed = 8;                 // 속도
+  float criticalProbability = 9;   // 크리티컬 확률
+  float criticalDamageRate = 10;   // 크리티컬 데미지 비율
+}
+
+// **TransformInfo** - 위치 및 회전 정보
+message TransformInfo {
+  float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
+  float posY = 2;   // Y 좌표 (기본값 : 1)
+  float posZ = 3;   // Z 좌표 (기본값 : -8 ~ 8)
+  float rot = 4;    // 회전 값 (기본값 : 0 ~ 360)
+}
+
+message PlayerInfo {
+    int32 playerId = 1;             // 플레이어 고유 식별 코드
+    string nickname = 2;            // 플레이어 닉네임
+    int32 class = 3;                // 플레이어 클래스
+    TransformInfo transform = 4;
+    StatInfo statInfo = 5;          // 플레이어 스탯 정보
+}
+
+message ItemInfo {
+  int32 itemId = 1; // 아이템 ID
+  int32 atk = 2;
+  int32 def = 3; 
+  int32 curHp = 4;
+  int32 maxHp = 5; 
+  int32 moveSpeed = 6;
+  int32 criticalProbability = 7;
+  int32 criticalDamageRate = 8;
+}
+
+message C_UseItem {
+  int32 itemId = 1; // 사용할 아이템 ID
+}
+
+message S_UseItem {
+	int32 playerId = 1; // 아이템 사용한 유저 ID
+  ItemInfo itemInfo = 2; // 사용 후 남은 아이템 정보
+}
+
+message C_Register {
+    string account = 1;  // 아이디
+    string password = 2;  // 비밀번호
+}
+
+message S_Register {
+    bool success = 1;     // 성공 여부
+    string message = 2;   // 메시지
+}
+
+message C_Login {
+    string account = 1;  // 아이디
+    string password = 2;  // 비밀번호
+}
+
+message S_Login {
+    bool success = 1;     // 성공 여부
+    string message = 2;   // 메시지
+    string token = 3;     // 토큰
+}
+
+// 파티 창 입장
+message C_Party {
+}
+
+// **S_Party** - 파티 정보 응답 메시지
+message S_Party {
+  repeated int32 playerId = 1;    // 파티에 참여 중인 유저들의 ID 리스트
+  int32 roomId = 2; 
+	int32 dungeonLevel = 3; // 던전 난이도
+}
+
+// **C_PartyJoin** - 파티에 참여 요청 메시지
+message C_PartyJoin {
+  int32 dungeonLevel = 1;  // 던전 난이도
+  int32 roomId = 2;
+  bool isOwner = 3;
+}
+
+message S_PartyJoin {
+	int32 playerId = 1;
+	int32 roomId = 2;
+	int32 dungeonLevel = 3;
+}
+
+// **C_PartyLeave** - 파티에서 나가기 요청 메시지
+message C_PartyLeave {
+  int32 roomId = 1;  // 방 번호
+}
+
+message S_PartyLeave {
+	int32 playerId = 1;
+	int32 roomId = 2;
+}
+
+message  C_MatchStart {
+	int32 dungeonLevel = 1; // 던전 들어가기
+	int32 roomId = 2; // 방번호
+}
+
+message MonsterStatus {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 monsterModel = 2; // 몬스터 모델 ID
+  string monsterName = 3; // 몬스터 이름
+  float monsterHp = 4; // 몬스터 체력
+}
+
+message S_MonsterAttack {
+  int32 monsterId = 1; // 몬스터 식별 ID
+}
+
+message S_MonsterMove {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  TransformInfo transform = 2; // 몬스터 위치
+}
+
+message S_MonsterKill {
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 itemId = 2;
+  int32 skillId = 3;
+  TransformInfo transform = 4;
+}
+
+message S_MonsterStatus {
+	int32 monsterId = 1;
+	MonsterStatus status = 2;
+}
+
+message S_MonsterSpawn{
+	MonsterStatus monsters = 1;
+	TransformInfo transform = 2;
+	Stats stats = 3;
+}
+	
+message C_GetNavPath{
+  TransformInfo playerPosition = 1;
+  TransformInfo enemyPosition = 2;
+}
+
+message S_GetNavPath{
+  TransformInfo pathPosition = 1;
+}
+
+message Stats {
+  int32 atk = 1;
+  int32 def = 2; 
+  int32 curHp = 3;
+  int32 maxHp = 4; 
+  int32 moveSpeed = 5;
+  int32 criticalProbability = 6;
+  int32 criticalDamageRate = 7;
+}
+
+message SkillInfo {
+	int32	skillId	= 1;	// 스킬 ID
+	float	damageRate 	= 2;	// 스킬 계수
+	float	coolTime = 3;	// 스킬 쿨타임
+}
+
+message ProjectileDirection {
+	float	dirX = 1;	// 방향 X
+	float	dirY = 2;	// 방향 Y
+	float	dirZ = 3;	// 방향 Z
+}
+
+message C_GetSkill {
+  int32 skillId = 1;     // 장착된 스킬 ID
+}
+
+message S_GetSkill {
+  SkillInfo skillInfo = 1; // 스킬 슬롯 정보
+}
+
+message C_ShootProjectile {	
+	int32 projectileId = 1;
+	TransformInfo transform = 2;
+	ProjectileDirection dir = 3;
+}
+
+message S_ShootProjectile {
+	int32 playerId = 1;
+	int32 projectileId = 2;
+	TransformInfo transform = 3;
+ 	ProjectileDirection dir = 4;
+ }
+message C_UseSkill {
+  int32 skillId = 1;     // 사용할 스킬 ID
+}
+
+message S_UseSkill {
+  int32 playerId = 1;    // 플레이어 고유 ID
+  SkillInfo skillInfo = 2; // 사용된 스킬 정보
+}
+message DungeonInfo {
+    int32 dungeonCode = 1;    // 던전 코드
+    string dungeonName = 2;
+}
+message C_Enter {
+    string nickname = 1;        // 닉네임
+    int32 class = 2;            // 캐릭터 클래스
+}
+message S_Enter {
+    PlayerInfo player = 1;      // 플레이어 정보 (추후 정의 예정)
+}
+message S_Spawn {
+    repeated PlayerInfo players = 1; // 스폰되는 플레이어 리스트 (추후 정의 예정)
+}
+message S_Despawn {
+    repeated int32 playerIds = 1;    // 디스폰되는 플레이어 ID 리스트
+}
+message C_Move {
+    TransformInfo transform = 1;    // 이동할 위치와 회전 정보
+}
+message S_Move {
+    int32 playerId = 1;             // 이동하는 플레이어 ID
+    TransformInfo transform = 2;    // 이동 후 위치와 회전 정보
+}
+message C_Animation {
+    int32 animCode = 1;             // 애니메이션 코드
+}
+message S_Animation {
+    int32 playerId = 1;             // 애니메이션을 실행하는 플레이어 ID
+    int32 animCode = 2;             // 애니메이션 코드
+}
+message C_Chat {
+    string chatMsg = 1;             // 채팅 메시지 내용
+}
+message S_Chat {
+    int32 playerId = 1;             // 채팅을 받는 플레이어 ID
+    string chatMsg = 2;             // 채팅 메시지 내용
+}
+message S_EnterDungeon {
+    DungeonInfo dungeonInfo = 1;    // 던전 정보 (추후 정의 예정)
+    repeated PlayerInfo player = 2; // 플레이어 정보 (추후 정의 예정)
+    string infoText = 3;            // 화면에 표시할 텍스트 (옵션)
+}

@@ -36,10 +36,17 @@ message S_AttackedNexus {
   int32 damage = 2;    // 데미지
 }
 
+// HP 변화 등 status 변할 때 알림
+message S_PlayerStatus {
+  int32 playerId = 1;   // 플레이어 ID
+  PlayerStatus status = 2; // 플레이어 상태
+}
+
 message C_HitPlayer {
   int32 playerId = 1;  // 공격자 ID
   int32 damage = 2;    // 데미지
 }
+
 // 플레이어 공격 알림
 message S_HitPlayer {
   int32 playerId = 1;  // 공격자 ID
@@ -50,16 +57,11 @@ message C_HitMonster {
   int32 monsterId = 1;  // 플레이어 ID
   int32 damage = 2;    // 데미지
 }
+
 // 몬스터 공격 알림
 message S_HitMonster {
   int32 monsterId = 1;  // 플레이어 ID
   int32 damage = 2;    // 데미지
-}
-
-// HP 변화 등 status 변할 때 알림
-message S_PlayerStatus {
-  int32 playerId = 1;   // 플레이어 ID
-  PlayerStatus status = 2; // 플레이어 상태
 }
 
 message ActionSet {

@@ -3,7 +3,6 @@ import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 
 // 패킷명세
@@ -27,29 +26,28 @@ const monsterKillNotification = async (socket, payload) => {
     const gameAssets = getGameAssets();
     const itemAssets = gameAssets.item.data;
     const item = itemAssets[Math.floor(Math.random() * itemAssets.length)];
-    const itemId = item.itemId;      
+    const itemId = item.itemId;
 
     const skillAssets = gameAssets.skillInfo.data;
     const skill = skillAssets[Math.floor(Math.random() * skillAssets.length)];
     const skillId = skill.skillId;
-    
+
     const monsterKillPayload = {
       monsterId,
       itemId,
       skillId,
       transform,
     };
-    
-    const response = createResponse(PACKET_ID.S_MonsterKill, monsterKillPayload);    
+
+    const response = createResponse(PACKET_ID.S_MonsterKill, monsterKillPayload);
 
     const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
-    const allUsers = dungeon.getAllUsers(); 
+    const allUsers = dungeon.getAllUsers();
 
     allUsers.forEach((value) => {
-        value.socket.write(response)
+      value.socket.write(response);
     });
-    
   } catch (e) {
     handleError(socket, e);
   }

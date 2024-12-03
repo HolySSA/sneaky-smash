@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "./customMessage.proto";
+
 message SkillInfo {
 	int32	skillId	= 1;	// 스킬 ID
 	float	damageRate 	= 2;	// 스킬 계수
@@ -31,6 +33,7 @@ message S_ShootProjectile {
 	int32 projectileId = 2;
 	TransformInfo transform = 3;
  	ProjectileDirection dir = 4;
+	float projectileSpeed = 5;
  }
 
 

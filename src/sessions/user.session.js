@@ -7,6 +7,7 @@ const addUserSession = (socket) => {
   }
 
   const user = new User(socket);
+  userSessions.set(socket.id, user);
   return user;
 };
 

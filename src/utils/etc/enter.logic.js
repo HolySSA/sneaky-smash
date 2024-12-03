@@ -13,7 +13,7 @@ import createResponse from '../response/createResponse.js';
 
 const enterLogic = async (socket, user) => {
   const playerPayload = {
-    playerId: user.id,
+    playerId: parseInt(user.id),
     nickname: user.nickname,
     class: user.myClass,
     transform: getUserTransformById(user.id),

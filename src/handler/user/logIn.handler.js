@@ -58,9 +58,12 @@ const logInHandler = async (socket, payload) => {
 
     if (character) {
       addUserSession(socket);
-      const user = await addRedisUser(existUser.id, character.nickname, character.myClass);
+      await addRedisUser(existUser.id, character.nickname, character.myClass);
 
-      return await enterLogic(socket, user);
+      const user = await getRedisUserById(existUser.id);
+      await enterLogic(socket, user);
+
+      return;
     }
 
     // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)

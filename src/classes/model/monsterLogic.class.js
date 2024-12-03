@@ -124,7 +124,7 @@ class MonsterLogic {
 
       if (distance < closestDistance) {
         closestDistance = distance;
-        closestPlayer = session;
+        closestPlayer = value;
       }
     });
 

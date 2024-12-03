@@ -44,7 +44,6 @@ export const PACKET_ID = {
   S_MonsterMove: 37,
   S_MonsterKill: 38,
   S_MonsterSpawn: 39,
-  S_MonsterStatus: 40,
   C_Party: 41,
   S_Party: 42,
   C_PartyJoin: 43,
@@ -52,7 +51,6 @@ export const PACKET_ID = {
   C_PartyLeave: 45,
   S_PartyLeave: 46,
   C_MatchStart: 47,
-
   C_GetNavPath: 99,
   S_GetNavPath: 100,
 };

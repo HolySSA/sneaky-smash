@@ -13,6 +13,7 @@ class MonsterLogic {
     this.gameLoopInterval = null;
     this.monsterIndex = 1;
 
+    this.monsterLogicInterval = 100;
     this.spawnInterval = 1000 * 10; // 10초
     this.spawnZones = [
       {
@@ -97,7 +98,7 @@ class MonsterLogic {
       console.log(
         `몬스터 ID: ${monster.id} 위치 데이터 전송 - (${monster.transform.posX}, ${monster.transform.posY}, ${monster.transform.posZ})`,
       );
-      value.socket.write(response); // 데이터 전송
+      value.userInfo.socket.write(response); // 데이터 전송
     });
   }
 
@@ -105,7 +106,7 @@ class MonsterLogic {
     if (!monster.target) return;
 
     this.pathServer
-      .sendPathRequest(monster.transform, monster.target.transform)
+      .sendPathRequest(monster.transform, monster.target.userInfo.transform)
       .then((response) => {
         // response는 S_GetNavPath 메시지에서 디코딩된 값
         const { pathPosition } = response;
@@ -116,7 +117,7 @@ class MonsterLogic {
             x: pathPosition.posX,
             y: pathPosition.posY,
             z: pathPosition.posZ,
-          });
+          }, this.monsterLogicInterval);
         } else {
           console.error(`몬스터 ID: ${monster.id} 경로 데이터가 없습니다.`);
         }
@@ -131,7 +132,7 @@ class MonsterLogic {
     let closestPlayer = null;
 
     this.dungeonInstance.users.forEach((value) => {
-      const { posX, posY, posZ } = value.transform;
+      const { posX, posY, posZ } = value.userInfo.transform;
       const distance = Math.sqrt(
         (posX - monster.transform.posX) ** 2 +
           (posY - monster.transform.posY) ** 2 +
@@ -170,9 +171,9 @@ class MonsterLogic {
     const payload = {
         monsters : {
             monsterId: monsterUniqueId,
-            monsterModel: monster.monsterId,
+            monsterModel: monster.modelId,
             monsterName: monster.name,
-            monsterHp: monster.MaxHp
+            monsterHp: monster.maxHp
         },
 
         transform,
@@ -188,10 +189,10 @@ class MonsterLogic {
     };
 
     this.dungeonInstance.users.forEach((user) => {
-        monsterSpawnNotification(user.socket, { payload })
+        monsterSpawnNotification(user.userInfo.socket, { payload })
     });
     
-    console.log(`몬스터 스폰 ${monster.name} 포지션 : ${transform.posX}, ${transform.posY}, ${transform.posZ}`)
+    // console.log(`몬스터 스폰 ${monster.name} 포지션 : ${transform.posX}, ${transform.posY}, ${transform.posZ}`)
 }
 
   startGameLoop() {
@@ -202,11 +203,12 @@ class MonsterLogic {
         // 타겟이 없을 때 가장 가까운 적을 타겟으로 설정
         if (!monster.target) {
           const closestPlayer = this.findClosestPlayer(monster);
+
           if (closestPlayer) {
             monster.target = closestPlayer;
-            console.log(
-              `${monster.name}이(가) 새로운 타겟을 설정했습니다: (${closestPlayer.transform.posX}, ${closestPlayer.transform.posY}, ${closestPlayer.transform.posZ})`,
-            );
+            // console.log(
+            //   `${monster.name}이(가) 새로운 타겟을 설정했습니다: (${closestPlayer.transform.posX}, ${closestPlayer.transform.posY}, ${closestPlayer.transform.posZ})`,
+            // );
           }
         }
 
@@ -221,7 +223,7 @@ class MonsterLogic {
           monster.attack(this.dungeonInstance.users);
         }
       });
-    }, 100); // 0.1초마다 업데이트
+    }, this.monsterLogicInterval); // 0.1초마다 업데이트
   }
 
   stopGameLoop() {

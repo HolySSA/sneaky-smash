@@ -26,9 +26,8 @@ class Dungeon {
     const statsInfo = await getStatsByUserId(userId);
 
     const dungeonUser = {
-      socket: userSession.socket,
+      userInfo: userSession,
       currentHp: statsInfo.maxHp,
-      transform: { posX: 0, posY: 0, posZ: 0, rot: 0 }, // 던전 입장 시 초기 위치
       statsInfo
     };
 

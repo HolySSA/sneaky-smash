@@ -6,7 +6,6 @@ message MonsterStatus {
   int32 monsterId = 1; // 몬스터 식별 ID
   int32 monsterModel = 2; // 몬스터 모델 ID
   string monsterName = 3; // 몬스터 이름
-  float monsterHp = 4; // 몬스터 체력
 }
 
 message S_MonsterAttack {
@@ -21,13 +20,16 @@ message S_MonsterMove {
 message S_MonsterKill {
   int32 monsterId = 1; // 몬스터 식별 ID
   int32 itemId = 2;
-  int32 skillId = 3;
-  TransformInfo transform = 4;
+  int32 playerId = 3;
+  int32 skillId = 4;
+  TransformInfo transform = 5;
+  float exp = 6;
 }
 message C_MonsterSpawn{
 	int32 stageId = 1;
 	repeated TransformInfo transform = 2;
 }
+
 message S_MonsterSpawn{
 	MonsterStatus monsters = 1;
 	TransformInfo transform = 2;
@@ -49,7 +51,7 @@ message Stats {
   int32 curHp = 3;
   int32 maxHp = 4; 
   int32 moveSpeed = 5;
-  int32 criticalProbability = 6;
-  int32 criticalDamageRate = 7;
+  float criticalProbability = 6;
+  float criticalDamageRate = 7;
 }
 

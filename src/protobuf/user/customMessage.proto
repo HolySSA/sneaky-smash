@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "../dungeon/monster.proto";
+
 // **PlayerStatus** - 플레이어 상태
 message PlayerStatus {
   int32 playerClass = 1;      // 플레이어 클래스
@@ -12,14 +14,8 @@ message PlayerStatus {
 // **StatInfo** - 플레이어의 상세 스탯 정보
 message StatInfo {
   int32 level = 1;                 // 플레이어 레벨
-  float hp = 2;                    // 현재 체력
-  float maxHp = 3;                 // 최대 체력
-  float atk = 4;                   // 공격력
-  float def = 5;                   // 방어력
-  float speed = 6;                 // 속도
-  float criticalProbability = 7;   // 크리티컬 확률
-  float criticalDamageRate = 8;    // 크리티컬 데미지 비율
-  float exp = 9;                   // 경험치
+  Stats stats = 2;
+  float exp = 3;                   // 경험치
 }
 
 // **TransformInfo** - 위치 및 회전 정보

@@ -20,24 +20,27 @@ const useItemHandler = async (socket, payload) => {
   try {
     const { itemId } = payload;
 
+    // 아이템 에셋 가져와서 id를 통해 아이템 정보 가져오기
     const gameAssets = getGameAssets();
     const itemAssets = gameAssets.item.data;
     const item = itemAssets.find((item) => item.itemId === itemId);
-    console.log('item:', item);
 
+    // 유저가 속한 던전 세션 가져오기
     const redisUser = await getRedisUserById(socket.id);
-    console.log('redisUser:', redisUser);
     const dungeon = getDungeonSession(redisUser.sessionId);
-    console.log('dungeon:', dungeon);
+    const allUsers = dungeon.getAllUsers();
 
     const itemInfo = {};
-
+    // 아이템 정보에 맞는 스텟 증가를 적용시키기
     Object.entries(item).forEach(([key, value]) => {
       if (attributeHandlers[key]) {
         itemInfo[key] = attributeHandlers[key](dungeon, socket.id, value); // 해당 속성 처리
       }
     });
-    console.log('itemInfo:', itemInfo);
+    // 체력 상태 동기화를 위한 유저의 체력 정보 가져오기
+    const user = dungeon.getDungeonUser(socket.id);
+    const currentHp = user.currentHp;
+
     const useItemPayload = {
       playerId: socket.id,
       itemInfo: {
@@ -46,7 +49,15 @@ const useItemHandler = async (socket, payload) => {
       },
     };
 
+    const updatePlayerHpResponse = createResponse(PACKET_ID.S_UpdatePlayerHp, {
+      playerId: socket.id,
+      hp: currentHp,
+    });
+
     const response = createResponse(PACKET_ID.S_UseItem, useItemPayload);
+    allUsers.forEach((value) => {
+      value.socket.write(updatePlayerHpResponse);
+    });
     socket.write(response);
   } catch (e) {
     handleError(socket, e);

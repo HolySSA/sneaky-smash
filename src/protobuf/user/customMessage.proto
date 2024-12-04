@@ -16,6 +16,7 @@ message StatInfo {
   int32 level = 1;                 // 플레이어 레벨
   Stats stats = 2;
   float exp = 3;                   // 경험치
+  float maxExp = 4;
 }
 
 // **TransformInfo** - 위치 및 회전 정보

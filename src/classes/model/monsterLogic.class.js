@@ -204,52 +204,24 @@ class MonsterLogic {
       this.monsterLists.forEach((monster) => {
         // 타겟이 없을 때 가장 가까운 적을 타겟으로 설정
         if (!monster.target) {
-          // 1. 가까운 플레이어 서치
           const closestPlayer = this.findClosestPlayer(monster);
           if (closestPlayer) {
-            // 2. 플레이어가 영역을 침범했는지 확인
-            const isPlayerDetected = monster.detectPlayer(closestPlayer.userInfo.transform);
-            if (isPlayerDetected) {
-              // 3. 영역전개 타겟On
-              if (!monster.targetOn) {
-                monster.targetOn = true;
-                console.log(`${monster.name}이(가) 플레이어를 감지했습니다.`);
-              }
-              monster.target = closestPlayer;
-              // 4. 활성화 된 상태에서만 이동과 공격
-              this.requestPathAndMove(monster);
-              this.sendMonsterMove(monster);
-              monster.attack(this.dungeonInstance.users);
-            } else {
-              // 5. 플레이어가 감지 범위를 벗어나면 비활성화
-              if (monster.targetOn) {
-                monster.targetOn = false;
-                monster.target = null;
-                console.log(`$(monster.name)는 플레이어를 놓침`);
-              }
-            }
-            // monster.target = closestPlayer;
+            monster.target = closestPlayer;
             // console.log(
             //   `${monster.name}이(가) 새로운 타겟을 설정했습니다: (${closestPlayer.transform.posX}, ${closestPlayer.transform.posY}, ${closestPlayer.transform.posZ})`,
             // );
-          } else {
-            // 주변에 플레이어 없으면 비활성화
-            if (monster.targetOn) {
-              monster.targetOn = false;
-              monster.target = null;
-            }
           }
         }
-        // // 타겟이 있을 경우 경로 요청 및 이동
-        // if (monster.target) {
-        //   this.requestPathAndMove(monster);
+        // 타겟이 있을 경우 경로 요청 및 이동
+        if (monster.target) {
+          this.requestPathAndMove(monster);
 
-        //   // 모든 유저에게 몬스터 위치 전송
-        //   this.sendMonsterMove(monster);
+          // 모든 유저에게 몬스터 위치 전송
+          this.sendMonsterMove(monster);
 
-        //   // 공격 실행
-        //   monster.attack(this.dungeonInstance.users);
-        // }
+          // 공격 실행
+          monster.attack(this.dungeonInstance.users);
+        }
       });
     }, this.monsterLogicInterval); // 0.1초마다 업데이트
   }

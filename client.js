@@ -3,26 +3,23 @@ import protobuf from 'protobufjs';
 import config from './src/config/config.js';
 import { PACKET_ID } from './src/constants/packetId.js';
 
-const S_HitPlayer = `
-message C_HitPlayer {
-  int32 playerId = 1;  // 공격 유저ID
-  int32 damage = 2;    // 데미지
-}
+const S_EnterStage = `
+syntax = "proto3";
 
-message S_HitPlayer {
-  int32 playerId = 1;  // 공격 유저ID
-  int32 damage = 2;    // 데미지
+message S_EnterStage {
+    SpawnMonster monsters = 1;
 }
 `;
+
 // .proto 파일 경로
-const PROTO_PATH = './src/protobuf/dungeon/battle.proto';
+const PROTO_PATH = './src/protobuf/dungeon/stage.proto';
 
 // 패킷 생성 및 전송 함수
 async function loadProtoAndSend(packetType, messageType, payload) {
   try {
     // .proto 파일 로드
     const root = await protobuf.load(PROTO_PATH);
-    const Message = root.lookupType('C_HitPlayer');
+    const Message = root.lookupType('C_EnterStage');
 
     // 페이로드 검증
     const errMsg = Message.verify(payload);
@@ -51,7 +48,7 @@ async function loadProtoAndSend(packetType, messageType, payload) {
     });
 
     // 동적으로 프로토타입 로드
-    const S_RegisterMessage = root.lookupType('S_HitPlayer');
+    const S_RegisterMessage = root.lookupType('S_EnterStage');
 
     // 서버 응답 처리
     client.on('data', (data) => {
@@ -99,22 +96,12 @@ async function loadProtoAndSend(packetType, messageType, payload) {
     // { posX: 8, posY: 1, posZ: 7, rot: 315 },
     // 필요한 만큼 추가 가능
   ];
-  const status = {
-    playerClass: 1,
-    playerLevel: 2,
-    playerName: 3,
-    playerFullHp: 4,
-    playerFullMp: 5,
-    playerCurHp: 6,
-    playerCurMp: 7,
-  };
-
-  const messageType = 'C_HitPlayer'; // 전송할 메시지 타입
+  const messageType = 'C_EnterStage'; // 전송할 메시지 타입
   const payload = {
-    playerId: 1,
-    damage: 2,
+    stageId: 1,
+    transform: transforms,
   };
-  const packetType = PACKET_ID.C_HitPlayer; // 패킷 타입
+  const packetType = PACKET_ID.C_EnterStage; // 패킷 타입
 
   await loadProtoAndSend(packetType, messageType, payload);
 })();

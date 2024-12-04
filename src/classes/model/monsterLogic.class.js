@@ -28,24 +28,24 @@ class MonsterLogic {
         id: 2,
         maxCount: 5,
         transform: [
-          { posX: 0, posY: -4, posZ: 55 },
-          { posX: 0, posY: -4, posZ: 45 },
+            { posX: 0, posY: -4, posZ: 55 },
+            { posX: 0, posY: -4, posZ: 45 },
         ],
       },
       {
         id: 3,
         maxCount: 5,
         transform: [
-          { posX: 10, posY: -4, posZ: 55 },
-          { posX: 10, posY: -4, posZ: 45 },
+            { posX: 10, posY: -4, posZ: 55 },
+            { posX: 10, posY: -4, posZ: 45 },
         ],
       },
       {
         id: 4,
         maxCount: 5,
         transform: [
-          { posX: 10, posY: -4, posZ: 30 },
-          { posX: 0, posY: -4, posZ: 30 },
+            { posX: 10, posY: -4, posZ: 30 },
+            { posX: 0, posY: -4, posZ: 30 },
         ],
       },
     ];
@@ -113,14 +113,11 @@ class MonsterLogic {
 
         if (pathPosition) {
           // 경로의 첫 번째 점으로 이동
-          monster.move(
-            {
-              x: pathPosition.posX,
-              y: pathPosition.posY,
-              z: pathPosition.posZ,
-            },
-            this.monsterLogicInterval,
-          );
+          monster.move({
+            x: pathPosition.posX,
+            y: pathPosition.posY,
+            z: pathPosition.posZ,
+          }, this.monsterLogicInterval);
         } else {
           console.error(`몬스터 ID: ${monster.id} 경로 데이터가 없습니다.`);
         }
@@ -151,18 +148,18 @@ class MonsterLogic {
     return closestPlayer;
   }
 
-  getRandomMonster() {
+  getRandomMonster(){
     const monsters = getGameAssets().monster.data;
     const randomIndex = Math.floor(Math.random() * monsters.length);
     return monsters[randomIndex];
   }
 
-  getRandomPosition(zone) {
+  getRandomPosition(zone){
     const randomIndex = Math.floor(Math.random() * zone.transform.length);
     return zone.transform[randomIndex];
   }
 
-  spawnMonster(zone) {
+  spawnMonster(zone){
     const monsterInfo = this.getRandomMonster();
     const transform = this.getRandomPosition(zone);
 
@@ -172,84 +169,59 @@ class MonsterLogic {
     this.monsterLists.push(monster);
 
     const payload = {
-      monsters: {
-        monsterId: monsterUniqueId,
-        monsterModel: monster.modelId,
-        monsterName: monster.name,
-        monsterHp: monster.maxHp,
-      },
+        monsters : {
+            monsterId: monsterUniqueId,
+            monsterModel: monster.modelId,
+            monsterName: monster.name,
+            monsterHp: monster.maxHp
+        },
 
-      transform,
-      stats: {
-        atk: monster.atk,
-        def: monster.def,
-        curHp: monster.curHp,
-        maxHp: monster.maxHp,
-        moveSpeed: monster.moveSpeed,
-        criticalProbability: monster.criticalProbability,
-        criticalDamageRate: monster.criticalDamageRate,
-      },
+        transform,
+        stats: {
+            atk: monster.atk,
+            def: monster.def,
+            curHp: monster.curHp,
+            maxHp: monster.maxHp,
+            moveSpeed: monster.moveSpeed,
+            criticalProbability: monster.criticalProbability,
+            criticalDamageRate: monster.criticalDamageRate,
+        }
     };
 
     this.dungeonInstance.users.forEach((user) => {
-      monsterSpawnNotification(user.userInfo.socket, { payload });
+        monsterSpawnNotification(user.userInfo.socket, { payload })
     });
-
+    
     // console.log(`몬스터 스폰 ${monster.name} 포지션 : ${transform.posX}, ${transform.posY}, ${transform.posZ}`)
-  }
+}
 
   startGameLoop() {
     // 게임 루프 시작
     this.gameLoopInterval = setInterval(() => {
+
       this.monsterLists.forEach((monster) => {
         // 타겟이 없을 때 가장 가까운 적을 타겟으로 설정
         if (!monster.target) {
-          // 1. 가까운 플레이어 서치
           const closestPlayer = this.findClosestPlayer(monster);
+
           if (closestPlayer) {
-            // 2. 플레이어가 영역을 침범했는지 확인
-            const isPlayerDetected = monster.detectPlayer(closestPlayer.userInfo.transform);
-            if (isPlayerDetected) {
-              // 3. 영역전개 타겟On
-              if (!monster.targetOn) {
-                monster.targetOn = true;
-                console.log(`${monster.name}이(가) 플레이어를 감지했습니다.`);
-              }
-              monster.target = closestPlayer;
-              // 4. 활성화 된 상태에서만 이동과 공격
-              this.requestPathAndMove(monster);
-              this.sendMonsterMove(monster);
-              monster.attack(this.dungeonInstance.users);
-            } else {
-              // 5. 플레이어가 감지 범위를 벗어나면 비활성화
-              if (monster.targetOn) {
-                monster.targetOn = false;
-                monster.target = null;
-                console.log(`$(monster.name)는 플레이어를 놓침`);
-              }
-            }
-            // monster.target = closestPlayer;
+            monster.target = closestPlayer;
             // console.log(
             //   `${monster.name}이(가) 새로운 타겟을 설정했습니다: (${closestPlayer.transform.posX}, ${closestPlayer.transform.posY}, ${closestPlayer.transform.posZ})`,
             // );
-          } else {
-            // 주변에 플레이어 없으면 비활성화
-            if (monster.targetOn) {
-              monster.targetOn = false;
-              monster.target = null;
-            }
           }
         }
-        // // 타겟이 있을 경우 경로 요청 및 이동
-        // if (monster.target) {
-        //   this.requestPathAndMove(monster);
 
-        //   // 모든 유저에게 몬스터 위치 전송
-        //   this.sendMonsterMove(monster);
+        // 타겟이 있을 경우 경로 요청 및 이동
+        if (monster.target) {
+          this.requestPathAndMove(monster);
 
-        //   // 공격 실행
-        //   monster.attack(this.dungeonInstance.users);
-        // }
+          // 모든 유저에게 몬스터 위치 전송
+          this.sendMonsterMove(monster);
+
+          // 공격 실행
+          monster.attack(this.dungeonInstance.users);
+        }
       });
     }, this.monsterLogicInterval); // 0.1초마다 업데이트
   }
@@ -266,15 +238,13 @@ class MonsterLogic {
   startMonsterSpawn() {
     setInterval(() => {
       this.spawnZones.forEach((zone) => {
-        const currentCount = this.monsterLists.filter(
-          (monster) => monster.zoneId === zone.id,
-        ).length;
+        const currentCount = this.monsterLists.filter((monster) => monster.zoneId === zone.id).length;
         if (currentCount < zone.maxCount) {
           this.spawnMonster(zone);
         }
       });
     }, this.spawnInterval);
-  }
+  }  
 }
 
 export default MonsterLogic;

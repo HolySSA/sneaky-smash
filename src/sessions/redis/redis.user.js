@@ -82,7 +82,44 @@ const getStatsByUserId = async (userId) => {
     (classInfo) => classInfo.classId === classId,
   );
 
-  return classInfos.stats;
+  return {
+    level: 1,
+    stats: classInfos.stats,
+    exp: 0,
+    maxExp: 0,
+  };
+};
+
+const setStatsByUserId = async (userId, statInfo) => {
+  const userKey = `user:${userId}`;
+  const user = await redis.hgetall(userKey);
+
+  if (!user || Object.keys(user).length === 0) {
+    throw new Error('유저가 존재하지 않습니다.');
+  }
+
+  // StatInfo 메시지 형식 검증
+  const validStatInfo = {
+    level: statInfo.level,
+    stats: {
+      atk: statInfo.stats.atk,
+      def: statInfo.stats.def,
+      curHp: statInfo.stats.curHp,
+      maxHp: statInfo.stats.maxHp,
+      moveSpeed: statInfo.stats.moveSpeed,
+      criticalProbability: statInfo.stats.criticalProbability,
+      criticalDamageRate: statInfo.stats.criticalDamageRate,
+    },
+    exp: statInfo.exp,
+    maxExp: statInfo.maxExp,
+  };
+
+  // Redis에 스탯 정보 저장
+  await redis.hset(userKey, {
+    stats: JSON.stringify(validStatInfo),
+  });
+
+  return validStatInfo;
 };
 
 const setSessionId = async (userId, sessionId) => {
@@ -103,4 +140,5 @@ export {
   getRedisUserById,
   getStatsByUserId,
   setSessionId,
+  setStatsByUserId,
 };

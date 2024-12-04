@@ -2,7 +2,7 @@ import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
-import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import { getDungeonSession, removeDungeonSession } from '../../sessions/dungeon.session.js';
 
 // message C_LeaveDungeon {
 //   // 던전에서 나가기 요청
@@ -20,6 +20,15 @@ const leaveDungeonHandler = async (socket, payload) => {
     const redisUser = await getRedisUserById(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
+
+    // 던전에서 유저 제거
+    dungeon.removeDungeonUser(playerId);
+
+    // 던전 세션제거 및 던전 종료
+    removeDungeonSession(dungeon.sessionId);
+    dungeon.onClose();
+
+    // dungeon.callonClose();
 
     const response = createResponse(PACKET_ID.S_LeaveDungeon, { playerId });
 

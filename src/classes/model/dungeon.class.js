@@ -1,5 +1,5 @@
-import { getStatsByUserId } from "../../sessions/redis/redis.user.js";
-import MonsterLogic from "./monsterLogic.class.js";
+import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
+import MonsterLogic from './monsterLogic.class.js';
 
 class Dungeon {
   constructor(dungeonInfo) {
@@ -28,7 +28,7 @@ class Dungeon {
     const dungeonUser = {
       userInfo: userSession,
       currentHp: statsInfo.maxHp,
-      statsInfo
+      statsInfo,
     };
 
     this.users.set(userId, dungeonUser);
@@ -38,6 +38,19 @@ class Dungeon {
   removeDungeonUser(userId) {
     const userIdStr = userId.toString();
     if (this.users.has(userIdStr)) return this.users.delete(userIdStr);
+    if (this.users.size === 0) this.monsterLogic.pathServer.onClose();
+  }
+
+  // ▲ 유저 잘라내는데 잘라내면서 0에 수렴하면 onclose 호출하게끔
+
+  callOnClose() {
+    if (this.users.size === 0) {
+      this.monsterLogic.pathServer.onClose();
+    }
+  }
+
+  remonveDungeonSession() {
+    remonveDungeonSession(this.sessionId);
   }
 
   getDungeonUser(userId) {
@@ -59,22 +72,22 @@ class Dungeon {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
-    if(!user){
-      throw new Error("유저가 존재하지 않습니다.");
+    if (!user) {
+      throw new Error('유저가 존재하지 않습니다.');
     }
 
     // 레벨 퍼당 스탯을 가져와서 @@@@@@@@@@@@@@ 밑에 스탯에 추가 해주면 됨.
 
     user.statsInfo = {
       level: user.statsInfo.level + 1,
-        hp: user.statsInfo.hp,
-        maxHp: user.statsInfo.maxHp,
-        atk: user.statsInfo.atk,
-        def: user.statsInfo.def,
-        speed: user.statsInfo.speed,
-        criticalProbability: user.statsInfo.criticalProbability,
-        criticalDamageRate: user.statsInfo.criticalDamageRate      
-    }
+      hp: user.statsInfo.hp + 10,
+      maxHp: user.statsInfo.maxHp + 20,
+      atk: user.statsInfo.atk + 3,
+      def: user.statsInfo.def + 3,
+      speed: user.statsInfo.speed + 1,
+      criticalProbability: user.statsInfo.criticalProbability + 1,
+      criticalDamageRate: user.statsInfo.criticalDamageRate + 1,
+    };
 
     return user;
   }
@@ -94,7 +107,7 @@ class Dungeon {
     }
   }
 
-  damagedUser(userId, damage){
+  damagedUser(userId, damage) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -104,7 +117,7 @@ class Dungeon {
     return user.currentHp;
   }
 
-  recoveryPlayerHp(userId, amount){
+  recoveryPlayerHp(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -114,7 +127,7 @@ class Dungeon {
     return user.currentHp;
   }
 
-  increasePlayerAtk(userId, amount){
+  increasePlayerAtk(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -123,7 +136,7 @@ class Dungeon {
     return user.atk;
   }
 
-  increasePlayerDef(userId, amount){
+  increasePlayerDef(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -132,7 +145,7 @@ class Dungeon {
     return user.def;
   }
 
-  increasePlayerMaxHp(userId, amount){
+  increasePlayerMaxHp(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -140,8 +153,8 @@ class Dungeon {
 
     return user.maxHp;
   }
-  
-  increasePlayerMoveSpeed(userId, amount){
+
+  increasePlayerMoveSpeed(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -150,7 +163,7 @@ class Dungeon {
     return user.moveSpeed;
   }
 
-  increasePlayerCriticalProbability(userId, amount){
+  increasePlayerCriticalProbability(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -158,8 +171,8 @@ class Dungeon {
 
     return user.criticalProbability;
   }
-
-  increasePlayerCriticalDamageRate(userId, amount){
+  //여기서 작업해야됨 무조건임 진짜임 레알마지트루임
+  increasePlayerCriticalDamageRate(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
@@ -168,11 +181,10 @@ class Dungeon {
     return user.criticalDamageRate;
   }
 
-  nexusDamaged(damage)
-  {
+  nexusDamaged(damage) {
     this.nexusCurrentHp -= damage;
     return this.nexusCurrentHp;
   }
-}  
+}
 
 export default Dungeon;

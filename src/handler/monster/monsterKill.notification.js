@@ -4,13 +4,16 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import levelUpNotification from '../game/levelUp.notification.js';
 
 // 패킷명세
 // message S_MonsterKill {
 //   int32 monsterId = 1; // 몬스터 식별 ID
 //   int32 itemId = 2;
-//   int32 skillId = 3;
-//   TransformInfo transform = 4;
+//   int32 playerId = 3;
+//   int32 skillId = 4;
+//   TransformInfo transform = 5;
+//   float exp = 6;
 // }
 // message TransformInfo {
 //   float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
@@ -18,11 +21,21 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 //   float posZ = 3;   // Z 좌표 (기본값 : -8 ~ 8)
 //   float rot = 4;    // 회전 값 (기본값 : 0 ~ 360)
 // }
+// **StatInfo** - 플레이어의 상세 스탯 정보
+// message StatInfo {
+//   int32 level = 1;                 // 플레이어 레벨
+//   Stats stats = 2;
+//   float exp = 3;                   // 경험치
+//   float maxExp = 4;
+// }
+
+//기본 경험치 상수
+const MONTSER_EXP = 20; // 몬스터 처치 시 얻는 기본 경험치
 
 const monsterKillNotification = async (socket, payload) => {
   try {
     const { monsterId, transform } = payload;
-
+    const playerId = socket.id;
     const gameAssets = getGameAssets();
     const itemAssets = gameAssets.item.data;
     const item = itemAssets[Math.floor(Math.random() * itemAssets.length)];
@@ -35,14 +48,37 @@ const monsterKillNotification = async (socket, payload) => {
     const monsterKillPayload = {
       monsterId,
       itemId,
+      playerId,
       skillId,
       transform,
+      exp,
     };
 
     const response = createResponse(PACKET_ID.S_MonsterKill, monsterKillPayload);
 
     const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
+
+    const dungeonUser = dungeon.getDungeonUser(socket.id);
+
+    // 레벨당 필요 경험치 불러오기
+    const expInfo = gameAssets.expInfo.data;
+    const userLevel = dungeon.setUserStats(playerId).level;
+    const maxExp = expInfo.find((id) => id.level === userLevel);
+    // 경험치 증가
+    dungeonUser.statsInfo.exp += MONTSER_EXP;
+    console.log(
+      `플레이어 ${socket.id}가 ${MONTSER_EXP}경험치 get (현재: ${dungeonUser.statsInfo.exp})`,
+    );
+    // 레벨업 체크
+    if (dungeonUser.statsInfo.exp >= maxExp);
+    {
+      //레벨업 알림
+      await levelUpNotification(socket);
+      //경험치 초기화
+      dungeonUser.statsInfo.exp = 0;
+    }
+
     const allUsers = dungeon.getAllUsers();
 
     allUsers.forEach((value) => {
@@ -54,3 +90,15 @@ const monsterKillNotification = async (socket, payload) => {
 };
 
 export default monsterKillNotification;
+
+// 유저한테 레벨당 maxExp가 있고, ( 유저에게 curExp랑 maxExp가 있어야함)
+// 몬스터 킬 noti에서 고정 exp를 주고,
+// maxExp를 넘어가면 레벨업을 보낸다 (S_LevelUp)
+
+// **StatInfo** - 플레이어의 상세 스탯 정보
+// message StatInfo {
+//   int32 level = 1;                 // 플레이어 레벨
+//   Stats stats = 2;
+//   float exp = 3;                   // 경험치
+//   float maxExp = 4;
+// }

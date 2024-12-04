@@ -5,13 +5,12 @@
       "className": "섭르탄 - 창",
       "stats": {
         "level": 1,
-        "maxHp": 10,
-        "atk": 1,
-        "def": 1,
-        "moveSpeed": 1,
+        "maxHp": 10.0,
+        "atk": 1.0,
+        "def": 1.0,
+        "speed": 1.0,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -19,13 +18,12 @@
       "className": "클르탄 - 검",
       "stats": {
         "level": 1,
-        "maxHp": 10,
-        "atk": 1,
-        "def": 1,
-        "moveSpeed": 1,
+        "maxHp": 10.0,
+        "atk": 1.0,
+        "def": 1.0,
+        "speed": 1.0,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -33,13 +31,12 @@
       "className": "디르탄 - 석궁?",
       "stats": {
         "level": 1,
-        "maxHp": 10,
-        "atk": 1,
-        "def": 1,
-        "moveSpeed": 1,
+        "maxHp": 10.0,
+        "atk": 1.0,
+        "def": 1.0,
+        "speed": 1.0,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -47,13 +44,12 @@
       "className": "큐르탄 - 망치",
       "stats": {
         "level": 1,
-        "maxHp": 10,
-        "atk": 1,
-        "def": 1,
-        "moveSpeed": 1,
+        "maxHp": 10.0,
+        "atk": 1.0,
+        "def": 1.0,
+        "speed": 1.0,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -61,13 +57,12 @@
       "className": "기르탄 - 마법",
       "stats": {
         "level": 1,
-        "maxHp": 10,
-        "atk": 1,
-        "def": 1,
-        "moveSpeed": 1,
+        "maxHp": 10.0,
+        "atk": 1.0,
+        "def": 1.0,
+        "speed": 1.0,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     }
   ]

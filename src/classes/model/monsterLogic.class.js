@@ -72,7 +72,7 @@ class MonsterLogic {
   }
 
   getMonsterById(id) {
-    const currentMonster = monsterLists.find((monster) => monster.id === id);
+    const currentMonster = this.monsterLists.find((monster) => monster.id === id);
 
     if (!currentMonster) {
       throw new Error(`${id} 몬스터가 존재하지 않습니다.`);
@@ -226,7 +226,10 @@ class MonsterLogic {
           }
         } else {
           // 타겟이 있고 활성화 상태일 때 - 이동과 공격 실행
-          const isPlayerStillDetected = monster.detectPlayer(monster.target.userInfo.transform);
+          const isPlayerStillDetected = monster.detectPlayer(
+            monster.target.userInfo.transform,
+            true, // 어그로해제됐나?
+          );
           if (isPlayerStillDetected) {
             monster.attack(this.dungeonInstance.users);
             // 공격중이 아닐 때만 이동

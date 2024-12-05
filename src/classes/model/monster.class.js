@@ -16,7 +16,8 @@ class Monster {
     this.attackSpeed = monster.attackSpeed;
     this.attackRange = monster.AttackRange || 1.5;
     this.lastAttackTime = 0;
-    this.detectRange = 5.0; //SIW
+    this.detectRange = 5.0; // 인지범위
+    this.releaseRange = 10.0; // 어그로 해제 범위
     this.zoneId = zoneId;
 
     this.transform = {
@@ -64,9 +65,10 @@ class Monster {
   }
 
   //플레이어 감지
-  detectPlayer(playerTransform) {
+  detectPlayer(playerTransform, releaseCheck = false) {
     const distance = this.calculateDistance(playerTransform);
-    return distance <= this.detectRange;
+    // releaseCheck true면 releaseRange를, false면 detectRange를 사용
+    return distance <= (releaseCheck ? this.releaseRange : this.detectRange);
   }
 
   attack(users) {

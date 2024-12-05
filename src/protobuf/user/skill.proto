@@ -21,7 +21,7 @@ message C_GetSkill {
 
 message S_GetSkill {
   SkillInfo skillInfo = 1; // 스킬 슬롯 정보
-  int32 playerId = 2
+  int32 playerId = 2;
   int32 itemInstanceId = 3; 	// 고유 아이템 ID
 }
 

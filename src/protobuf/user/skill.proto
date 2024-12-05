@@ -15,12 +15,13 @@ message ProjectileDirection {
 }
 
 message C_GetSkill {
-  int32 itemInstanceId = 1; 	// 고유 아이템 ID
-  int32 skillId = 2;     // 장착된 스킬 ID
+  int32 skillId = 1;     // 장착된 스킬 ID
+  int32 itemInstanceId = 2; 	// 고유 아이템 ID
 }
 
 message S_GetSkill {
   SkillInfo skillInfo = 1; // 스킬 슬롯 정보
+  int32 itemInstanceId = 2; 	// 고유 아이템 ID
 }
 
 message C_ShootProjectile {	

@@ -26,6 +26,7 @@ class Monster {
       rot: transform.rot,
     };
 
+    this.stopMove = false; // 공격할 때 이동을 멈춰라 그것이 예.의니까...
     this.targetOn = false; //SIW
     this.target = null; // 현재 타겟
     this.isDead = false;
@@ -86,6 +87,7 @@ class Monster {
     );
 
     if (distanceToTarget <= this.attackRange) {
+      this.stopMove = true;
       console.log(`${this.name}이(가) ${this.target}를 공격합니다!`);
       this.target = null; // 공격 후 타겟 초기화
 
@@ -99,6 +101,8 @@ class Monster {
       });
       // 공격 시간 갱신
       this.lastAttackTime = currentTime;
+    } else {
+      this.stopMove = false;
     }
   }
 

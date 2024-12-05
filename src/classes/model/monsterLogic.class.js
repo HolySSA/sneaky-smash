@@ -52,7 +52,7 @@ class MonsterLogic {
 
     // 패스파인딩 서버 연결
     this.pathServer
-      .connectToUnityServer('127.0.0.1', 6000)
+      .connectToUnityServer('20.157.13.232', 9000)
       .then(() => {
         console.log('패스파인딩 서버에 연결되었습니다.');
       })

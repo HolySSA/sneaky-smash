@@ -16,7 +16,8 @@ class Monster {
     this.attackSpeed = monster.attackSpeed;
     this.attackRange = monster.AttackRange || 1.5;
     this.lastAttackTime = 0;
-    this.detectRange = 5.0; //SIW
+    this.detectRange = 5.0; // 인지범위
+    this.releaseRange = 10.0; // 어그로 해제 범위
     this.zoneId = zoneId;
 
     this.transform = {
@@ -26,6 +27,7 @@ class Monster {
       rot: transform.rot,
     };
 
+    this.stopMove = false; // 공격할 때 이동을 멈춰라 그것이 예.의니까...
     this.targetOn = false; //SIW
     this.target = null; // 현재 타겟
     this.isDead = false;
@@ -63,9 +65,10 @@ class Monster {
   }
 
   //플레이어 감지
-  detectPlayer(playerTransform) {
+  detectPlayer(playerTransform, releaseCheck = false) {
     const distance = this.calculateDistance(playerTransform);
-    return distance <= this.detectRange;
+    // releaseCheck true면 releaseRange를, false면 detectRange를 사용
+    return distance <= (releaseCheck ? this.releaseRange : this.detectRange);
   }
 
   attack(users) {
@@ -86,6 +89,7 @@ class Monster {
     );
 
     if (distanceToTarget <= this.attackRange) {
+      this.stopMove = true;
       console.log(`${this.name}이(가) ${this.target}를 공격합니다!`);
       this.target = null; // 공격 후 타겟 초기화
 
@@ -99,6 +103,8 @@ class Monster {
       });
       // 공격 시간 갱신
       this.lastAttackTime = currentTime;
+    } else {
+      this.stopMove = false;
     }
   }
 

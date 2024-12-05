@@ -33,8 +33,8 @@ const hitPlayerHandler = async (socket, payload) => {
     const response = createResponse(PACKET_ID.S_HitPlayer, { playerId, damage });
 
     allUsers.forEach((value) => {
-      value.userInfo.socket.write(response);
-      value.userInfo.socket.write(updatePlayerHpResponse);
+      value.socket.write(response);
+      value.socket.write(updatePlayerHpResponse);
     });
   } catch (err) {
     handleError(socket, err);

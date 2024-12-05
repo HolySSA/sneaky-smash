@@ -99,13 +99,13 @@ const setStatsByUserId = async (userId, statInfo) => {
   }
 
   // StatInfo 메시지 형식 검증
-  const validStatInfo = {
+  const StatInfo = {
     level: statInfo.level,
     stats: {
-      atk: statInfo.stats.atk,
-      def: statInfo.stats.def,
-      curHp: statInfo.stats.curHp,
-      maxHp: statInfo.stats.maxHp,
+      atk: statInfo.stats.atk + statInfo.level * 2,
+      def: statInfo.stats.def + statInfo.level * 1,
+      curHp: statInfo.stats.curHp + statInfo.level * 10,
+      maxHp: statInfo.stats.maxHp + statInfo.level * 20,
       moveSpeed: statInfo.stats.moveSpeed,
       criticalProbability: statInfo.stats.criticalProbability,
       criticalDamageRate: statInfo.stats.criticalDamageRate,
@@ -116,10 +116,10 @@ const setStatsByUserId = async (userId, statInfo) => {
 
   // Redis에 스탯 정보 저장
   await redis.hset(userKey, {
-    stats: JSON.stringify(validStatInfo),
+    stats: JSON.stringify(StatInfo),
   });
 
-  return validStatInfo;
+  return StatInfo;
 };
 
 const setSessionId = async (userId, sessionId) => {

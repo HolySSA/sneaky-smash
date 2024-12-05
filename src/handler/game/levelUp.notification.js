@@ -11,7 +11,6 @@ import createResponse from '../../utils/response/createResponse.js';
 
 const levelUpNotification = async (socket) => {
   try {
-    
     const playerId = socket.id;
 
     const user = await getRedisUserById(playerId);
@@ -23,7 +22,7 @@ const levelUpNotification = async (socket) => {
 
     const payload = {
       playerId,
-      statInfo: statsInfo
+      statInfo: statsInfo,
     };
 
     const response = createResponse(PACKET_ID.S_LevelUp, payload);
@@ -31,9 +30,8 @@ const levelUpNotification = async (socket) => {
     const allUsers = dungeon.getAllUsers();
 
     allUsers.forEach((value) => {
-      value.socket.write(response);    
+      value.socket.write(response);
     });
-    
   } catch (err) {
     handleError(socket, err);
   }

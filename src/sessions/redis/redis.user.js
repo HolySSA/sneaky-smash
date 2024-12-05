@@ -83,10 +83,8 @@ const getStatsByUserId = async (userId) => {
   );
 
   return {
-    level: 1,
     stats: classInfos.stats,
     exp: 0,
-    maxExp: 0,
   };
 };
 

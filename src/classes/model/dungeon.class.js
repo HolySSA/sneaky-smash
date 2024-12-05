@@ -28,7 +28,7 @@ class Dungeon {
 
     const dungeonUser = {
       userInfo: userSession,
-      currentHp: statsInfo.maxHp,
+      currentHp: statsInfo.stats.maxHp,
       statsInfo,
     };
 
@@ -91,17 +91,30 @@ class Dungeon {
     // 레벨 퍼당 스탯을 가져와서 @@@@@@@@@@@@@@ 밑에 스탯에 추가 해주면 됨.
 
     user.statsInfo = {
-      level: user.statsInfo.level + 1,
-      hp: user.statsInfo.hp + 10,
-      maxHp: user.statsInfo.maxHp + 20,
-      atk: user.statsInfo.atk + 3,
-      def: user.statsInfo.def + 3,
-      speed: user.statsInfo.speed + 1,
-      criticalProbability: user.statsInfo.criticalProbability + 1,
-      criticalDamageRate: user.statsInfo.criticalDamageRate + 1,
+      stats: {
+        level: user.statsInfo.stats.level + 1,
+        maxHp: user.statsInfo.stats.maxHp + 20,
+        atk: user.statsInfo.stats.atk + 3,
+        def: user.statsInfo.stats.def + 1,
+        moveSpeed: user.statsInfo.stats.moveSpeed + 1,
+        criticalProbability: user.statsInfo.stats.criticalProbability,
+        criticalDamageRate: user.statsInfo.stats.criticalDamageRate,
+      },
+      exp: user.statsInfo.exp,
     };
 
     return user;
+  }
+
+  addUserExp(userId, exp) {
+    const userIdStr = userId.toString();
+    const user = this.users.get(userIdStr);
+    if (!user) {
+      console.log(user);
+    }
+    user.statsInfo.exp += exp;
+    console.log(`플레이어 ${user.id}의 경험치 get +${exp} 현재경험치 ${user.statsInfo.exp}`);
+    return user.statsInfo.exp;
   }
 
   getUserHp(userId) {

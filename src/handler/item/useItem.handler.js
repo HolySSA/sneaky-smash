@@ -18,7 +18,7 @@ const attributeHandlers = {
 
 const useItemHandler = async (socket, payload) => {
   try {
-    const { itemId } = payload;
+    const { itemId, itemInstanceId } = payload;
 
     // 아이템 에셋 가져와서 id를 통해 아이템 정보 가져오기
     const gameAssets = getGameAssets();
@@ -46,6 +46,7 @@ const useItemHandler = async (socket, payload) => {
       itemInfo: {
         itemId,
         stats: itemInfo,
+        itemInstanceId,
       },
     };
 

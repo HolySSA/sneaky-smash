@@ -7,8 +7,8 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 
 const getSkillHandler = async (socket, payload) => {
   try {
-    const { skillId } = payload;
-
+    const { skillId, itemInstanceId } = payload;
+    const playerId = socket.id;
     const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
@@ -20,8 +20,13 @@ const getSkillHandler = async (socket, payload) => {
       damageRate: curSkill.damageRate,
       coolTime: curSkill.coolTime,
     };
+    const skillPayload = {
+      skillInfo,
+      playerId,
+      itemInstanceId,
+    };
 
-    const response = createResponse(PACKET_ID.S_GetSkill, { skillInfo });
+    const response = createResponse(PACKET_ID.S_GetSkill, skillPayload);
 
     allUsers.forEach((value) => {
       value.socket.write(response);

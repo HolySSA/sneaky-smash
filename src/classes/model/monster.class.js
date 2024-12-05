@@ -71,9 +71,9 @@ class Monster {
     if (!this.target && this.isDead) return;
 
     const distanceToTarget = Math.sqrt(
-      (this.target.posX - this.transform.posX) ** 2 +
-        (this.target.posY - this.transform.posY) ** 2 +
-        (this.target.posZ - this.transform.posZ) ** 2,
+      (this.target.userInfo.transform.posX - this.transform.posX) ** 2 +
+        (this.target.userInfo.transform.posY - this.transform.posY) ** 2 +
+        (this.target.userInfo.transform.posZ - this.transform.posZ) ** 2,
     );
 
     if (distanceToTarget <= this.attackRange) {

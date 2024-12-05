@@ -34,9 +34,6 @@ class PathServer {
   }
 
   onData(data) {
-    // 수신된 데이터를 로그로 확인
-    console.log(`수신된 원시 데이터: ${data.toString('hex')}`);
-
     // 수신된 데이터를 버퍼에 추가
     this.buffer = Buffer.concat([this.buffer, data]);
 
@@ -46,7 +43,7 @@ class PathServer {
       const packetLength = this.buffer.readUInt32BE(0); // 패킷 길이
       const packetType = this.buffer.readUInt8(4); // 패킷 ID
 
-    //   console.log(`패킷 길이: ${packetLength}, 패킷 ID: ${packetType}`);
+      //   console.log(`패킷 길이: ${packetLength}, 패킷 ID: ${packetType}`);
 
       // 잘못된 패킷 길이 처리
       if (packetLength > this.buffer.length || packetLength <= totalHeaderLength) {

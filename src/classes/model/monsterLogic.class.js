@@ -95,9 +95,9 @@ class MonsterLogic {
 
     // 모든 유저 세션에 데이터 전송
     this.dungeonInstance.users.forEach((value) => {
-      console.log(
-        `몬스터 ID: ${monster.id} 위치 데이터 전송 - (${monster.transform.posX}, ${monster.transform.posY}, ${monster.transform.posZ})`,
-      );
+      // console.log(
+      //   `몬스터 ID: ${monster.id} 위치 데이터 전송 - (${monster.transform.posX}, ${monster.transform.posY}, ${monster.transform.posZ})`,
+      // );
       value.userInfo.socket.write(response); // 데이터 전송
     });
   }
@@ -199,31 +199,47 @@ class MonsterLogic {
   }
 
   startGameLoop() {
-    // 게임 루프 시작
     this.gameLoopInterval = setInterval(() => {
       this.monsterLists.forEach((monster) => {
-        // 타겟이 없을 때 가장 가까운 적을 타겟으로 설정
-        if (!monster.target) {
+        if (monster.isDead) return; // 죽은 몬스터는 처리하지 않음
+
+        if (!monster.target || !monster.targetOn) {
+          // 타겟이 없거나 비활성화 상태일 때
           const closestPlayer = this.findClosestPlayer(monster);
           if (closestPlayer) {
-            monster.target = closestPlayer;
-            // console.log(
-            //   `${monster.name}이(가) 새로운 타겟을 설정했습니다: (${closestPlayer.transform.posX}, ${closestPlayer.transform.posY}, ${closestPlayer.transform.posZ})`,
-            // );
+            const isPlayerDetected = monster.detectPlayer(closestPlayer.userInfo.transform);
+            if (isPlayerDetected) {
+              // 플레이어 감지 시 활성화
+              if (!monster.targetOn) {
+                monster.targetOn = true;
+                console.log(`${monster.name}이(가) 플레이어를 감지했습니다.`);
+              }
+              monster.target = closestPlayer;
+            } else {
+              // 감지 범위 벗어남
+              if (monster.targetOn) {
+                monster.targetOn = false;
+                monster.target = null;
+                console.log(`${monster.name}는 플레이어를 놓쳤습니다.`);
+              }
+            }
+          }
+        } else {
+          // 타겟이 있고 활성화 상태일 때 - 이동과 공격 실행
+          const isPlayerStillDetected = monster.detectPlayer(monster.target.userInfo.transform);
+          if (isPlayerStillDetected) {
+            this.requestPathAndMove(monster);
+            this.sendMonsterMove(monster);
+            monster.attack(this.dungeonInstance.users);
+          } else {
+            // 타겟이 감지 범위를 벗어남
+            monster.targetOn = false;
+            monster.target = null;
+            console.log(`${monster.name}는 플레이어를 놓쳤습니다.`);
           }
         }
-        // 타겟이 있을 경우 경로 요청 및 이동
-        if (monster.target) {
-          this.requestPathAndMove(monster);
-
-          // 모든 유저에게 몬스터 위치 전송
-          this.sendMonsterMove(monster);
-
-          // 공격 실행
-          monster.attack(this.dungeonInstance.users);
-        }
       });
-    }, this.monsterLogicInterval); // 0.1초마다 업데이트
+    }, this.monsterLogicInterval);
   }
 
   stopGameLoop() {

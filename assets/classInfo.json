@@ -33,8 +33,8 @@
       "className": "디르탄 - 석궁?",
       "stats": {
         "level": 1,
-        "maxHp": 270,
-        "atk": 16,
+        "maxHp": 2700,
+        "atk": 160,
         "def": 3,
         "moveSpeed": 1,
         "criticalProbability": 10.0,

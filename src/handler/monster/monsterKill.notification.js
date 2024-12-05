@@ -29,6 +29,11 @@ import levelUpNotification from '../game/levelUp.notification.js';
 //   float maxExp = 4;
 // }
 
+// message S_GetExp { ★
+//   int32 playerId = 1;
+//   int32 expAmount = 2;
+//   }
+
 //기본 경험치 상수
 const MONTSER_EXP = 20; // 몬스터 처치 시 얻는 기본 경험치
 
@@ -36,6 +41,8 @@ const monsterKillNotification = async (socket, payload) => {
   try {
     const { monsterId, transform } = payload;
     const playerId = socket.id;
+    const itemInstanceId = 0;
+
     const gameAssets = getGameAssets();
     const itemAssets = gameAssets.item.data;
     const item = itemAssets[Math.floor(Math.random() * itemAssets.length)];
@@ -48,11 +55,14 @@ const monsterKillNotification = async (socket, payload) => {
     const monsterKillPayload = {
       monsterId,
       itemId,
+      itemInstanceId: itemInstanceId++,
       playerId,
       skillId,
       transform,
-      exp,
     };
+
+    // 아이템에도 iteminstanceid
+    // 스킬에도 iteminstanceid
 
     const response = createResponse(PACKET_ID.S_MonsterKill, monsterKillPayload);
 
@@ -70,6 +80,12 @@ const monsterKillNotification = async (socket, payload) => {
     console.log(
       `플레이어 ${socket.id}가 ${MONTSER_EXP}경험치 get (현재: ${dungeonUser.statsInfo.exp})`,
     );
+
+    const expResponse = createResponse(PACKET_ID.S_GetExp, {
+      playerId,
+      expAmount: dungeonUser.statsInfo.exp,
+    });
+
     // 레벨업 체크
     if (dungeonUser.statsInfo.exp >= maxExp);
     {
@@ -84,6 +100,8 @@ const monsterKillNotification = async (socket, payload) => {
     allUsers.forEach((value) => {
       value.socket.write(response);
     });
+
+    socket.write(expResponse);
   } catch (e) {
     handleError(socket, e);
   }

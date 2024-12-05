@@ -15,6 +15,7 @@ class Monster {
     this.moveSpeed = monster.MoveSpeed;
     this.attackSpeed = monster.attackSpeed;
     this.attackRange = monster.AttackRange || 1.5;
+    this.lastAttackTime = 0;
     this.detectRange = 5.0; //SIW
     this.zoneId = zoneId;
 
@@ -70,6 +71,14 @@ class Monster {
   attack(users) {
     if (!this.target && this.isDead) return;
 
+    const currentTime = Date.now();
+    const timeSinceLastAttack = currentTime - this.lastAttackTime;
+    const attackDelay = 1000 / this.attackSpeed; // attackSpeed를 초당 공격 횟수로 변환
+
+    // 아직 공격 딜레이가 끝나지 않았으면 리턴
+    if (timeSinceLastAttack < attackDelay) {
+      return;
+    }
     const distanceToTarget = Math.sqrt(
       (this.target.userInfo.transform.posX - this.transform.posX) ** 2 +
         (this.target.userInfo.transform.posY - this.transform.posY) ** 2 +
@@ -88,6 +97,8 @@ class Monster {
       users.forEach((value) => {
         value.userInfo.socket.write(response);
       });
+      // 공격 시간 갱신
+      this.lastAttackTime = currentTime;
     }
   }
 

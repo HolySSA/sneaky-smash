@@ -1,3 +1,4 @@
+import getSkillHandler from '../../handler/skill/getSkill.handler.js';
 import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
 import MonsterLogic from './monsterLogic.class.js';
 
@@ -59,8 +60,19 @@ class Dungeon {
     return this.users.get(userIdStr) || null;
   }
 
+  // 인포만 매핑해서 받기
   getAllUsers() {
-    return this.users;
+    const users = new Map();
+    this.users.forEach((user, userId) => {
+      users.set(userId, {
+        socket: user.userInfo.socket, // 소켓 객체
+        transform: user.userInfo.transform, // 위치 및 회전 정보
+        skillList: user.userInfo.skillList || [], // 스킬 리스트
+        currentHp: user.currentHp, // 현재 체력
+        statsInfo: user.statsInfo,
+      });
+    });
+    return users;
   }
 
   getUserStats(userId) {
@@ -171,7 +183,6 @@ class Dungeon {
 
     return user.criticalProbability;
   }
-  //여기서 작업해야됨 무조건임 진짜임 레알마지트루임
   increasePlayerCriticalDamageRate(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);

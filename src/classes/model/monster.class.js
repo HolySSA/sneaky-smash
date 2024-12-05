@@ -6,18 +6,18 @@ class Monster {
     this.id = id;
     this.modelId = monster.monsterId;
     this.name = monster.name;
-    this.maxHp = monster.MaxHp;
+    this.maxHp = monster.maxHp;
     this.curHp = this.maxHp;
-    this.atk = monster.ATK;
-    this.def = monster.DEF;
-    this.criticalProbability = monster.CriticalProbability;
-    this.criticalDamageRate = monster.CriticalDamageRate;
-    this.moveSpeed = monster.MoveSpeed;
+    this.atk = monster.atk;
+    this.def = monster.def;
+    this.criticalProbability = monster.criticalProbability;
+    this.criticalDamageRate = monster.criticalDamageRate;
+    this.moveSpeed = monster.moveSpeed;
     this.attackSpeed = monster.attackSpeed;
-    this.attackRange = monster.AttackRange || 1.5;
+    this.attackRange = monster.attackRange || 1.5;
     this.lastAttackTime = 0;
-    this.detectRange = 5.0; // 인지범위
-    this.releaseRange = 10.0; // 어그로 해제 범위
+    this.detectRange = 7.0; // 인지범위
+    this.releaseRange = 20.0; // 어그로 해제 범위
     this.zoneId = zoneId;
 
     this.transform = {
@@ -82,6 +82,10 @@ class Monster {
     if (timeSinceLastAttack < attackDelay) {
       return;
     }
+    //공격대상이없다면 공격자를 죽이러간다
+    if (!this.target) {
+      return;
+    }
     const distanceToTarget = Math.sqrt(
       (this.target.userInfo.transform.posX - this.transform.posX) ** 2 +
         (this.target.userInfo.transform.posY - this.transform.posY) ** 2 +
@@ -118,11 +122,26 @@ class Monster {
     return 0;
   }
 
-  hit(damage) {
+  hit(damage, targetYou) {
     if (this.isDead) return;
     this.curHp -= Math.max(0, damage - this.def); // 방어력이 공격력보다 커도 최소뎀
 
+    // 공격자를 타겟으로 설정
+    if (!this.target) {
+      this.target = targetYou; // 공격자가 타겟으로 설정됨
+      this.targetOn = true; // 타겟 활성화
+      console.log(
+        `${this.name}이(가) ${targetYou}.userInfo.nickname}을(를) 타겟으로 설정했습니다.`,
+      );
+    }
+
     return this.curHp;
+  }
+  moveToTarget() {
+    if (this.target) {
+      // 타겟의 위치로 이동
+      this.stopMove = false;
+    }
   }
 }
 

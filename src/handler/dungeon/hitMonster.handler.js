@@ -26,7 +26,10 @@ const hitMonsterHandler = async (socket, payload) => {
     const allUsers = dungeon.getAllUsers();
 
     const monster = dungeon.monsterLogic.getMonsterById(monsterId);
-    const currentHp = monster.hit(damage);
+
+    const targetYou = dungeon.getDungeonUser(socket.id);
+
+    const currentHp = monster.hit(damage, targetYou);
 
     if (currentHp <= 0) monsterKillNotification(socket, monster.id, monster.transform);
 

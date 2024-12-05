@@ -98,8 +98,8 @@ const setStatsByUserId = async (userId, statInfo) => {
 
   // StatInfo 메시지 형식 검증
   const StatInfo = {
-    level: statInfo.level,
     stats: {
+      level: statInfo.stats.level + 1,
       atk: statInfo.stats.atk + statInfo.level * 2,
       def: statInfo.stats.def + statInfo.level * 1,
       curHp: statInfo.stats.curHp + statInfo.level * 10,
@@ -109,7 +109,6 @@ const setStatsByUserId = async (userId, statInfo) => {
       criticalDamageRate: statInfo.stats.criticalDamageRate,
     },
     exp: statInfo.exp,
-    maxExp: statInfo.maxExp,
   };
 
   // Redis에 스탯 정보 저장

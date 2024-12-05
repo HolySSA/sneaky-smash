@@ -24,12 +24,6 @@ const leaveDungeonHandler = async (socket, payload) => {
     // 던전에서 유저 제거
     dungeon.removeDungeonUser(playerId);
 
-    // 던전 세션제거 및 던전 종료
-    removeDungeonSession(dungeon.sessionId);
-    dungeon.onClose();
-
-    // dungeon.callonClose();
-
     const response = createResponse(PACKET_ID.S_LeaveDungeon, { playerId });
 
     // 클라이언트에서 나가기 처리를 따로 실시하면 내 유저 ID 제외하고 보내면 된다.

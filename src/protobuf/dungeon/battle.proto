@@ -68,3 +68,19 @@ message ActionSet {
   int32 animCode = 1;   // 애니메이션 코드
   int32 effectCode = 2; // 효과 코드
 }
+
+message S_DeathPlayer {
+  int32 playerId = 1;
+  float spawnTime = 2;
+}
+
+message S_RevivePlayer {
+  int32 playerId = 1;
+  TransformInfo transform = 2;
+  StatInfo statInfo = 3;     
+}
+
+message S_GetExp {
+  int32 playerId = 1;
+  int32 expAmount = 2;
+}

@@ -15,7 +15,8 @@ message ProjectileDirection {
 }
 
 message C_GetSkill {
-  int32 skillId = 1;     // 장착된 스킬 ID
+  int32 itemInstanceId = 1; 	// 고유 아이템 ID
+  int32 skillId = 2;     // 장착된 스킬 ID
 }
 
 message S_GetSkill {
@@ -35,7 +36,6 @@ message S_ShootProjectile {
  	ProjectileDirection dir = 4;
 	float projectileSpeed = 5;
  }
-
 
 message C_UseSkill {
   int32 skillId = 1;     // 사용할 스킬 ID

@@ -1,8 +1,8 @@
 {
     "name": "projectile",
     "data":[
-      { "projectileId":1, "projectileSpeed":1.1 },
-      { "projectileId":2, "projectileSpeed":1.2 },
-      { "projectileId":3, "projectileSpeed":1.3 }
+      { "projectileId":100, "projectileSpeed":11.1 },
+      { "projectileId":101, "projectileSpeed":12.2 },
+      { "projectileId":102, "projectileSpeed":13.3 }
     ]
   }

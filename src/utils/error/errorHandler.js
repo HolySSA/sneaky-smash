@@ -16,6 +16,13 @@ const handleError = (socket, error) => {
     console.error(`일반 에러: ${error.message}`);
   }
 
+  // 스택 트레이스 출력
+  if (error.stack) {
+    console.error(`스택 트레이스:\n${error.stack}`);
+  } else {
+    console.error('스택 트레이스 정보가 없습니다.');
+  }
+
   const errorResponse = createResponse(-1, { message });
   socket.write(errorResponse);
 };

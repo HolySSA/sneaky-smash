@@ -39,6 +39,7 @@ const loadGameAssets = async () => {
       skillInfo,
       projectile,
       expInfo,
+      spawnTimeInfo,
     ] = await Promise.all([
       readFileAsync('dungeonInfo.json'),
       readFileAsync('equipment.json'),
@@ -50,6 +51,7 @@ const loadGameAssets = async () => {
       readFileAsync('skill.json'),
       readFileAsync('projectile.json'),
       readFileAsync('userExp.json'),
+      readFileAsync('userSpawnTime.json'),
     ]);
     gameAssets = {
       dungeonInfo,
@@ -62,6 +64,7 @@ const loadGameAssets = async () => {
       skillInfo,
       projectile,
       expInfo,
+      spawnTimeInfo,
     };
     return gameAssets;
   } catch (error) {

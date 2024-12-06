@@ -15,12 +15,11 @@ const userKillCounter = async (socket) => {
     // redis에서 유저정보갖고오기
     const redisUser = await getRedisUserById(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
-
+    let userKillCount = 0;
     // 유저 킬 카운트 함수 불러오기
-    redisUser.increaseUserKillCount();
     const response = createResponse(PACKET_ID.S_UserKillCount, {
       playerId: socket.id,
-      userKillCount,
+      userKillCount: userKillCount++,
     });
 
     // 주변 유저들에게 킬카운트 전송

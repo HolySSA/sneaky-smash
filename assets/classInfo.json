@@ -6,12 +6,11 @@
       "stats": {
         "level": 1,
         "maxHp": 300,
-        "atk": 13,
+        "atk": 15,
         "def": 5,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -20,12 +19,11 @@
       "stats": {
         "level": 1,
         "maxHp": 290,
-        "atk": 14,
+        "atk": 16,
         "def": 4,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -33,13 +31,12 @@
       "className": "디르탄 - 석궁?",
       "stats": {
         "level": 1,
-        "maxHp": 2700,
-        "atk": 160,
+        "maxHp": 270,
+        "atk": 20,
         "def": 3,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -48,12 +45,11 @@
       "stats": {
         "level": 1,
         "maxHp": 320,
-        "atk": 12,
+        "atk": 13,
         "def": 6,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     },
     {
@@ -62,12 +58,11 @@
       "stats": {
         "level": 1,
         "maxHp": 270,
-        "atk": 17,
+        "atk": 19,
         "def": 2,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
-        "criticalDamageRate": 10.0,
-        "exp" : 0
+        "criticalDamageRate": 10.0
       }
     }
   ]

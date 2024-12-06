@@ -59,7 +59,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const dungeonStartHandler = async (socket, payload) => {
   try {
-    const { dungeonLevel, roomId } = payload;
+    const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기
 
     // 파티 세션
     const party = await getRedisParty(roomId);
@@ -95,6 +95,9 @@ const dungeonStartHandler = async (socket, payload) => {
       await setSessionId(memberId, sessionId);
 
       if (userSession) {
+        // 레이턴시 추가하면
+        // userSession.updateLatency(latency);
+
         // 던전 세션 유저 추가
         dungeon.addDungeonUser(userSession);
 

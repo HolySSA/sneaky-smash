@@ -1,4 +1,3 @@
-import getSkillHandler from '../../handler/skill/getSkill.handler.js';
 import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
 import MonsterLogic from './monsterLogic.class.js';
 
@@ -11,6 +10,8 @@ class Dungeon {
 
     this.nexusCurrentHp = 100;
     this.nexusMaxHp = 100;
+
+    this.latencyManager = new LatencyManager();
   }
 
   async addDungeonUser(userSession) {
@@ -33,16 +34,36 @@ class Dungeon {
     };
 
     this.users.set(userId, dungeonUser);
+    this.latencyManager.addUser(userId, userSession.ping.bind(userSession), 1000);
+
     return userSession;
   }
 
   removeDungeonUser(userId) {
     const userIdStr = userId.toString();
-    if (this.users.has(userIdStr)) return this.users.delete(userIdStr);
-    if (this.users.size === 0) this.monsterLogic.pathServer.onClose();
+
+    if (this.users.has(userIdStr)) {
+      this.latencyManager.removeUser(userIdStr);
+      const result = this.users.delete(userIdStr);
+
+      if (this.users.size === 0) {
+        this.monsterLogic.pathServer.onClose();
+        this.latencyManager.clearAll();
+      }
+
+      return result;
+    }
   }
 
-  // ▲ 유저 잘라내는데 잘라내면서 0에 수렴하면 onclose 호출하게끔
+  getMaxLatency() {
+    let maxLatency = 0;
+    this.users.forEach((user) => {
+      const userLatency = user.userInfo.getLatency();
+      maxLatency = Math.max(maxLatency, userLatency);
+    });
+
+    return maxLatency;
+  }
 
   callOnClose() {
     if (this.users.size === 0) {
@@ -113,7 +134,7 @@ class Dungeon {
       console.log(user);
     }
     user.statsInfo.exp += exp;
-    console.log(`플레이어 ${user.id}의 경험치 get +${exp} 현재경험치 ${user.statsInfo.exp}`);
+    console.log(`플레이어 ${userIdStr}의 경험치 get +${exp} 현재경험치 ${user.statsInfo.exp}`);
     return user.statsInfo.exp;
   }
 

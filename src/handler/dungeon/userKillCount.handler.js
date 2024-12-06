@@ -3,6 +3,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import User from '../../classes/model/user.class.js';
 
 //   message S_UserKillCount {
 //      int32 playerId = 1;
@@ -15,8 +16,8 @@ const userKillCounter = async (socket) => {
     const redisUser = await getRedisUserById(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
 
-    // 플레이어 킬 카운트 함수 불러오기 + 이거 손봐야할듯????
-    const userKillCount = dungeon.getUserStats(playerId).userKillCount;
+    // 유저 킬 카운트 함수 불러오기
+    redisUser.increaseUserKillCount();
     const response = createResponse(PACKET_ID.S_UserKillCount, {
       playerId: socket.id,
       userKillCount,

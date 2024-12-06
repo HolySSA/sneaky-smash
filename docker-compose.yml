@@ -55,7 +55,7 @@ services:
     image: redis:latest
     command: redis-server --port 6379
     ports:
-      - '6400:6379'
+      - '6400:6400'
     volumes:
       - redis-bull-data:/data
     networks:

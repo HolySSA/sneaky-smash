@@ -72,7 +72,7 @@ const monsterKillNotification = async (socket, payload) => {
     const curExp = dungeon.addUserExp(playerId, MONSTER_EXP);
 
     // console.log(
-    //   `플레이어 ${socket.id}가 ${MONSTER_EXP}경험치 get (현재: ${dungeonUser.statsInfo.exp})`,
+    //   `플레이어 ${socket.id}가 ${MONTSER_EXP}경험치 get (현재: ${dungeonUser.statsInfo.exp})`,
     // );
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {

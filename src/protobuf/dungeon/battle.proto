@@ -43,24 +43,24 @@ message S_PlayerStatus {
 }
 
 message C_HitPlayer {
-  int32 playerId = 1;  // 공격자 ID
+  int32 playerId = 1;  // 피격자 ID
   int32 damage = 2;    // 데미지
 }
 
 // 플레이어 공격 알림
 message S_HitPlayer {
-  int32 playerId = 1;  // 공격자 ID
+  int32 playerId = 1;  // 피격자 ID
   int32 damage = 2;    // 데미지
 }
 
 message C_HitMonster {
-  int32 monsterId = 1;  // 플레이어 ID
+  int32 monsterId = 1;  // 몬스터 ID
   int32 damage = 2;    // 데미지
 }
 
 // 몬스터 공격 알림
 message S_HitMonster {
-  int32 monsterId = 1;  // 플레이어 ID
+  int32 monsterId = 1;  // 몬스터 ID
   int32 damage = 2;    // 데미지
 }
 

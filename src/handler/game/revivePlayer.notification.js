@@ -8,6 +8,7 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 //     TransformInfo transform = 2;
 //     StatInfo statInfo = 3;
 //     }
+
 const revivePlayerNotification = async (socket, playerId) => {
   try {
     const redisUser = await getRedisUserById(socket.id);
@@ -16,18 +17,18 @@ const revivePlayerNotification = async (socket, playerId) => {
 
     const userStats = dungeon.getUserStats(playerId);
     // transform = [{
-    // },{},{},{}]
-    transform = [
-      {
-        posX: 0,
-        posY: 0,
-        posZ: 0,
-        rot: 0,
-      },
-    ];
+    // },{},{},{}] //게임실행 부탁드립니다
+    console.log('userStats:', userStats);
+    const transforms = {
+      posX: 2.75,
+      posY: -4.65,
+      posZ: 73,
+      rot: 0,
+    };
+
     const response = createResponse(PACKET_ID.S_RevivePlayer, {
       playerId,
-      transform,
+      transform: transforms,
       statInfo: userStats,
     });
 

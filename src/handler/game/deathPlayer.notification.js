@@ -16,9 +16,9 @@ const deathPlayerNotification = async (socket, playerId) => {
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
 
-    const userLevel = dungeon.getUserStats(playerId).level;
-
+    const userLevel = dungeon.getUserStats(playerId).stats.level;
     // const playerLevel = redisUser.level;
+
     const gameAssets = getGameAssets();
     const spawnTimeInfo = gameAssets.spawnTimeInfo.data;
     const spawnTime = spawnTimeInfo.find((id) => id.level === userLevel);

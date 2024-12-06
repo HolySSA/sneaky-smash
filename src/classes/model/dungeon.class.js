@@ -50,8 +50,8 @@ class Dungeon {
     }
   }
 
-  remonveDungeonSession() {
-    remonveDungeonSession(this.sessionId);
+  removeDungeonSession() {
+    removeDungeonSession(this.sessionId);
   }
 
   getDungeonUser(userId) {

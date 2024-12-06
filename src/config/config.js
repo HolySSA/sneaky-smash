@@ -33,6 +33,10 @@ const config = {
     },
     // 필요한 만큼 추가
   },
+  game: {
+    itemDropRate: ITEM_DROP_RATE,
+    skillDropRate: SKILL_DROP_RATE,
+  },
 };
 
 export default config;

@@ -5,6 +5,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import levelUpNotification from '../game/levelUp.notification.js';
+import config from '../../config/config.js';
 
 // 패킷명세
 // message S_MonsterKill {
@@ -37,23 +38,38 @@ import levelUpNotification from '../game/levelUp.notification.js';
 //기본 경험치 상수
 const MONSTER_EXP = 110; // 몬스터 처치 시 얻는 기본 경험치
 
+let itemInstanceId = 0;
+
 const monsterKillNotification = async (socket, payload) => {
   try {
     const { monsterId, transform } = payload;
     const playerId = socket.id;
-    let itemInstanceId = 0;
 
     const gameAssets = getGameAssets();
     const itemAssets = gameAssets.item.data;
-    const item = itemAssets[Math.floor(Math.random() * itemAssets.length)];
-    const itemId = item.itemId;
     const skillAssets = gameAssets.skillInfo.data;
-    const skill = skillAssets[Math.floor(Math.random() * skillAssets.length)];
-    const skillId = skill.skillId;
+
+    let itemId = -1;
+    let skillId = -1;
+
+    // 50%
+    const totalDropRate = config.game.itemDropRate + config.game.skillDropRate;
+    const drop = Math.random();
+
+    if (drop < totalDropRate) {
+      if (drop < config.game.itemDropRate) {
+        const item = itemAssets[Math.floor(Math.random() * itemAssets.length)];
+        itemId = item.itemId;
+      } else {
+        const skill = skillAssets[Math.floor(Math.random() * skillAssets.length)];
+        skillId = skill.skillId;
+      }
+    }
+
     const monsterKillPayload = {
       monsterId,
       itemId,
-      itemInstanceId: itemInstanceId++,
+      itemInstanceId: itemId === -1 && skillId === -1 ? -1 : itemInstanceId++,
       playerId,
       skillId,
       transform,
@@ -62,18 +78,14 @@ const monsterKillNotification = async (socket, payload) => {
     const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const dungeonUser = dungeon.getDungeonUser(socket.id);
+
     // 레벨당 필요 경험치 불러오기
     const expInfo = gameAssets.expInfo.data;
     const userLevel = dungeonUser.statsInfo.stats.level;
-
     const maxExp = expInfo.find((id) => id.level === userLevel).maxExp;
+
     // 경험치 증가
-
     const curExp = dungeon.addUserExp(playerId, MONSTER_EXP);
-
-    // console.log(
-    //   `플레이어 ${socket.id}가 ${MONSTER_EXP}경험치 get (현재: ${dungeonUser.statsInfo.exp})`,
-    // );
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {
       playerId,

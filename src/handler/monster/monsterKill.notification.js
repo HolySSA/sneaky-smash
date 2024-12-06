@@ -35,7 +35,7 @@ import levelUpNotification from '../game/levelUp.notification.js';
 //   }
 
 //기본 경험치 상수
-const MONTSER_EXP = 110; // 몬스터 처치 시 얻는 기본 경험치
+const MONSTER_EXP = 110; // 몬스터 처치 시 얻는 기본 경험치
 
 const monsterKillNotification = async (socket, payload) => {
   try {
@@ -58,8 +58,6 @@ const monsterKillNotification = async (socket, payload) => {
       skillId,
       transform,
     };
-    // 아이템에도 iteminstanceid
-    // 스킬에도 iteminstanceid
 
     const redisUser = await getRedisUserById(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
@@ -71,7 +69,7 @@ const monsterKillNotification = async (socket, payload) => {
     const maxExp = expInfo.find((id) => id.level === userLevel).maxExp;
     // 경험치 증가
 
-    const curExp = dungeon.addUserExp(playerId, MONTSER_EXP);
+    const curExp = dungeon.addUserExp(playerId, MONSTER_EXP);
 
     // console.log(
     //   `플레이어 ${socket.id}가 ${MONTSER_EXP}경험치 get (현재: ${dungeonUser.statsInfo.exp})`,

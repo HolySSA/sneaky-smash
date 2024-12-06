@@ -31,7 +31,12 @@ const hitMonsterHandler = async (socket, payload) => {
 
     const currentHp = monster.hit(damage, targetYou);
 
-    if (currentHp <= 0) monsterKillNotification(socket, monster.id, monster.transform);
+    if (currentHp <= 0) {
+      monsterKillNotification(socket, {
+        monsterId: monster.id,
+        transform: monster.transform,
+      });
+    }
 
     // 몬스터 체력 업데이트 노티피케이션
     const updateHpResponse = createResponse(PACKET_ID.S_UpdateMonsterHp, {

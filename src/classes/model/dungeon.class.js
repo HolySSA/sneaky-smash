@@ -168,8 +168,9 @@ class Dungeon {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
-    // 방어력 관련
-    user.currentHp = Math.min(amount + user.currentHp, user.maxHp);
+    // 스탯 불러오기 수정
+    const maxHp = user.statsInfo.stats.maxHp;
+    user.currentHp = Math.min(amount + user.currentHp, maxHp);
 
     return user.currentHp;
   }

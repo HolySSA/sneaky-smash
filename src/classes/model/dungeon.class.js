@@ -1,4 +1,5 @@
 import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
+import LatencyManager from '../manager/latency.manager.js';
 import MonsterLogic from './monsterLogic.class.js';
 
 class Dungeon {

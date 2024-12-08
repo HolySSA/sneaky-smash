@@ -4,8 +4,9 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
+
 const attributeHandlers = {
-  curHp: (dungeon, socketId, value) => dungeon.recoveryPlayerHp(socketId, value),
+  curHp: (dungeon, socketId, value) => dungeon.updatePlayerHp(socketId, value),
   atk: (dungeon, socketId, value) => dungeon.increasePlayerAtk(socketId, value),
   def: (dungeon, socketId, value) => dungeon.increasePlayerDef(socketId, value),
   maxHp: (dungeon, socketId, value) => dungeon.increasePlayerMaxHp(socketId, value),
@@ -46,8 +47,8 @@ const useItemHandler = async (socket, payload) => {
       itemInfo: {
         itemId,
         stats: itemInfo,
-        itemInstanceId,
       },
+      itemInstanceId,
     };
 
     const updatePlayerHpResponse = createResponse(PACKET_ID.S_UpdatePlayerHp, {
@@ -55,11 +56,14 @@ const useItemHandler = async (socket, payload) => {
       hp: currentHp,
     });
 
-    const response = createResponse(PACKET_ID.S_UseItem, useItemPayload);
     allUsers.forEach((value) => {
       value.socket.write(updatePlayerHpResponse);
     });
-    socket.write(response);
+
+    const response = createResponse(PACKET_ID.S_UseItem, useItemPayload);
+    allUsers.forEach((value) => {
+      value.socket.write(response);
+    });
   } catch (e) {
     handleError(socket, e);
   }

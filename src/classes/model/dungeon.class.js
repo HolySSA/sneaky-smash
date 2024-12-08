@@ -164,13 +164,14 @@ class Dungeon {
     return user.currentHp;
   }
 
-  recoveryPlayerHp(userId, amount) {
+  updatePlayerHp(userId, amount) {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
 
     // 스탯 불러오기 수정
     const maxHp = user.statsInfo.stats.maxHp;
-    user.currentHp = Math.min(amount + user.currentHp, maxHp);
+    const newHp = user.currentHp + amount;
+    user.currentHp = Math.max(0, Math.min(newHp, maxHp));
 
     return user.currentHp;
   }

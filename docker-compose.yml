@@ -52,15 +52,22 @@ services:
       - redis-cluster-2
       - redis-cluster-3
     command: >
-       bash -c "
-         export REDISCLI_AUTH=${REDIS_PASSWORD} &&
-         sleep 5 &&
-         echo 'yes' | redis-cli --cluster create redis1:6379 redis2:6379 redis3:6379 --cluster-replicas 0"
+     bash -c "
+       export REDISCLI_AUTH=${REDIS_PASSWORD} &&
+       sleep 5 &&
+       if [ -z \"\$(redis-cli -h redis1 -p 6379 CLUSTER NODES | grep myself)\" ]; then
+         echo 'yes' | redis-cli --cluster create redis1:6379 redis2:6379 redis3:6379 --cluster-replicas 0;
+       else
+         echo 'Cluster already exists. Skipping initialization.';
+       fi"
     networks:
       - redis-net
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-
+    deploy:
+      restart_policy:
+        condition: none
+        
   # Bull Queue Redis
   redis-bull:
     image: redis:latest

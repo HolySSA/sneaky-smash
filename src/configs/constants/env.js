@@ -1,5 +1,6 @@
 // 중앙 집중식 관리
 import dotenv from 'dotenv';
+delete process.env.REDIS_PORT;
 dotenv.config();
 
 /**
@@ -10,11 +11,10 @@ dotenv.config();
 const requiredEnv = {
   DB: ['HOST', 'PORT', 'USER', 'PASSWORD', 'NAME', 'CONNECTION_LIMIT'],
   SERVER: ['PORT', 'BIND'],
-  REDIS: ['HOST', 'PORT1', 'PORT2', 'PORT3', 'PASSWORD'],
+  REDIS: ['HOST', 'PORT', 'PASSWORD'],
   SECURE: ['PEPPER', 'SALT'],
   LOGGER: ['STACK_TRACE'],
   CLIENT: ['VERSION'],
-  BULL: ['PORT'],
 };
 
 /**

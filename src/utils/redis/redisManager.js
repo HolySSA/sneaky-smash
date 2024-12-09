@@ -1,6 +1,6 @@
-import configs from '../configs/configs.js';
+import configs from '../../configs/config.js';
 import Redis from 'ioredis';
-import logger from '../utils/logger.js';
+import logger from '../logger.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = configs;
@@ -20,6 +20,7 @@ export const connect = async () => {
         host: REDIS_HOST,
         port: REDIS_PORT,
         password: REDIS_PASSWORD,
+        db: 3,
       });
 
       redis.on('error', (err) => {
@@ -41,6 +42,7 @@ export const connect = async () => {
         host: REDIS_HOST,
         port: REDIS_PORT,
         password: REDIS_PASSWORD,
+        db: 3,
       });
 
       subscriberRedis.on('error', (err) => {

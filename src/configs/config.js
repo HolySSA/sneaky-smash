@@ -3,6 +3,7 @@ import headerConfigs from './constants/header.js';
 import env from './constants/env.js';
 import userDatabases from './constants/userDatabase.js';
 import packet from './constants/packet.js';
+import CONSTANTS from './constants/constants.js';
 
 const configs = {
   ...gameConfigs,
@@ -10,9 +11,7 @@ const configs = {
   ...headerConfigs,
   ...userDatabases,
   ...packet,
-  HOST,
-  PORT,
-  CLIENT_VERSION,
+  ...CONSTANTS,
 };
 
 export default configs;

@@ -45,24 +45,14 @@ const logInHandler = async (socket, payload) => {
       return;
     }
 
-    const connectedUser = await getRedisUserById(existUser.id);
-    if (connectedUser) {
-      writeLoginResponse(socket, false, '이미 접속 중인 유저입니다.', null);
-      return;
-    }
-
     // 로그인 검증 통과 - socket.id 할당
     socket.id = existUser.id.toString();
 
     const character = await findCharacterByUserId(existUser.id);
-
     if (character) {
       addUserSession(socket);
       await addRedisUser(existUser.id, character.nickname, character.myClass);
-
-      const user = await getRedisUserById(existUser.id);
-      await enterLogic(socket, user);
-
+      await enterLogic(socket);
       return;
     }
 

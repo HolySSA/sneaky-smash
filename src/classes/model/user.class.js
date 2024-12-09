@@ -39,6 +39,10 @@ class User {
   updateUserTransform(posX, posY, posZ, rot) {
     this.transform = { posX, posY, posZ, rot };
   }
+
+  updateUserTransform(posX, posY, posZ, rot) {
+    this.transform = { posX, posY, posZ, rot };
+  }
 }
 
 export default User;

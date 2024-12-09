@@ -3,12 +3,17 @@ import redis from '../../utils/redis/redisManager.js';
 
 const addRedisUser = async (userId, nickname, myClass) => {
   const userKey = `user:${userId}`;
+
+  const existingUser = await redis.exists(userKey);
+  if (existingUser) {
+    throw new Error('이미 존재하는 레디스 유저입니다.');
+  }
+
   const redisUser = await redis.hset(userKey, {
     id: userId.toString(),
     nickname: nickname,
     myClass: myClass.toString(),
     locationType: 'town',
-    sessionId: 0,
   });
 
   return redisUser;
@@ -18,8 +23,8 @@ const removeRedisUser = async (socket) => {
   const userKey = `user:${socket.id}`;
   const user = await redis.hgetall(userKey);
 
-  if (Object.keys(user).length === 0) {
-    return null;
+  if (!user || Object.keys(user).length === 0) {
+    throw new Error('존재하지 않는 레디스 유저입니다.');
   }
 
   await redis.del(userKey);
@@ -27,11 +32,12 @@ const removeRedisUser = async (socket) => {
 };
 
 const getRedisUsers = async () => {
-  // keys - 데이터 많으면 불안전. 대신 scan 사용으로 변경.
+  // keys 명령어로 직접 조회
   const userKeys = await redis.keys('user:*');
+  console.log('Redis 유저 키 조회 결과:', userKeys);
 
   if (!userKeys.length) {
-    return null;
+    return [];
   }
 
   // pipeline - 명령 묶어서 실행(최적화)
@@ -42,6 +48,7 @@ const getRedisUsers = async () => {
 
   return results.map(([err, data]) => {
     if (err || !data) return null;
+
     return {
       id: data.id,
       nickname: data.nickname,
@@ -74,7 +81,7 @@ const getStatsByUserId = async (userId) => {
   const user = await redis.hgetall(userKey);
 
   if (!user || Object.keys(user).length === 0) {
-    return null;
+    throw new Error('존재하지 않는 레디스 유저입니다.');
   }
 
   const classId = parseInt(user.myClass);

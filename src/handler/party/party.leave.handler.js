@@ -44,17 +44,17 @@ const partyLeaveHandler = async (socket, payload) => {
 
       const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
 
-      // party.members.forEach((memberId) => {
-      //   const user = getUserSessionById(memberId);
-      //   user?.socket.write(response);
-      // });
+      /*
+      party.members.forEach((memberId) => {
+        const user = getUserSessionById(memberId);
+        user?.socket.write(response);
+      });
+      */
 
-      
       const users = getUserSessions();
       users.forEach((user) => {
         user.socket.write(response);
       });
-      
     } else {
       const remainMembers = await leaveRedisParty(roomId, socket.id);
 
@@ -64,7 +64,6 @@ const partyLeaveHandler = async (socket, payload) => {
         const user = getUserSessionById(memberId);
         user?.socket.write(response);
       });
-
 
       const users = getUserSessions();
       users.forEach((user) => {

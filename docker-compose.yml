@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Redis Cluster Nodes
+  redis-cluster-1:
+    image: redis:latest
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-cluster-1-data:/data
+    networks:
+      redis-net:
+        ipv4_address: 172.20.0.2
+
+  redis-cluster-2:
+    image: redis:latest
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    ports:
+      - '6380:6379'
+    volumes:
+      - redis-cluster-2-data:/data
+    networks:
+      redis-net:
+        ipv4_address: 172.20.0.3
+
+  redis-cluster-3:
+    image: redis:latest
+    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    ports:
+      - '6381:6379'
+    volumes:
+      - redis-cluster-3-data:/data
+    networks:
+      redis-net:
+        ipv4_address: 172.20.0.4
+
+  # Redis Cluster Initializer
+  redis-cluster-init:
+    image: redis:latest
+    depends_on:
+      - redis-cluster-1
+      - redis-cluster-2
+      - redis-cluster-3
+    command: >
+      bash -c "
+        sleep 5 &&
+        echo 'yes' | redis-cli --cluster create 172.20.0.2:6379 172.20.0.3:6379 172.20.0.4:6379 --cluster-replicas 0
+      "
+    networks:
+      - redis-net
+
+  # Bull Queue Redis
+  redis-bull:
+    image: redis:latest
+    command: redis-server --port 6379
+    ports:
+      - '6400:6400'
+    volumes:
+      - redis-bull-data:/data
+    networks:
+      redis-net:
+        ipv4_address: 172.20.0.5
+
+networks:
+  redis-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  redis-cluster-1-data:
+  redis-cluster-2-data:
+  redis-cluster-3-data:
+  redis-bull-data:

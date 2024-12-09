@@ -26,6 +26,10 @@ message S_MonsterKill {
   TransformInfo transform = 6;
 }
 
+message C_MonsterSpawn {
+  repeated TransformInfo transform = 1;
+}
+
 message S_MonsterSpawn{
 	MonsterStatus monsters = 1;
 	TransformInfo transform = 2;

@@ -8,7 +8,7 @@ import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
-import configs from '../../configs/config.js';
+import configs from '../../configs/configs.js';
 const { JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE } = configs;
 
 // message C_Login {

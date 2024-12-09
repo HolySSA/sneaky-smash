@@ -1,6 +1,6 @@
 import net from 'net';
 import { loadProtos } from '../init/loadProtos.js';
-import configs from '../configs/config.js';
+import configs from '../configs/configs.js';
 import createResponse from '../utils/packet/createResponse.js';
 await loadProtos();
 import { PACKET_ID } from '../configs/constants/packetId.js';

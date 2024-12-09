@@ -1,6 +1,6 @@
 import winston from 'winston';
 import 'winston-daily-rotate-file';
-import configs from '../configs/config.js';
+import configs from '../configs/configs.js';
 
 const { LOGGER_STACK_TRACE } = configs;
 /**

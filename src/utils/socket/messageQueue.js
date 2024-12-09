@@ -1,6 +1,6 @@
 import { getHandlerByPacketId } from '../../handler/index.js';
 import logger from '../logger.js';
-import configs from '../../configs/config.js';
+import configs from '../../configs/configs.js';
 import createResponse from '../packet/createResponse.js';
 
 const { PACKET_ID } = configs;

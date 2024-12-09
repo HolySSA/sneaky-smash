@@ -2,7 +2,7 @@ import net from 'net';
 import { createInterface } from 'readline';
 import initServer from './init/index.js';
 import onConnection from './events/onConnection.js';
-import configs from './configs/config.js';
+import configs from './configs/configs.js';
 import logger from './utils/logger.js';
 
 const { SERVER_BIND, SERVER_PORT } = configs;

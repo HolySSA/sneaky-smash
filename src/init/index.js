@@ -6,7 +6,7 @@ import { connect } from '../utils/redis/redisManager.js';
 
 const initServer = async () => {
   try {
-    await import('../configs/config.js');
+    await import('../configs/configs.js');
     await loadProtos();
     await loadGameAssets();
     await connect();

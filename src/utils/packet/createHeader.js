@@ -1,4 +1,4 @@
-import configs from '../../configs/config.js';
+import configs from '../../configs/configs.js';
 const { PACKET_LENGTH, PACKET_TYPE_LENGTH, PACKET_TOTAL_LENGTH } = configs;
 
 const createHeader = (packetId, buffer) => {

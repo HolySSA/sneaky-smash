@@ -5,7 +5,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import levelUpNotification from '../game/levelUp.notification.js';
-import configs from '../../configs/config.js';
+import configs from '../../configs/configs.js';
 
 const { ITEM_DROP_RATE, SKILL_DROP_RATE } = configs;
 

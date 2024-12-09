@@ -1,5 +1,5 @@
 import fs from 'fs';
-import configs from '../configs/config.js';
+import configs from '../configs/configs.js';
 import mysql from 'mysql2';
 import logger from '../utils/logger.js';
 import path from 'path';

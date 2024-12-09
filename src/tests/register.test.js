@@ -1,5 +1,5 @@
 import { getOrCreateClient } from './client.test.js';
-import configs from '../configs/config.js';
+import configs from '../configs/configs.js';
 import testEnv from './env.test.js';
 const { PACKET_ID } = configs;
 const client = getOrCreateClient(testEnv.url, testEnv.port);

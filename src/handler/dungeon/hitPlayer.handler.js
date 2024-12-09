@@ -1,7 +1,7 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
 import deathPlayerNotification from '../game/deathPlayer.notification.js';
 

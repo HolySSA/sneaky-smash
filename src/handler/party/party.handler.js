@@ -1,7 +1,7 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getRedisParties } from '../../sessions/redis/redis.party.js';
 import handleError from '../../utils/error/errorHandler.js';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 
 // // 파티 창 입장
 // message C_Party {

@@ -6,7 +6,7 @@ import { closeAllQueues } from './utils/redis/bull/bullManager.js';
 import configs from './configs/config.js';
 import logger from './utils/logger.js';
 
-const { PORT, HOST } = configs;
+const { SERVER_BIND, SERVER_HOST } = configs;
 
 const server = net.createServer(onConnection);
 

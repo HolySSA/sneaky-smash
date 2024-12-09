@@ -8,7 +8,7 @@ import {
 } from '../../sessions/redis/redis.user.js';
 import { getUserSessionById, getUserSessions } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
 
 // message S_EnterDungeon {

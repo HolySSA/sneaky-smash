@@ -4,18 +4,17 @@ import { getHandlerByPacketId } from '../handler/index.js';
 import decodeMessageByPacketId from '../utils/packet/decodePacket.js';
 import logger from '../utils/logger.js';
 
-const { length, typeLength } = configs;
+const { PACKET_LENGTH, PACKET_TYPE_LENGTH, PACKET_TOTAL_LENGTH } = configs;
 
 const onData = (socket) => async (data) => {
   socket.buffer = Buffer.concat([socket.buffer, data]);
-  const totalHeaderLength = length + typeLength;
 
-  while (socket.buffer.length >= totalHeaderLength) {
-    const packetLength = socket.buffer.readUInt32BE(0);
-    const packetType = socket.buffer.readUInt8(length);
+  while (socket.buffer.length >= PACKET_TOTAL_LENGTH) {
+    const packetLength = socket.buffer.readUIntBE(0, PACKET_LENGTH);
+    const packetType = socket.buffer.readUIntBE(PACKET_LENGTH, PACKET_TYPE_LENGTH);
 
     if (socket.buffer.length >= packetLength) {
-      const packet = socket.buffer.subarray(totalHeaderLength, packetLength);
+      const packet = socket.buffer.subarray(PACKET_TOTAL_LENGTH, packetLength);
       socket.buffer = socket.buffer.subarray(packetLength);
 
       try {

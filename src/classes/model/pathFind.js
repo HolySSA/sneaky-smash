@@ -1,5 +1,5 @@
 import net from 'net';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import decodeMessageByPacketId from '../../utils/parser/decodePacket.js';
 import logger from '../../utils/logger.js';

@@ -12,8 +12,8 @@ const server = net.createServer(onConnection);
 
 initServer()
   .then(() => {
-    server.listen(PORT, HOSTt, () => {
-      logger.info(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
+    server.listen(SERVER_HOST, SERVER_BIND, () => {
+      logger.info(`서버가 ${SERVER_BIND}:${SERVER_HOST}에서 실행 중입니다.`);
       logger.info(server.address());
     });
   })

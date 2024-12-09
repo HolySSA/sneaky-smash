@@ -1,6 +1,8 @@
 import Redis from 'ioredis';
+import configs from '../../configs/config.js';
 
 let redisClient = null;
+const { REDIS_HOST, REDIS_PORT, REDIS_PORT2, REDIS_PORT3, REDIS_PASSWORD } = configs;
 
 function createRedisClient() {
   console.log('Redis 클러스터 연결 시도...');
@@ -9,15 +11,16 @@ function createRedisClient() {
 
   try {
     const nodes = [
-      { host: '127.0.0.1', port: 6379 },
-      { host: '127.0.0.1', port: 6380 },
-      { host: '127.0.0.1', port: 6381 },
+      { host: REDIS_HOST, port: REDIS_PORT },
+      { host: REDIS_HOST, port: REDIS_PORT2 },
+      { host: REDIS_HOST, port: REDIS_PORT3 },
     ];
 
     console.log('Redis 클러스터 노드 설정:', nodes);
 
     redisClient = new Redis.Cluster(nodes, {
       redisOptions: {
+        password: REDIS_PASSWORD,
         connectTimeout: 30000,
         maxRetriesPerRequest: 3,
         retryStrategy(times) {
@@ -36,11 +39,6 @@ function createRedisClient() {
       scaleReads: 'master',
       enableReadyCheck: true,
       maxRedirections: 16,
-      natMap: {
-        '172.20.0.2:6379': { host: '127.0.0.1', port: 6379 },
-        '172.20.0.3:6379': { host: '127.0.0.1', port: 6380 },
-        '172.20.0.4:6379': { host: '127.0.0.1', port: 6381 },
-      },
     });
 
     console.log('Redis 클라이언트 인스턴스 생성됨');

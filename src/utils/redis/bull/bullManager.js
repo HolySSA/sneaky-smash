@@ -1,7 +1,7 @@
 import Queue from 'bull';
 import configs from '../../../configs/config.js';
 
-const { REDIS_HOST, REDIS_PORT } = configs;
+const { REDIS_HOST, BULL_PORT, REDIS_PORT, REDIS_PASSWORD } = configs;
 
 // 큐 인스턴스 저장 MAP
 const queues = new Map();
@@ -9,7 +9,8 @@ const queues = new Map();
 const defaultOptions = {
   redis: {
     host: REDIS_HOST,
-    port: 6400,
+    port: BULL_PORT,
+    password: REDIS_PASSWORD,
   },
   // 기본 작업 옵션
   defaultJobOptions: {

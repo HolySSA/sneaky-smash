@@ -10,10 +10,11 @@ dotenv.config();
 const requiredEnv = {
   DB: ['HOST', 'PORT', 'USER', 'PASSWORD', 'NAME', 'CONNECTION_LIMIT'],
   SERVER: ['PORT', 'BIND'],
-  REDIS: ['HOST', 'PORT', 'PASSWORD'],
+  REDIS: ['HOST', 'PORT', 'PORT2', 'PORT3', 'PASSWORD'],
   SECURE: ['PEPPER', 'SALT'],
   LOGGER: ['STACK_TRACE'],
   CLIENT: ['VERSION'],
+  BULL: ['PORT'],
 };
 
 /**

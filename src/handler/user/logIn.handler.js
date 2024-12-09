@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import handleError from '../../utils/error/errorHandler.js';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { findUserByAccount } from '../../db/model/user.db.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';

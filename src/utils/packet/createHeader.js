@@ -1,4 +1,4 @@
-import config from '../configs/config.js';
+import config from '../../configs/config.js';
 
 const createHeader = (packetId, buffer) => {
   const packetLength = Buffer.alloc(config.packet.length);

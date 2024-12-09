@@ -1,5 +1,5 @@
 import { getProtoMessages } from '../../init/loadProtos.js';
-import createHeader from '../createHeader.js';
+import createHeader from '../packet/createHeader.js';
 
 const createNotificationPacket = (packetId, data = null) => {
   const protoMessages = getProtoMessages();

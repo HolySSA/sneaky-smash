@@ -1,4 +1,4 @@
-import createResponse from '../response/createResponse.js';
+import createResponse from '../packet/createResponse.js';
 
 const handleError = (socket, error) => {
   let responseCode;

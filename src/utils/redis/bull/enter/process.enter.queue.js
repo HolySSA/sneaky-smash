@@ -6,7 +6,7 @@ import {
   getUserTransformById,
 } from '../../../../sessions/user.session.js';
 import createNotificationPacket from '../../../notification/createNotification.js';
-import createResponse from '../../../response/createResponse.js';
+import createResponse from '../../../packet/createResponse.js';
 import { enterQueue } from '../queues.js';
 
 enterQueue.process(async (job) => {

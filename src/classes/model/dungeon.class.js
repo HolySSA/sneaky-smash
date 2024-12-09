@@ -1,6 +1,7 @@
 import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
 import LatencyManager from '../manager/latency.manager.js';
 import MonsterLogic from './monsterLogic.class.js';
+import logger from '../../utils/logger.js';
 
 class Dungeon {
   constructor(dungeonInfo) {
@@ -132,10 +133,10 @@ class Dungeon {
     const userIdStr = userId.toString();
     const user = this.users.get(userIdStr);
     if (!user) {
-      console.log(user);
+      logger.info(user);
     }
     user.statsInfo.exp += exp;
-    console.log(`플레이어 ${userIdStr}의 경험치 get +${exp} 현재경험치 ${user.statsInfo.exp}`);
+    logger.info(`플레이어 ${userIdStr}의 경험치 get +${exp} 현재경험치 ${user.statsInfo.exp}`);
     return user.statsInfo.exp;
   }
 

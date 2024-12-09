@@ -1,6 +1,7 @@
 import net from 'net';
 import protobuf from 'protobufjs';
 import { PACKET_ID } from '../constants/packetId.js';
+import logger from '../utils/logger.js';
 
 // 프로토 정의
 const ItemProto = `
@@ -38,7 +39,7 @@ async function testUseItem() {
     const socket = {
       id: 'test-socket-id',
       write: (data) => {
-        console.log('서버로 전송된 데이터:', data);
+        logger.info('서버로 전송된 데이터:', data);
       },
     };
 
@@ -62,21 +63,21 @@ async function testUseItem() {
     buffer.writeUInt8(PACKET_ID.C_UseItem, 4);
     messageBuffer.copy(buffer, 5);
 
-    console.log('아이템 사용 요청을 전송합니다:', payload);
+    logger.info('아이템 사용 요청을 전송합니다:', payload);
     socket.write(buffer);
 
     // 서버 응답 모의 처리
     const responseBuffer = Buffer.from([0, 0, 0, 0, PACKET_ID.S_UseItem, ...messageBuffer]);
     const decoded = S_UseItemMessage.decode(responseBuffer.subarray(5));
-    console.log('아이템 사용 결과:', JSON.stringify(decoded, null, 2));
+    logger.info('아이템 사용 결과:', JSON.stringify(decoded, null, 2));
   } catch (error) {
-    console.error('테스트 실행 중 오류 발생:', error);
+    logger.error('테스트 실행 중 오류 발생:', error);
   }
 }
 
 // 테스트 실행
 (async () => {
-  console.log('아이템 사용 테스트를 시작합니다...');
+  logger.info('아이템 사용 테스트를 시작합니다...');
   await testUseItem();
-  console.log('테스트가 완료되었습니다.');
+  logger.info('테스트가 완료되었습니다.');
 })();

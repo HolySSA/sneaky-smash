@@ -1,5 +1,6 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
-import createResponse from '../../utils/packet/createResponse.js';
+import createResponse from '../../utils/response/createResponse.js';
+import logger from '../../utils/logger.js';
 
 class Monster {
   constructor(id, monster, transform, zoneId) {
@@ -94,7 +95,7 @@ class Monster {
 
     if (distanceToTarget <= this.attackRange) {
       this.stopMove = true;
-      console.log(`${this.name}이(가) ${this.target}를 공격합니다!`);
+      logger.info(`${this.name}이(가) ${this.target}를 공격합니다!`);
       this.target = null; // 공격 후 타겟 초기화
 
       const attackPayload = {
@@ -130,7 +131,7 @@ class Monster {
     if (!this.target) {
       this.target = targetYou; // 공격자가 타겟으로 설정됨
       this.targetOn = true; // 타겟 활성화
-      console.log(
+      logger.info(
         `${this.name}이(가) ${targetYou}.userInfo.nickname}을(를) 타겟으로 설정했습니다.`,
       );
     }

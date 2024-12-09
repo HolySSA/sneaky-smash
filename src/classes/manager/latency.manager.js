@@ -1,4 +1,5 @@
 import BaseManager from './base.manager.js';
+import logger from '../../utils/logger.js';
 
 class LatencyManager extends BaseManager {
   constructor() {
@@ -9,7 +10,7 @@ class LatencyManager extends BaseManager {
 
   addUser(userId, callback, timestamp) {
     if (this.intervals.has(userId)) {
-      console.error('중복 인터벌 존재.');
+      logger.error('중복 인터벌 존재.');
     }
 
     this.intervals.set(userId, setInterval(callback, timestamp));

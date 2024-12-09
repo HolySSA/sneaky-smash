@@ -3,6 +3,7 @@ import createResponse from '../../utils/packet/createResponse.js';
 import joiUtils from '../../utils/joi/joiUtils.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { findUserByAccount, createUser } from '../../db/model/user.db.js';
+import logger from '../../utils/logger.js';
 import bcrypt from 'bcryptjs';
 
 const registerHandler = async (socket, payload) => {
@@ -35,7 +36,7 @@ const registerHandler = async (socket, payload) => {
     // PACKET_ID.S_Register: 20
     const response = createResponse(PACKET_ID.S_Register, registerResponse);
 
-    console.log('회원가입 성공!');
+    logger.info('회원가입 성공!');
     socket.write(response);
   } catch (e) {
     handleError(socket, e);

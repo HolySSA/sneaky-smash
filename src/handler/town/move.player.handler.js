@@ -2,7 +2,7 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { getUserSessions, updateUserTransformById } from '../../sessions/user.session.js';
-
+import logger from '../../utils/logger.js';
 /**
  * 무브 핸들러
  * @param {object} socket - 클라이언트 소켓
@@ -32,7 +32,7 @@ const movePlayerHandler = async (socket, payload) => {
       }
     });
   } catch (error) {
-    console.error('무브 핸들러 실행 중 오류 발생:', error.message);
+    logger.error('무브 핸들러 실행 중 오류 발생:', error.message);
   }
 };
 

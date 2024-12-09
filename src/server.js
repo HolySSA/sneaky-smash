@@ -4,6 +4,7 @@ import initServer from './init/index.js';
 import onConnection from './events/onConnection.js';
 import { closeAllQueues } from './utils/redis/bull/bullManager.js';
 import configs from './configs/config.js';
+import logger from './utils/logger.js';
 
 const { SERVER_BIND, SERVER_HOST } = configs;
 
@@ -11,20 +12,20 @@ const server = net.createServer(onConnection);
 
 initServer()
   .then(() => {
-    server.listen(SERVER_BIND, SERVER_HOST, () => {
-      console.log(`서버가 ${SERVER_BIND}:${SERVER_HOST}에서 실행 중입니다.`);
-      console.log(server.address());
+    server.listen(PORT, HOSTt, () => {
+      logger.info(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
+      logger.info(server.address());
     });
   })
   .catch((err) => {
-    console.error(err);
+    logger.error(err);
     process.exit(1); // 오류 발생 시 프로세스 종료
   });
 
 const shutDownServer = async () => {
   await new Promise((resolve) => {
     server.close(() => {
-      console.log('TCP 서버 종료.');
+      logger.info('TCP 서버 종료.');
       resolve();
     });
   });
@@ -33,9 +34,9 @@ const shutDownServer = async () => {
   process.removeAllListeners('SIGTERM');
   process.removeAllListeners('SIGHUP');
 
-  console.log('Bull Queue 정리.');
+  logger.info('Bull Queue 정리.');
   await closeAllQueues();
-  console.log('서버 종료 완료.');
+  logger.info('서버 종료 완료.');
   process.exit(0);
 };
 

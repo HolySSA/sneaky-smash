@@ -2,7 +2,6 @@ import net from 'net';
 import { createInterface } from 'readline';
 import initServer from './init/index.js';
 import onConnection from './events/onConnection.js';
-import { closeAllQueues } from './utils/redis/bull/bullManager.js';
 import configs from './configs/config.js';
 import logger from './utils/logger.js';
 

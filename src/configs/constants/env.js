@@ -15,6 +15,16 @@ const requiredEnv = {
   SECURE: ['PEPPER', 'SALT'],
   LOGGER: ['STACK_TRACE'],
   CLIENT: ['VERSION'],
+  JWT: [
+    'SECRET',
+    'EXPIRES_IN',
+    'ALGORITHM',
+    'ISSUER',
+    'AUDIENCE',
+    'REFRESH_SECRET',
+    'REFRESH_EXPIRES_IN',
+    'ALGORITHM',
+  ],
 };
 
 /**

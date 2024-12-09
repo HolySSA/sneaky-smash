@@ -8,6 +8,8 @@ import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
+import configs from '../../configs/config.js';
+const { JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE } = configs;
 
 // message C_Login {
 //     string account = 1;  // 아이디
@@ -19,6 +21,18 @@ import enterLogic from '../../utils/etc/enter.logic.js';
 //     string message = 2;   // 메시지
 //     string token = 3;     // 토큰
 // }
+
+function isTokenValid(token) {
+  try {
+    jwt.verify(token, JWT_SECRET);
+    return true; // 토큰이 유효하고 만료되지 않음
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return false; // 토큰이 만료됨
+    }
+    return false; // 토큰이 유효하지 않음
+  }
+}
 
 const writeLoginResponse = (socket, success, message, token) => {
   const loginPayload = { success, message, token };
@@ -55,13 +69,13 @@ const logInHandler = async (socket, payload) => {
       await enterLogic(socket);
       return;
     }
-
-    // JWT 추가 로직 - 임시(리프레시 토큰 db에 저장하고 엑세스 토큰 발급해주는 형식으로)
-    const TMP_SECRET_KEY = 'tmp_secret_key';
-
-    const token = jwt.sign({ id: existUser.id }, TMP_SECRET_KEY, { expiresIn: '24h' });
+    const token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN,
+      algorithm: JWT_ALGORITHM,
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
+    });
     const bearerToken = `Bearer ${token}`;
-
     writeLoginResponse(socket, true, '로그인에 성공했습니다.', bearerToken);
   } catch (e) {
     handleError(socket, e);

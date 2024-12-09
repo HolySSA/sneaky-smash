@@ -5,7 +5,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 
-const getSkillHandler = async (socket, payload) => {
+const getSkillHandler = async ({ socket, payload }) => {
   try {
     const { skillId, itemInstanceId } = payload;
     const playerId = socket.id;

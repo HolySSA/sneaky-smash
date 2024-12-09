@@ -2,7 +2,7 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import handleError from '../../utils/error/errorHandler.js';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 
 // message S_LevelUp {
 //     int32 playerId = 1;  // 레벨업하는 유저ID

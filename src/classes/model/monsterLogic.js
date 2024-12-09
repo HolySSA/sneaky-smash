@@ -1,7 +1,7 @@
 import Monster from './monster.class.js';
 import PathServer from './pathServer.js'; // 패스파인딩 서버와 연결
 import { PACKET_ID } from '../../constants/packetId.js';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 import { getUserSessions } from '../../sessions/user.session.js';
 
 class MonsterLogic {

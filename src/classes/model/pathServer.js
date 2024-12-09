@@ -1,7 +1,7 @@
 import net from 'net';
-import createResponse from '../../utils/response/createResponse.js';
+import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
-import decodeMessageByPacketId from '../../utils/parser/decodePacket.js';
+import decodeMessageByPacketId from '../../utils/packet/decodePacket.js';
 
 class PathServer {
   constructor() {

@@ -1,11 +1,8 @@
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getUserSessions } from '../../sessions/user.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
-import {
-  addRedisParty,
-  joinRedisParty,
-} from '../../sessions/redis/redis.party.js';
+import { addRedisParty, joinRedisParty } from '../../sessions/redis/redis.party.js';
 
 // 패킷명세
 // **C_PartyJoin** - 파티에 참여 요청 메시지

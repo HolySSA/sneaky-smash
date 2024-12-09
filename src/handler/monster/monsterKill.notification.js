@@ -1,11 +1,11 @@
 import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import levelUpNotification from '../game/levelUp.notification.js';
-import config from '../../config/config.js';
+import config from '../../configs/config.js';
 
 // 패킷명세
 // message S_MonsterKill {

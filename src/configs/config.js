@@ -7,12 +7,14 @@ import {
   DB_PASSWORD,
   DB_HOST,
   DB_PORT,
-} from '../constants/env.js';
-import { ITEM_DROP_RATE, SKILL_DROP_RATE } from '../constants/game.js';
-import { PACKET_TYPE_LENGTH, PACKET_LENGTH } from '../constants/header.js';
-import { PACKET_ID, reverseMapping } from '../constants/packetId.js';
+} from './constants/env.js';
+import gameConfigs from './constants/game.js';
+import { PACKET_TYPE_LENGTH, PACKET_LENGTH } from './constants/header.js';
+import { PACKET_ID, reverseMapping } from './constants/packetId.js';
 
 const config = {
+  ...gameConfigs,
+
   server: {
     host: HOST,
     port: PORT,

@@ -1,5 +1,5 @@
-import config from '../config/config.js';
-import { PACKET_ID } from '../constants/packetId.js';
+import config from '../configs/config.js';
+import { PACKET_ID } from '../configs/constants/packetId.js';
 import { getHandlerByPacketId } from '../handler/index.js';
 import decodeMessageByPacketId from '../utils/parser/decodePacket.js';
 

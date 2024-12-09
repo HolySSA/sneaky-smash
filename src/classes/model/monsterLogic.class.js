@@ -1,6 +1,6 @@
 import Monster from './monster.class.js';
 import PathServer from './pathServer.js'; // 패스파인딩 서버와 연결
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import createResponse from '../../utils/response/createResponse.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import monsterSpawnNotification from '../../handler/monster/monsterSpawn.notification.js';

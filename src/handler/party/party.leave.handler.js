@@ -1,5 +1,5 @@
 import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getUserSessionById, getUserSessions } from '../../sessions/user.session.js';
 import {

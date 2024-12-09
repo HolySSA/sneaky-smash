@@ -1,4 +1,4 @@
-import { PACKET_ID } from '../constants/packetId.js';
+import { PACKET_ID } from '../configs/constants/packetId.js';
 import CustomError from '../utils/error/customError.js';
 import ErrorCodes from '../utils/error/errorCodes.js';
 // town

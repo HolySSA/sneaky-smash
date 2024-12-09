@@ -1,5 +1,5 @@
 import Queue from 'bull';
-import { REDIS_HOST, REDIS_PORT } from '../../../constants/env.js';
+import { REDIS_HOST, REDIS_PORT } from '../../../configs/constants/env.js';
 
 // 큐 인스턴스 저장 MAP
 const queues = new Map();

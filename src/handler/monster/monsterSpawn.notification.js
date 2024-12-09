@@ -1,5 +1,5 @@
 import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 
 // message S_MonsterSpawn{
@@ -20,7 +20,6 @@ import handleError from '../../utils/error/errorHandler.js';
 
 const monsterSpawnNotification = async (socket, { payload }) => {
   try {
-    
     const response = createResponse(PACKET_ID.S_MonsterSpawn, payload);
 
     socket.write(response);

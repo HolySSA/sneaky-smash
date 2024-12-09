@@ -1,6 +1,6 @@
 import net from 'net';
 import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import decodeMessageByPacketId from '../../utils/parser/decodePacket.js';
 
 class PathServer {

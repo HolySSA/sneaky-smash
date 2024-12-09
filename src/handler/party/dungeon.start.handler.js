@@ -1,4 +1,4 @@
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { addDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import {

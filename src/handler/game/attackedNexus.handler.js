@@ -1,6 +1,6 @@
 import createResponse from '../../utils/response/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import updateNexusHpNotification from './updateNexusHp.notification.js';
@@ -14,11 +14,11 @@ import updateNexusHpNotification from './updateNexusHp.notification.js';
 //   }
 
 const attackedNexusHandler = async (socket, payload) => {
-    try{
-        const { damage } = payload;
-        const playerId = socket.id
+  try {
+    const { damage } = payload;
+    const playerId = socket.id;
 
-        const response = createResponse(PACKET_ID.S_AttackedNexus, { playerId, damage });
+    const response = createResponse(PACKET_ID.S_AttackedNexus, { playerId, damage });
 
     const redisUser = await getRedisUserById(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
@@ -29,13 +29,11 @@ const attackedNexusHandler = async (socket, payload) => {
     updateNexusHpNotification(socket, currentHp);
 
     allUsers.forEach((value) => {
-        value.socket.write(response);
-    })
-    }catch(err){
-        handleError(socket, err)
-    }
-}
-
-
+      value.socket.write(response);
+    });
+  } catch (err) {
+    handleError(socket, err);
+  }
+};
 
 export default attackedNexusHandler;

@@ -1,5 +1,5 @@
 import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';

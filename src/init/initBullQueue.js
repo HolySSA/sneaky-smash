@@ -5,7 +5,7 @@ import '../utils/redis/bull/enter/process.enter.queue.js';
 
 const initBullQueue = () => {
   if (enterQueue) {
-    logger.log('Enter Queue 초기화 완료');
+    logger.info('Enter Queue 초기화 완료');
   }
 };
 

@@ -1,30 +1,46 @@
 import Queue from 'bull';
 import configs from '../../../configs/config.js';
 import logger from '../../logger.js';
-
+import Redis from 'ioredis';
+import redis from '../redisManager.js';
 const { REDIS_HOST, BULL_PORT, REDIS_PORT, REDIS_PASSWORD } = configs;
 
 // 큐 인스턴스 저장 MAP
 const queues = new Map();
 
-const defaultOptions = {
-  redis: {
-    host: REDIS_HOST,
-    port: BULL_PORT,
-    password: REDIS_PASSWORD,
-  },
-  // 기본 작업 옵션
-  defaultJobOptions: {
-    attempts: 3, // 재시도 횟수
-    removeOnComplete: 100, // 완료된 작업 100개까지만 보관
-    removeOnFail: 100, // 실패한 작업 100개까지만 보관
-  },
+const defaultJobOptions = {
+  attempts: 3, // 재시도 횟수
+  removeOnComplete: 100, // 완료된 작업 100개까지만 보관
+  removeOnFail: 100, // 실패한 작업 100개까지만 보관
 };
 
 // 큐 생성
 const createQueue = (queueName) => {
   if (!queues.has(queueName)) {
-    const queue = new Queue(queueName, defaultOptions);
+    const queue = new Queue(queueName, {
+      createClient: (type) => {
+        if (type === 'client' || type === 'subscriber') {
+          logger.info(`Bull에서 Redis ${type} 클라이언트 생성`);
+
+          // Bull에서 사용하는 Redis 클라이언트는 enableReadyCheck와 maxRetriesPerRequest 비활성화
+          return new Redis.Cluster(
+            redis.nodes('master').map((node) => ({
+              host: node.options.host,
+              port: node.options.port,
+            })),
+            {
+              redisOptions: {
+                password: redis.options.redisOptions.password,
+                enableReadyCheck: false,
+                maxRetriesPerRequest: null,
+              },
+            },
+          );
+        }
+        // 기본 Redis 연결 (작업 저장 용도)
+        return redis.duplicate();
+      },
+    });
 
     // Queue 이벤트 리스너
     queue.on('error', (err) => {

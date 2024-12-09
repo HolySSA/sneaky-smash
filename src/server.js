@@ -6,15 +6,15 @@ import { closeAllQueues } from './utils/redis/bull/bullManager.js';
 import configs from './configs/config.js';
 import logger from './utils/logger.js';
 
-const { SERVER_BIND, SERVER_HOST } = configs;
+const { SERVER_BIND, SERVER_PORT } = configs;
 
 const server = net.createServer(onConnection);
 
 initServer()
   .then(() => {
-    server.listen(SERVER_HOST, SERVER_BIND, () => {
-      logger.info(`서버가 ${SERVER_BIND}:${SERVER_HOST}에서 실행 중입니다.`);
-      logger.info(server.address());
+    server.listen(SERVER_PORT, SERVER_BIND, () => {
+      const bindInfo = server.address();
+      logger.info(`서버가 ${bindInfo.address}:${bindInfo.port}에서 실행 중입니다.`);
     });
   })
   .catch((err) => {

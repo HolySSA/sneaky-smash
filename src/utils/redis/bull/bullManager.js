@@ -28,7 +28,7 @@ const createQueue = (queueName) => {
 
     // Queue 이벤트 리스너
     queue.on('error', (err) => {
-      logger.error(`Queue ${queueName} 에러: `, err);
+      logger.error(err);
     });
 
     queue.on('waiting', (jobId) => {

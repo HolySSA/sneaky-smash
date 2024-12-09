@@ -1,19 +1,11 @@
-import {
-  CLIENT_VERSION,
-  HOST,
-  PORT,
-  DB_NAME,
-  DB_USER,
-  DB_PASSWORD,
-  DB_HOST,
-  DB_PORT,
-} from './constants/env.js';
 import gameConfigs from './constants/game.js';
-import { PACKET_TYPE_LENGTH, PACKET_LENGTH } from './constants/header.js';
-import { PACKET_ID, reverseMapping } from './constants/packetId.js';
+import headerConfigs from './constants/header.js';
+import env from './constants/env.js';
 
 const config = {
   ...gameConfigs,
+  ...env,
+  ...headerConfigs,
 
   server: {
     host: HOST,

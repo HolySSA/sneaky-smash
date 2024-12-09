@@ -21,7 +21,7 @@ const onData = (socket) => async (data) => {
         const decodedMessage = decodeMessageByPacketId(packetType, packet);
 
         if (packetType !== PACKET_ID.C_Move) {
-          logger.info(`패킷 ID ${packetType}의 디코드 결과:`, decodedMessage);
+          logger.info(`패킷 ID ${packetType}의 디코드 결과: ${JSON.stringify(decodedMessage)}`);
         }
 
         enqueueReceive(socket.UUID, packetType, decodedMessage);

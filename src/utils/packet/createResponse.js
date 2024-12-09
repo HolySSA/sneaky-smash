@@ -1,13 +1,15 @@
+import { reverseMapping } from '../../configs/constants/packetId.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 import createHeader from './createHeader.js';
 
 const createResponse = (packetId, data = null) => {
   const protoMessages = getProtoMessages();
 
-  const response = protoMessages[packetId];
+  const protoType = reverseMapping[packetId];
+  const response = protoMessages[protoType];
+
   const gamePacket = response.create(data);
   const buffer = response.encode(gamePacket).finish();
-
   const header = createHeader(packetId, buffer);
 
   return Buffer.concat([header, buffer]);

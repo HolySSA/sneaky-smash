@@ -6,7 +6,7 @@ import { findUserByAccount, createUser } from '../../db/model/user.db.js';
 import logger from '../../utils/logger.js';
 import bcrypt from 'bcryptjs';
 
-const registerHandler = async (socket, payload) => {
+const registerHandler = async ({ socket, payload }) => {
   try {
     const { account, password } = await joiUtils.validateRegister(payload);
 
@@ -19,7 +19,7 @@ const registerHandler = async (socket, payload) => {
       };
 
       const response = createResponse(PACKET_ID.S_Register, registerResponse);
-      socket.write(response);
+      await socket.write(response);
       return;
     }
 

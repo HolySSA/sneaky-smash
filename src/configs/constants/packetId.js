@@ -59,8 +59,6 @@ export const PACKET_ID = {
   S_GetNavPath: 100,
 };
 
-export const createReverseMapping = () => {
-  for (const [key, value] of Object.entries(PACKET_ID)) {
-    reverseMapping[value] = key; // value를 key로, key를 value로 저장
-  }
-};
+for (const [key, value] of Object.entries(PACKET_ID)) {
+  reverseMapping[value] = key; // value를 key로, key를 value로 저장
+}

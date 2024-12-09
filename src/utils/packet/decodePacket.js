@@ -1,11 +1,14 @@
+import { reverseMapping } from '../../configs/constants/packetId.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
 
 const decodeMessageByPacketId = (packetId, buffer) => {
   const protoMessages = getProtoMessages();
 
-  const type = protoMessages[packetId];
+  const protoType = reverseMapping[packetId];
+  const type = protoMessages[protoType];
+
   if (!type) {
-    throw new Error(`패킷 ID ${packetId}에 대한 Protobuf 타입이 없습니다.`);
+    throw new Error(`패킷 ${protoType} [${packetId}]에 대한 Protobuf 타입이 없습니다.`);
   }
 
   try {

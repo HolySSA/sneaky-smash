@@ -6,7 +6,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { addUserQueue } from '../utils/socket/messageQueue.js';
 
 const onConnection = (socket) => {
-  socket.uuid = uuidV4();
+  socket.UUID = uuidV4();
   logger.info(
     `클라이언트가 연결되었습니다 [${socket.remoteAddress}:${socket.remotePort}] ${socket.uuid}`,
   );

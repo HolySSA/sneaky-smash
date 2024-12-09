@@ -1,7 +1,7 @@
 import net from 'net';
 import { loadProtos } from '../init/loadProtos.js';
-import configs from '../configs/configs.js';
-import { createPacket } from '../utils/packet/createPacket.js';
+import configs from '../configs/config.js';
+import createResponse from '../utils/packet/createResponse.js';
 await loadProtos();
 import { PACKET_ID } from '../configs/constants/packetId.js';
 import decodeMessageByPacketId from '../utils/packet/decodePacket.js';
@@ -71,7 +71,7 @@ class Client {
       throw new Error('서버에 연결되어 있지 않습니다.');
     }
     console.log(`Client Send : [${packetType}] `, data);
-    const wrappedPacket = createPacket(packetType, this.token, data);
+    const wrappedPacket = createResponse(packetType, data);
     await this.client.write(wrappedPacket);
   };
 

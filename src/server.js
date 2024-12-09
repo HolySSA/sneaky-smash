@@ -33,8 +33,6 @@ const shutDownServer = async () => {
   process.removeAllListeners('SIGTERM');
   process.removeAllListeners('SIGHUP');
 
-  logger.info('Bull Queue 정리.');
-  await closeAllQueues();
   logger.info('서버 종료 완료.');
   process.exit(0);
 };

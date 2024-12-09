@@ -1,18 +1,15 @@
-import Client from './client.test.js';
 import { getOrCreateClient } from './client.test.js';
-import configs from '../configs/configs.js';
+import configs from '../configs/config.js';
 import testEnv from './env.test.js';
-const { PacketType } = configs;
-
+const { PACKET_ID } = configs;
 const client = getOrCreateClient(testEnv.url, testEnv.port);
 await client.connect();
 
-client.addHandler(PacketType.SIGN_UP_RESPONSE, async (payload) => {
+client.addHandler(PACKET_ID.S_Register, async (payload) => {
   // console.log(payload);
 });
 
-client.sendMessage(PacketType.SIGN_UP_REQUEST, {
-  id: testEnv.userName,
-  password: testEnv.password,
-  nickname: testEnv.nickname,
+client.sendMessage(PACKET_ID.C_Register, {
+  account: 'qkrdydgus123',
+  password: 'ajdcjddl12!2#',
 });

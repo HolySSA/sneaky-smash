@@ -1,11 +1,11 @@
 import configs from '../../configs/config.js';
-const { length, typeLength } = configs;
+const { PACKET_LENGTH, PACKET_TYPE_LENGTH } = configs;
 
 const createHeader = (packetId, buffer) => {
-  const packetLength = Buffer.alloc(length);
-  packetLength.writeUInt32BE(buffer.length + length + typeLength, 0);
+  const packetLength = Buffer.alloc(PACKET_LENGTH);
+  packetLength.writeUInt32BE(buffer.length + PACKET_LENGTH + PACKET_TYPE_LENGTH, 0);
 
-  const packetType = Buffer.alloc(typeLength);
+  const packetType = Buffer.alloc(PACKET_TYPE_LENGTH);
   packetType.writeUInt8(packetId);
 
   return Buffer.concat([packetLength, packetType]);

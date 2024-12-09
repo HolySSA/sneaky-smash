@@ -1,4 +1,4 @@
-import { PACKET_ID } from '../../../../constants/packetId.js';
+import { PACKET_ID } from '../../../../configs/constants/packetId.js';
 import { getRedisUserById, getRedisUsers } from '../../../../sessions/redis/redis.user.js';
 import {
   getUserSessionById,

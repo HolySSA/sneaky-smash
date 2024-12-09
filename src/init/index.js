@@ -1,7 +1,7 @@
-import { createReverseMapping } from '../constants/packetId.js';
 import initBullQueue from './initBullQueue.js';
 import { loadGameAssets } from './loadAsset.js';
 import { loadProtos } from './loadProtos.js';
+import { createReverseMapping } from '../configs/constants/packetId.js';
 
 const initServer = async () => {
   try {

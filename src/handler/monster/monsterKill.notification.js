@@ -5,7 +5,9 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import levelUpNotification from '../game/levelUp.notification.js';
-import config from '../../configs/config.js';
+import configs from '../../configs/config.js';
+
+const { ITEM_DROP_RATE, SKILL_DROP_RATE } = configs;
 
 // 패킷명세
 // message S_MonsterKill {
@@ -53,11 +55,11 @@ const monsterKillNotification = async (socket, payload) => {
     let skillId = -1;
 
     // 50%
-    const totalDropRate = config.game.itemDropRate + config.game.skillDropRate;
+    const totalDropRate = ITEM_DROP_RATE + SKILL_DROP_RATE;
     const drop = Math.random();
 
     if (drop < totalDropRate) {
-      if (drop < config.game.itemDropRate) {
+      if (drop < ITEM_DROP_RATE) {
         const item = itemAssets[Math.floor(Math.random() * itemAssets.length)];
         itemId = item.itemId;
       } else {

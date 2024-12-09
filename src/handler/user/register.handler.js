@@ -3,7 +3,7 @@ import createResponse from '../../utils/response/createResponse.js';
 import joiUtils from '../../utils/joi/joiUtils.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { findUserByAccount, createUser } from '../../db/model/user.db.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const registerHandler = async (socket, payload) => {
   try {

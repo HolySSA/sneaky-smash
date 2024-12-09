@@ -32,7 +32,7 @@
       "stats": {
         "level": 1,
         "maxHp": 270,
-        "atk": 20,
+        "atk": 1000,
         "def": 3,
         "moveSpeed": 1,
         "criticalProbability": 10.0,

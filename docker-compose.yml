@@ -4,36 +4,45 @@ services:
   # Redis Cluster Nodes
   redis-cluster-1:
     image: redis:latest
-    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    command: redis-server --requirepass ${REDIS_PASSWORD}  --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
     ports:
-      - '6379:6379'
+      - '${REDIS_PORT}:6379'
     volumes:
       - redis-cluster-1-data:/data
     networks:
       redis-net:
-        ipv4_address: 172.20.0.2
+        aliases:
+          - redis1
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   redis-cluster-2:
     image: redis:latest
-    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    command: redis-server --requirepass ${REDIS_PASSWORD} --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
     ports:
-      - '6380:6379'
+      - '${REDIS2_PORT}:6379'
     volumes:
       - redis-cluster-2-data:/data
     networks:
       redis-net:
-        ipv4_address: 172.20.0.3
+        aliases:
+          - redis2
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   redis-cluster-3:
     image: redis:latest
-    command: redis-server --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
+    command: redis-server  --requirepass ${REDIS_PASSWORD} --port 6379 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes
     ports:
-      - '6381:6379'
+      - '${REDIS3_PORT}:6379'
     volumes:
       - redis-cluster-3-data:/data
     networks:
       redis-net:
-        ipv4_address: 172.20.0.4
+        aliases:
+          - redis3
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   # Redis Cluster Initializer
   redis-cluster-init:
@@ -43,32 +52,47 @@ services:
       - redis-cluster-2
       - redis-cluster-3
     command: >
-      bash -c "
-        sleep 5 &&
-        echo 'yes' | redis-cli --cluster create 172.20.0.2:6379 172.20.0.3:6379 172.20.0.4:6379 --cluster-replicas 0
-      "
+     bash -c "
+       export REDISCLI_AUTH=${REDIS_PASSWORD} &&
+       sleep 5 &&
+       if [ -z \"\$(redis-cli -h redis1 -p 6379 CLUSTER NODES | grep myself)\" ]; then
+         echo 'yes' | redis-cli --cluster create redis1:6379 redis2:6379 redis3:6379 --cluster-replicas 0;
+       else
+         echo 'Cluster already exists. Skipping initialization.';
+       fi"
     networks:
       - redis-net
-
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    deploy:
+      restart_policy:
+        condition: none
+        
   # Bull Queue Redis
   redis-bull:
     image: redis:latest
     command: redis-server --port 6379
     ports:
-      - '6400:6400'
+      - '${BULL_PORT}:6400'
     volumes:
       - redis-bull-data:/data
     networks:
       redis-net:
-        ipv4_address: 172.20.0.5
+
+  # MySQL Service
+  mysql:
+   image: mysql:latest
+   ports:
+     - "${DB_PORT}:3306"
+   environment:
+     MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+     MYSQL_DATABASE: ${DB_NAME}
+     MYSQL_USER: ${DB_USER}
+     MYSQL_PASSWORD: ${DB_PASSWORD}
 
 networks:
   redis-net:
     driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.20.0.0/16
 
 volumes:
   redis-cluster-1-data:

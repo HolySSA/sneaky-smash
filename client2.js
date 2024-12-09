@@ -1,7 +1,10 @@
 import net from 'net';
 import protobuf from 'protobufjs';
-import config from './src/config/config.js';
 import { PACKET_ID } from './src/constants/packetId.js';
+import configs from './src/configs/config.js';
+
+const { HOST, PORT } = configs;
+
 // message C_HitPlayer{
 //     int32 playerId = 1;  // 공격자 ID
 //     int32 damage = 2;    // 데미지
@@ -52,7 +55,7 @@ async function loadProtoAndSend(packetType, messageType, payload) {
 
     // TCP 소켓 연결
     const client = new net.Socket();
-    client.connect(config.server.port, config.server.host, () => {
+    client.connect(PORT, HOST, () => {
       console.log(`${messageType} 메시지를 서버로 전송합니다.`);
       console.log(`${JSON.stringify(payload, null, 2)}`);
       client.write(buffer);

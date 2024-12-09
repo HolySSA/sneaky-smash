@@ -2,15 +2,17 @@ import net from 'net';
 import { createInterface } from 'readline';
 import initServer from './init/index.js';
 import onConnection from './events/onConnection.js';
-import config from './config/config.js';
 import { closeAllQueues } from './utils/redis/bull/bullManager.js';
+import configs from './configs/config.js';
+
+const { PORT, HOST } = configs;
 
 const server = net.createServer(onConnection);
 
 initServer()
   .then(() => {
-    server.listen(config.server.port, config.server.host, () => {
-      console.log(`서버가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`);
+    server.listen(PORT, HOSTt, () => {
+      console.log(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
       console.log(server.address());
     });
   })

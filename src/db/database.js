@@ -1,10 +1,10 @@
 import mysql from 'mysql2/promise';
-import config from '../configs/config.js';
+import userDatabases from '../configs/constants/userDatabase.js';
 import formatDate from '../utils/dateFormatter.js';
 
 const createPool = () => {
   const pool = mysql.createPool({
-    ...config.databases.USER_DB,
+    ...userDatabases,
     //...config.databases.GAME_DB,
     waitForConnections: true,
     connectionLimit: 10,

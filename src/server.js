@@ -5,14 +5,14 @@ import onConnection from './events/onConnection.js';
 import { closeAllQueues } from './utils/redis/bull/bullManager.js';
 import configs from './configs/config.js';
 
-const { PORT, HOST } = configs;
+const { SERVER_BIND, SERVER_HOST } = configs;
 
 const server = net.createServer(onConnection);
 
 initServer()
   .then(() => {
-    server.listen(PORT, HOSTt, () => {
-      console.log(`서버가 ${HOST}:${PORT}에서 실행 중입니다.`);
+    server.listen(SERVER_BIND, SERVER_HOST, () => {
+      console.log(`서버가 ${SERVER_BIND}:${SERVER_HOST}에서 실행 중입니다.`);
       console.log(server.address());
     });
   })

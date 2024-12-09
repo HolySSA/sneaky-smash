@@ -1,5 +1,6 @@
 import Queue from 'bull';
 import configs from '../../../configs/config.js';
+import logger from '../../logger.js';
 
 const { REDIS_HOST, REDIS_PORT } = configs;
 
@@ -26,23 +27,23 @@ const createQueue = (queueName) => {
 
     // Queue 이벤트 리스너
     queue.on('error', (err) => {
-      console.error(`Queue ${queueName} 에러: `, err);
+      logger.error(`Queue ${queueName} 에러: `, err);
     });
 
     queue.on('waiting', (jobId) => {
-      console.log(`Job ${jobId} 대기.`);
+      logger.info(`Job ${jobId} 대기.`);
     });
 
     queue.on('active', (job) => {
-      console.log(`Job ${job.id} 실행.`);
+      logger.info(`Job ${job.id} 실행.`);
     });
 
     queue.on('completed', (job) => {
-      console.log(`Job ${job.id} 완료.`);
+      logger.info(`Job ${job.id} 완료.`);
     });
 
     queue.on('failed', (job, err) => {
-      console.error(`Job ${job.id} 실패: `, err);
+      logger.error(`Job ${job.id} 실패: `, err);
     });
 
     queues.set(queueName, queue);
@@ -92,7 +93,7 @@ const closeAllQueues = async () => {
   }
 
   queues.clear();
-  console.log('모든 Bull Queue 정리.');
+  logger.info('모든 Bull Queue 정리.');
 };
 
 export { createQueue, getQueue, getAllQueues, removeQueue, closeAllQueues };

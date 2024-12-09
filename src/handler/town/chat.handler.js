@@ -2,6 +2,7 @@ import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getUserSessions } from '../../sessions/user.session.js';
+import logger from '../../utils/logger.js';
 
 const chatHandler = async (socket, payload) => {
   try {
@@ -16,7 +17,7 @@ const chatHandler = async (socket, payload) => {
 
     const allUsers = getUserSessions();
     if (!allUsers || allUsers.length === 0) {
-      console.error('유저세션이 없습니다.');
+      logger.error('유저세션이 없습니다.');
       return;
     }
 

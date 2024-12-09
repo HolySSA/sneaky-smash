@@ -2,6 +2,7 @@ import net from 'net';
 import createResponse from '../../utils/response/createResponse.js';
 import { PACKET_ID } from '../../constants/packetId.js';
 import decodeMessageByPacketId from '../../utils/parser/decodePacket.js';
+import logger from '../../utils/logger.js';
 
 class PathServer {
   constructor() {
@@ -14,7 +15,7 @@ class PathServer {
   async connectToUnityServer(host, port) {
     return new Promise((resolve, reject) => {
       if (this.isConnected) {
-        console.log('이미 Unity 서버와 연결되어 있습니다.');
+        logger.info('이미 Unity 서버와 연결되어 있습니다.');
         return resolve();
       }
 
@@ -22,7 +23,7 @@ class PathServer {
 
       this.client.connect(port, host, () => {
         Buffer.alloc(0);
-        console.log(`Unity 서버에 연결됨: ${host}:${port}`);
+        logger.info(`Unity 서버에 연결됨: ${host}:${port}`);
         this.isConnected = true;
         resolve();
       });
@@ -35,7 +36,7 @@ class PathServer {
 
   onData(data) {
     // 수신된 데이터를 로그로 확인
-    console.log(`수신된 원시 데이터: ${data.toString('hex')}`);
+    logger.info(`수신된 원시 데이터: ${data.toString('hex')}`);
 
     // 수신된 데이터를 버퍼에 추가
     this.buffer = Buffer.concat([this.buffer, data]);
@@ -50,7 +51,7 @@ class PathServer {
 
       // 잘못된 패킷 길이 처리
       if (packetLength > this.buffer.length || packetLength <= totalHeaderLength) {
-        console.error(`Invalid packet length: ${packetLength} for packet ID: ${packetType}`);
+        logger.error(`Invalid packet length: ${packetLength} for packet ID: ${packetType}`);
 
         // 잘못된 헤더 부분만 제거하고 나머지 데이터 유지
         this.buffer = this.buffer.slice(totalHeaderLength);
@@ -69,13 +70,13 @@ class PathServer {
           handler(null, decodedMessage);
         }
       } catch (err) {
-        console.error('패킷 디코딩 중 오류 발생:', err.message);
+        logger.error('패킷 디코딩 중 오류 발생:', err.message);
       }
     }
   }
 
   onError(err, reject) {
-    console.error('Unity 서버 연결 오류:', err.message);
+    logger.error('Unity 서버 연결 오류:', err.message);
     this.isConnected = false;
 
     // 모든 대기 중인 요청에 에러 전달
@@ -88,7 +89,7 @@ class PathServer {
   }
 
   onClose() {
-    console.log('Unity 서버와의 연결 종료');
+    logger.info('Unity 서버와의 연결 종료');
     this.isConnected = false;
     this.client = null;
 
@@ -129,7 +130,7 @@ class PathServer {
       this.client.end();
       this.client = null;
       this.isConnected = false;
-      console.log('Unity 서버와의 연결을 종료했습니다.');
+      logger.info('Unity 서버와의 연결을 종료했습니다.');
     }
   }
 }

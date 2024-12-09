@@ -3,6 +3,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/response/createResponse.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import logger from '../../utils/logger.js';
 // message S_RevivePlayer {
 //     int32 playerId = 1;
 //     TransformInfo transform = 2;
@@ -18,7 +19,7 @@ const revivePlayerNotification = async (socket, playerId) => {
     const userStats = dungeon.getUserStats(playerId);
     // transform = [{
     // },{},{},{}] //게임실행 부탁드립니다
-    console.log('userStats:', userStats);
+    logger.info('userStats:', userStats);
     const transforms = {
       posX: 2.75,
       posY: -4.65,

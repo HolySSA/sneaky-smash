@@ -8,6 +8,7 @@ import {
 import createNotificationPacket from '../../../notification/createNotification.js';
 import createResponse from '../../../packet/createResponse.js';
 import { enterQueue } from '../queues.js';
+import logger from '../../../logger.js';
 
 enterQueue.process(async (job) => {
   const { socketId } = job.data;
@@ -72,7 +73,7 @@ enterQueue.process(async (job) => {
 
     return { success: true };
   } catch (err) {
-    console.error('Enter Queue Process 에러: ', err);
+    logger.error('Enter Queue Process 에러: ', err);
     return { success: false };
   }
 });

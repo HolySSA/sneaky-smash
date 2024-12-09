@@ -1,9 +1,10 @@
 import net from 'net';
 import protobuf from 'protobufjs';
 import { PACKET_ID } from './src/constants/packetId.js';
-import configs from './src/configs/config.js';
+import testEnv from './env.test.js';
+import logger from './src/utils/logger.js';
 
-const { HOST, PORT } = configs;
+const { HOST, PORT } = testEnv;
 
 // message C_HitPlayer{
 //     int32 playerId = 1;  // 공격자 ID
@@ -56,8 +57,8 @@ async function loadProtoAndSend(packetType, messageType, payload) {
     // TCP 소켓 연결
     const client = new net.Socket();
     client.connect(PORT, HOST, () => {
-      console.log(`${messageType} 메시지를 서버로 전송합니다.`);
-      console.log(`${JSON.stringify(payload, null, 2)}`);
+      logger.info(`${messageType} 메시지를 서버로 전송합니다.`);
+      logger.info(`${JSON.stringify(payload, null, 2)}`);
       client.write(buffer);
     });
 
@@ -70,36 +71,36 @@ async function loadProtoAndSend(packetType, messageType, payload) {
 
     // 서버 응답 처리
     client.on('data', (data) => {
-      console.log('데이터:', data);
+      logger.info('데이터:', data);
 
       // payload만 남기기
       const payloadBuffer = data.subarray(5);
 
       // 패킷 ID
       const packetId = data.readUInt8(4);
-      console.log('받은 패킷 ID:', packetId);
+      logger.info('받은 패킷 ID:', packetId);
 
       // S_Register 디코딩
       const handler = handlers[packetId];
       if (handler) {
         const decoded = handler.decode(payloadBuffer);
-        console.log(`Decoded data for packet ID ${packetId}:`, JSON.stringify(decoded, null, 2));
+        logger.info(`Decoded data for packet ID ${packetId}:`, JSON.stringify(decoded, null, 2));
       } else {
-        console.log(`Unhandled packet ID: ${packetId}`);
+        logger.info(`Unhandled packet ID: ${packetId}`);
       }
 
       // client.destroy(); // 응답 수신 후 연결 종료
     });
 
     client.on('close', () => {
-      console.log('연결 종료');
+      logger.info('연결 종료');
     });
 
     client.on('error', (err) => {
-      console.error('오류 발생:', err.message);
+      logger.error('오류 발생:', err.message);
     });
   } catch (error) {
-    console.error('패킷 전송 실패:', error.message);
+    logger.error('패킷 전송 실패:', error.message);
   }
 }
 

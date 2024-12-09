@@ -4,6 +4,7 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import createResponse from '../../utils/response/createResponse.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import monsterSpawnNotification from '../../handler/monster/monsterSpawn.notification.js';
+import logger from '../../utils/logger.js';
 
 class MonsterLogic {
   constructor(dungeonInstance) {
@@ -54,13 +55,13 @@ class MonsterLogic {
     this.pathServer
       .connectToUnityServer('20.157.13.232', 9000)
       .then(() => {
-        console.log('패스파인딩 서버에 연결되었습니다.');
+        logger.info('패스파인딩 서버에 연결되었습니다.');
       })
       .catch((err) => {
-        console.error('패스파인딩 서버 연결 실패:', err.message);
+        logger.error('패스파인딩 서버 연결 실패:', err.message);
       });
 
-    console.log('MonsterLogic 생성됨. 게임 루프 시작.');
+    logger.info('MonsterLogic 생성됨. 게임 루프 시작.');
 
     this.startGameLoop();
     this.startMonsterSpawn();
@@ -122,11 +123,11 @@ class MonsterLogic {
             this.monsterLogicInterval,
           );
         } else {
-          console.error(`몬스터 ID: ${monster.id} 경로 데이터가 없습니다.`);
+          logger.error(`몬스터 ID: ${monster.id} 경로 데이터가 없습니다.`);
         }
       })
       .catch((err) => {
-        console.error(`몬스터 ID: ${monster.id} 경로 요청 실패:`, err.message || err);
+        logger.error(`몬스터 ID: ${monster.id} 경로 요청 실패:`, err.message || err);
       });
   }
 
@@ -212,7 +213,7 @@ class MonsterLogic {
               // 플레이어 감지 시 활성화
               if (!monster.targetOn) {
                 monster.targetOn = true;
-                console.log(`${monster.name}이(가) 플레이어를 감지했습니다.`);
+                logger.info(`${monster.name}이(가) 플레이어를 감지했습니다.`);
               }
               monster.target = closestPlayer;
               monster.moveToTarget();
@@ -221,7 +222,7 @@ class MonsterLogic {
               if (monster.targetOn) {
                 monster.targetOn = false;
                 monster.target = null;
-                console.log(`${monster.name}는 플레이어를 놓쳤습니다.`);
+                logger.info(`${monster.name}는 플레이어를 놓쳤습니다.`);
               }
             }
           }
@@ -243,7 +244,7 @@ class MonsterLogic {
             monster.targetOn = false;
             monster.target = null;
             monster.stopMove = false;
-            console.log(`${monster.name}는 플레이어를 놓쳤습니다.`);
+            logger.info(`${monster.name}는 플레이어를 놓쳤습니다.`);
           }
         }
       });
@@ -255,7 +256,7 @@ class MonsterLogic {
     if (this.gameLoopInterval) {
       clearInterval(this.gameLoopInterval);
       this.gameLoopInterval = null;
-      console.log('게임 루프 중지됨.');
+      logger.info('게임 루프 중지됨.');
     }
   }
 

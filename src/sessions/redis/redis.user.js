@@ -1,5 +1,6 @@
 import { getGameAssets } from '../../init/loadAsset.js';
 import redis from '../../utils/redis/redisManager.js';
+import logger from '../../utils/logger.js';
 
 const addRedisUser = async (userId, nickname, myClass) => {
   const userKey = `user:${userId}`;
@@ -34,7 +35,7 @@ const removeRedisUser = async (socket) => {
 const getRedisUsers = async () => {
   // keys 명령어로 직접 조회
   const userKeys = await redis.keys('user:*');
-  console.log('Redis 유저 키 조회 결과:', userKeys);
+  logger.info('Redis 유저 키 조회 결과:', userKeys);
 
   if (!userKeys.length) {
     return [];

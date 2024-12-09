@@ -1,7 +1,7 @@
 // 중앙 집중식 관리
 import dotenv from 'dotenv';
-
 dotenv.config();
+
 /**
  * 필수 환경 변수 목록을 정의하는 객체.
  * 각 카테고리(DB, JWT, SERVER, SECURITY)에 대한 필요한 환경 변수의 키를 포함합니다.
@@ -10,7 +10,7 @@ dotenv.config();
 const requiredEnv = {
   DB: ['HOST', 'PORT', 'USER', 'PASSWORD', 'NAME', 'CONNECTION_LIMIT'],
   SERVER: ['PORT', 'BIND'],
-  REDIS: ['HOST', 'PORT', 'PORT2', 'PORT3', 'PASSWORD'],
+  REDIS: ['HOST', 'PORT1', 'PORT2', 'PORT3', 'PASSWORD'],
   SECURE: ['PEPPER', 'SALT'],
   LOGGER: ['STACK_TRACE'],
   CLIENT: ['VERSION'],

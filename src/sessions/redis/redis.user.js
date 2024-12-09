@@ -1,8 +1,9 @@
 import { getGameAssets } from '../../init/loadAsset.js';
-import redis from '../../utils/redis/redisManager.js';
+import { getRedis } from '../../utils/redis/redisManager.js';
 import logger from '../../utils/logger.js';
 
 const addRedisUser = async (userId, nickname, myClass) => {
+  const redis = await getRedis();
   const userKey = `user:${userId}`;
 
   const existingUser = await redis.exists(userKey);
@@ -21,6 +22,7 @@ const addRedisUser = async (userId, nickname, myClass) => {
 };
 
 const removeRedisUser = async (socket) => {
+  const redis = await getRedis();
   const userKey = `user:${socket.id}`;
   const user = await redis.hgetall(userKey);
 
@@ -33,6 +35,7 @@ const removeRedisUser = async (socket) => {
 };
 
 const getRedisUsers = async () => {
+  const redis = await getRedis();
   // keys 명령어로 직접 조회
   const userKeys = await redis.keys('user:*');
   logger.info('Redis 유저 키 조회 결과:', userKeys);
@@ -61,6 +64,7 @@ const getRedisUsers = async () => {
 };
 
 const getRedisUserById = async (id) => {
+  const redis = await getRedis();
   const userKey = `user:${id}`;
   const user = await redis.hgetall(userKey);
 
@@ -78,6 +82,7 @@ const getRedisUserById = async (id) => {
 };
 
 const getStatsByUserId = async (userId) => {
+  const redis = await getRedis();
   const userKey = `user:${userId}`;
   const user = await redis.hgetall(userKey);
 
@@ -97,6 +102,7 @@ const getStatsByUserId = async (userId) => {
 };
 
 const setStatsByUserId = async (userId, statInfo) => {
+  const redis = await getRedis();
   const userKey = `user:${userId}`;
   const user = await redis.hgetall(userKey);
 
@@ -128,6 +134,7 @@ const setStatsByUserId = async (userId, statInfo) => {
 };
 
 const setSessionId = async (userId, sessionId) => {
+  const redis = await getRedis();
   const userKey = `user:${userId}`;
   const user = await redis.exists(userKey);
 

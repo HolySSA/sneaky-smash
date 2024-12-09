@@ -1,6 +1,7 @@
-import redis from '../../utils/redis/redisManager.js';
+import { getRedis } from '../../utils/redis/redisManager.js';
 
 const addRedisParty = async (roomId, dungeonLevel, userId) => {
+  const redis = await getRedis();
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
 
@@ -30,6 +31,7 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
 };
 
 const removeRedisParty = async (roomId) => {
+  const redis = await getRedis();
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
 
@@ -47,6 +49,7 @@ const removeRedisParty = async (roomId) => {
 };
 
 const joinRedisParty = async (roomId, userId) => {
+  const redis = await getRedis();
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
 
@@ -72,6 +75,7 @@ const joinRedisParty = async (roomId, userId) => {
 };
 
 const leaveRedisParty = async (roomId, userId) => {
+  const redis = await getRedis();
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
 
@@ -93,6 +97,7 @@ const leaveRedisParty = async (roomId, userId) => {
 };
 
 const getRedisParty = async (roomId) => {
+  const redis = await getRedis();
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
 
@@ -114,6 +119,7 @@ const getRedisParty = async (roomId) => {
 };
 
 const getRedisPartyByUserId = async (userId) => {
+  const redis = await getRedis();
   const roomIds = await redis.smembers('partyList');
 
   for (const roomId of roomIds) {
@@ -138,6 +144,7 @@ const getRedisPartyByUserId = async (userId) => {
 };
 
 const getRedisParties = async () => {
+  const redis = await getRedis();
   const roomIds = await redis.smembers('partyList');
 
   const parties = await Promise.all(

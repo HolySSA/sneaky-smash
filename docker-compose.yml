@@ -1,93 +1,17 @@
 version: '3.8'
 
 services:
-  redis-cluster-1:
+  redis:
     image: redis:latest
-    command: >
-      redis-server --requirepass ${REDIS_PASSWORD} --port 6379
-      --cluster-enabled yes --cluster-config-file nodes.conf
-      --cluster-node-timeout 5000 --appendonly yes
-      --cluster-announce-ip redis1
-      --cluster-announce-port 6379
-      --cluster-announce-bus-port 16379
     ports:
-      - '${REDIS_PORT}:6379'
+      - ${REDIS_PORT}:6379
     volumes:
-      - redis-cluster-1-data:/data
-    networks:
-      redis-net:
-        aliases:
-          - redis1
+      - redis-data:/data # 별도 볼륨 사용
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-
-  redis-cluster-2:
-    image: redis:latest
-    command: >
-      redis-server --requirepass ${REDIS_PASSWORD} --port 6379
-      --cluster-enabled yes --cluster-config-file nodes.conf
-      --cluster-node-timeout 5000 --appendonly yes
-      --cluster-announce-ip redis2
-      --cluster-announce-port 6379
-      --cluster-announce-bus-port 16379
-    ports:
-      - '${REDIS_PORT2}:6379'
-    volumes:
-      - redis-cluster-2-data:/data
+      - 'REDIS_PASSWORD=${REDIS_PASSWORD}'
+    restart: always
     networks:
-      redis-net:
-        aliases:
-          - redis2
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-
-  redis-cluster-3:
-    image: redis:latest
-    command: >
-      redis-server --requirepass ${REDIS_PASSWORD} --port 6379
-      --cluster-enabled yes --cluster-config-file nodes.conf
-      --cluster-node-timeout 5000 --appendonly yes
-      --cluster-announce-ip redis3
-      --cluster-announce-port 6379
-      --cluster-announce-bus-port 16379
-    ports:
-      - '${REDIS_PORT3}:6379'
-    volumes:
-      - redis-cluster-3-data:/data
-    networks:
-      redis-net:
-        aliases:
-          - redis3
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-
-  redis-cluster-init:
-    image: redis:latest
-    depends_on:
-      - redis-cluster-1
-      - redis-cluster-2
-      - redis-cluster-3
-    command: >
-      bash -c "
-        sleep 5 &&
-        redis-cli -a ${REDIS_PASSWORD} --cluster create redis1:6379 redis2:6379 redis3:6379 --cluster-replicas 1 --cluster-yes;"
-    networks:
-      redis-net:
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    deploy:
-      restart_policy:
-        condition: none
-
-  redis-bull:
-    image: redis:latest
-    command: redis-server --port 6400
-    ports:
-      - '${BULL_PORT}:6400'
-    volumes:
-      - redis-bull-data:/data
-    networks:
-      redis-net:
+      - multipleRoguelike
 
   mysql:
     image: mysql:latest
@@ -98,13 +22,14 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql # 별도 볼륨 사용
+    networks:
+      - multipleRoguelike
 
 networks:
-  redis-net:
-    driver: bridge
+  multipleRoguelike:
 
 volumes:
-  redis-cluster-1-data:
-  redis-cluster-2-data:
-  redis-cluster-3-data:
-  redis-bull-data:
+  redis-data: # Redis 데이터를 저장할 볼륨
+  mysql-data: # MySQL 데이터를 저장할 볼륨

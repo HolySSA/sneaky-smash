@@ -1,6 +1,5 @@
-import { addEnterJob } from '../redis/bull/enter/add.enter.queue.js';
 import logger from '../logger.js';
-
+import { getUserTransformById } from '../../sessions/user.session.js';
 // message S_Enter {
 //     PlayerInfo player = 1;      // 플레이어 정보 (추후 정의 예정)
 // }
@@ -16,11 +15,12 @@ const enterLogic = async (socket, user) => {
     transform: getUserTransformById(user.id),
   };
 
-  const result = await job.finished();
+  logger.error('enterLogic. 미완성된 기능 호출함');
+  // const result = await job.finished();
 
-  if (!result.success) {
-    logger.error(`유저 ${socket.id} 접속 실패.`);
-  }
+  // if (!result.success) {
+  //   logger.error(`유저 ${socket.id} 접속 실패.`);
+  // }
 };
 
 export default enterLogic;

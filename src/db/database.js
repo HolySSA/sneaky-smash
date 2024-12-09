@@ -1,5 +1,5 @@
 import fs from 'fs';
-import configs from '../configs/configs.js';
+import configs from '../configs/config.js';
 import mysql from 'mysql2';
 import logger from '../utils/logger.js';
 import path from 'path';
@@ -21,7 +21,6 @@ class MysqlService {
 
   async init() {
     this.createConnectionPool();
-    await this.createTables();
     logger.info('mysql initialized');
   }
 
@@ -41,16 +40,27 @@ class MysqlService {
   }
 
   async createTables() {
-    const text = fs.readFileSync(path.join(__dirname, `sql/schema.sql`), 'utf-8');
-
+    const sqlDir = path.join(__dirname, 'sql');
+    logger.info(`Start createTables for database : ${sqlDir}`);
+    const files = fs.readdirSync(sqlDir).filter((file) => file.endsWith('.sql'));
     const jobs = [];
-    text.split(';').forEach((qry) => {
-      if (!qry.trim()) {
-        return;
-      }
-      jobs.push(this.execute(qry));
-    });
+    for (const file of files) {
+      const filePath = path.join(sqlDir, file);
+      const text = fs.readFileSync(filePath, 'utf-8');
+      const texts = text
+        .split(';')
+        .map((text) => text.trim())
+        .filter((text) => !text.length);
+      logger.info(`${filePath} : ${texts.length}`);
+      texts.forEach((qry) => {
+        if (qry) {
+          jobs.push(this.execute(qry));
+        }
+      });
+    }
+
     await Promise.all(jobs);
+    logger.info(`createTables for database done.`);
   }
 
   addToQueue(queue, query, params) {
@@ -115,6 +125,6 @@ class MysqlService {
   }
 }
 
-const mysqlService = new MysqlService();
+const dbPool = new MysqlService();
 
-export { mysqlService as mysql };
+export default dbPool;

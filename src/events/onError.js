@@ -6,7 +6,7 @@ const onError = (socket) => async (err) => {
   removeUserQueue(socket);
   despawnLogic(socket);
 
-  logger.error('Socket error:', err);
+  logger.warn(`클라이언트와 연결이 종료되었습니다.[${socket.id}] ${socket.UUID}`);
 };
 
 export default onError;

@@ -12,11 +12,18 @@ const addUserForTown = (user) => {
   return user;
 };
 
-const removeUserForTown = (user) => {
-  townSessions.delete(user.id);
-  const index = allUsersUUID.indexOf(user.socket.UUID);
-  if (index !== -1) {
-    allUsersUUID.splice(index, 1);
+/**
+ *
+ * @param {string} userId  socket.id 혹은 db의 user.id
+ */
+const removeUserForTown = (userId) => {
+  const user = getUserSessionById(userId);
+  if (user) {
+    townSessions.delete(user.id);
+    const index = allUsersUUID.indexOf(user.socket.UUID);
+    if (index !== -1) {
+      allUsersUUID.splice(index, 1);
+    }
   }
 };
 
@@ -26,11 +33,6 @@ const getAllUserUUIDByTown = () => {
 
 const getUserSessionById = (id) => {
   const userId = id.toString();
-
-  if (!townSessions.has(userId)) {
-    throw new Error('존재하지 않는 유저 세션입니다.');
-  }
-
   return townSessions.get(userId);
 };
 

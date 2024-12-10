@@ -1,7 +1,6 @@
-import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getAllUserUUID, getUserSessions } from '../../sessions/user.session.js';
+import { getAllUserUUID } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
 import Result from '../result.js';
 

@@ -4,6 +4,8 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import logger from '../../utils/logger.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 // message SkillInfo {
 // 	int32	skillId	= 1;	// 스킬 ID
@@ -22,21 +24,19 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 //   int32 itemInstanceId = 3; 	// 고유 아이템 ID
 // }
 
+// Notification
 const getSkillHandler = async ({ socket, payload }) => {
+  const { skillId, itemInstanceId } = payload;
+  const playerId = socket.id;
   try {
-    const { skillId, itemInstanceId } = payload;
-    const playerId = socket.id;
     const redisUser = await getRedisUserById(socket.id);
-    const dungeon = getDungeonSession(redisUser.sessionId);
-    const allUsers = dungeon.getAllUsers();
+    if (!redisUser) {
+      throw new Error(`getSkillHandler error. Cannot find redisUser by socket.id : ${socket.id}`);
+    }
 
     const skillData = getGameAssets().skillInfo.data;
-    const curSkill = skillData.find((id) => id.skillId === skillId);
-    const skillInfo = {
-      skillId,
-      damageRate: curSkill.damageRate,
-      coolTime: curSkill.coolTime,
-    };
+    const skillInfo = skillData.find((id) => id.skillId === skillId);
+
     const skillPayload = {
       skillInfo,
       playerId,
@@ -45,12 +45,9 @@ const getSkillHandler = async ({ socket, payload }) => {
 
     const response = createResponse(PACKET_ID.S_GetSkill, skillPayload);
 
-    allUsers.forEach((value) => {
-      value.socket.write(response);
-    });
-    socket.write(response);
-  } catch (err) {
-    handleError(socket, err);
+    createNotificationPacket(PACKET_ID.S_GetSkill);
+  } catch (error) {
+    handleError(socket, error);
   }
 };
 

@@ -34,6 +34,12 @@ const getDungeonSession = (dungeonId) => {
   return session;
 };
 
+const getDungeonUsersUUID = (dungeonId) => {
+  const session = getDungeonSession(dungeonId);
+
+  return Array.from(session.users.values()).map((user) => user.userInfo.socket.UUID);
+};
+
 const removeDungeonSession = (dungeonId) => {
   if (!dungeonSessions.has(dungeonId)) {
     throw new Error(`던전 세션이 존재하지 않습니다.`);

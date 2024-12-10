@@ -52,4 +52,10 @@ const getDungeonSessions = () => {
   return dungeonSessions;
 };
 
-export { addDungeonSession, getDungeonSession, removeDungeonSession, getDungeonSessions };
+export {
+  addDungeonSession,
+  getDungeonSession,
+  removeDungeonSession,
+  getDungeonSessions,
+  getDungeonUsersUUID,
+};

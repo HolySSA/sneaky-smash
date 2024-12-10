@@ -1,7 +1,7 @@
 import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getUserSessionById, getUserSessions } from '../../sessions/user.session.js';
+import { getUserById, getUserSessions } from '../../sessions/user.session.js';
 import {
   getRedisParty,
   leaveRedisParty,
@@ -46,7 +46,7 @@ const partyLeaveHandler = async (socket, payload) => {
 
       /*
       party.members.forEach((memberId) => {
-        const user = getUserSessionById(memberId);
+        const user = getUserById(memberId);
         user?.socket.write(response);
       });
       */
@@ -61,7 +61,7 @@ const partyLeaveHandler = async (socket, payload) => {
       const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
 
       remainMembers.members.forEach((memberId) => {
-        const user = getUserSessionById(memberId);
+        const user = getUserById(memberId);
         user?.socket.write(response);
       });
 
@@ -72,7 +72,7 @@ const partyLeaveHandler = async (socket, payload) => {
 
       /*
       party.members.forEach((memberId) => {
-        const user = getUserSessionById(parseInt(memberId));
+        const user = getUserById(parseInt(memberId));
         user?.socket.write(response);
       });
       */

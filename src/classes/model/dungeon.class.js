@@ -3,7 +3,6 @@ import LatencyManager from '../manager/latency.manager.js';
 import MonsterLogic from './monsterLogic.class.js';
 import logger from '../../utils/logger.js';
 import { removeDungeonSession } from '../../sessions/dungeon.session.js';
-import { transform } from 'lodash';
 
 class Dungeon {
   constructor(dungeonInfo) {

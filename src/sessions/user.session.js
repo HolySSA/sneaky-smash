@@ -77,7 +77,7 @@ export {
   addUserSession,
   removeUserSession,
   getUserSessions,
-  getUserSessionById,
+  getUserById,
   getUserTransformById,
   updateUserTransformById,
   getAllUserUUID,

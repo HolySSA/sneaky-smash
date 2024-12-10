@@ -2,6 +2,7 @@ import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
 import LatencyManager from '../manager/latency.manager.js';
 import MonsterLogic from './monsterLogic.class.js';
 import logger from '../../utils/logger.js';
+import { removeDungeonSession } from '../../sessions/dungeon.session.js';
 
 class Dungeon {
   constructor(dungeonInfo) {

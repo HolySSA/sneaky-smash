@@ -45,10 +45,11 @@ const logInHandler = async ({ socket, payload }) => {
       } else {
         // 로그인 검증 통과 - socket.id 할당
         socket.id = existUser.id.toString();
-        addUserSession(socket);
+
         const loginBuffer = createResponse(PACKET_ID.S_Login, { success, message, token });
         enqueueSend(socket.UUID, loginBuffer);
         const character = await findCharacterByUserId(existUser.id);
+        addUserSession(socket);
         if (character) {
           await addRedisUser(existUser.id, character.nickname, character.myClass);
           await enterLogic(socket, character);

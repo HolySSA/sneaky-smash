@@ -11,9 +11,10 @@ class User {
     this.skillList = [];
     this.monsterKillCount = 0;
     this.userKillCount = 0;
-
     this.latency = 0;
     this.lastPingTime = Date.now();
+    this.myClass = 0;
+    this.nickname = '';
   }
 
   updateLatency(latency) {

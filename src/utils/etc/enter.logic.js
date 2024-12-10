@@ -1,10 +1,16 @@
 import logger from '../logger.js';
-import { getUserTransformById } from '../../sessions/user.session.js';
+import { getUserTransformById, getUserSessionById } from '../../sessions/user.session.js';
 import { enqueueSend } from '../socket/messageQueue.js';
 import createResponse from '../packet/createResponse.js';
 import configs from '../../configs/configs.js';
 import createNotificationPacket from '../notification/createNotification.js';
 import { getProtoMessages } from '../../init/loadProtos.js';
+import {
+  addUserForTown,
+  getAllUserUUIDByTown,
+  getAllUserByTown,
+  getUserTransformById as getTownTransformByUserId,
+} from '../../sessions/town.session.js';
 const { PACKET_ID } = configs;
 
 // message S_Enter {
@@ -14,21 +20,45 @@ const { PACKET_ID } = configs;
 //     repeated PlayerInfo players = 1; // 스폰되는 플레이어 리스트 (추후 정의 예정)
 // }
 
-const enterLogic = async (socket, user) => {
+/**
+ * 타운에 입장하는 함수
+ */
+const enterLogic = async (socket, character) => {
+  const user = getUserSessionById(socket.id);
   const playerPayload = {
     player: {
-      playerId: parseInt(user.id),
-      nickname: user.nickname,
-      class: user.myClass,
-      transform: getUserTransformById(user.id),
+      playerId: parseInt(socket.id),
+      nickname: character.nickname,
+      class: character.myClass,
+      transform: user.transform,
     },
   };
 
-  logger.error('enterLogic. 미완성된 기능 호출함');
-  let buffer = createResponse(PACKET_ID.S_Enter, playerPayload);
-  enqueueSend(socket.UUID, buffer);
+  user.nickname = character.nickname;
+  user.myClass = character.myClass;
 
-  //createNotificationPacket()
+  let buffer = createResponse(PACKET_ID.S_Enter, playerPayload);
+
+  addUserForTown(user);
+  enqueueSend(socket.UUID, buffer);
+  const allUUID = getAllUserUUIDByTown();
+  if (allUUID.length > 1) {
+    const players = [];
+    for (const [_, user] of getAllUserByTown()) {
+      players.push({
+        playerId: parseInt(user.id),
+        nickname: user.nickname,
+        class: user.myClass,
+        transform: user.transform,
+      });
+    }
+
+    const spawnPayload = {
+      players,
+    };
+
+    createNotificationPacket(PACKET_ID.S_Spawn, spawnPayload, allUUID);
+  }
 };
 
 export default enterLogic;

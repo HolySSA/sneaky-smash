@@ -6,11 +6,6 @@ const addRedisUser = async (userId, nickname, myClass) => {
   const redis = await getRedis();
   const userKey = `user:${userId}`;
 
-  const existingUser = await redis.exists(userKey);
-  if (existingUser) {
-    throw new Error('이미 존재하는 레디스 유저입니다.');
-  }
-
   const redisUser = await redis.hset(userKey, {
     id: userId.toString(),
     nickname: nickname,

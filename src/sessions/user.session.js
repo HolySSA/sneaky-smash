@@ -1,6 +1,7 @@
 import User from '../classes/model/user.class.js';
 import logger from '../utils/logger.js';
 import { userSessions } from './sessions.js';
+const allUsersUUID = [];
 
 const addUserSession = (socket) => {
   if (userSessions.has(socket.id)) {
@@ -9,6 +10,7 @@ const addUserSession = (socket) => {
 
   const user = new User(socket);
   userSessions.set(socket.id, user);
+  allUsersUUID.push(socket.UUID);
   return user;
 };
 
@@ -19,7 +21,15 @@ const removeUserSession = (socket) => {
     );
   } else {
     userSessions.delete(socket.id);
+    const index = allUsersUUID.indexOf(socket.UUID);
+    if (index !== -1) {
+      allUsersUUID.splice(index, 1);
+    }
   }
+};
+
+const getAllUserUUID = () => {
+  return allUsersUUID;
 };
 
 const getUserSessions = () => {
@@ -70,4 +80,5 @@ export {
   getUserSessionById,
   getUserTransformById,
   updateUserTransformById,
+  getAllUserUUID,
 };

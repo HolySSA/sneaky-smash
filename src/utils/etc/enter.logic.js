@@ -1,5 +1,5 @@
 import logger from '../logger.js';
-import { getUserTransformById, getUserSessionById } from '../../sessions/user.session.js';
+import { getUserTransformById, getUserById } from '../../sessions/user.session.js';
 import { enqueueSend } from '../socket/messageQueue.js';
 import createResponse from '../packet/createResponse.js';
 import configs from '../../configs/configs.js';
@@ -24,7 +24,7 @@ const { PACKET_ID } = configs;
  * 타운에 입장하는 함수
  */
 const enterLogic = async (socket, character) => {
-  const user = getUserSessionById(socket.id);
+  const user = getUserById(socket.id);
   const playerPayload = {
     player: {
       playerId: parseInt(socket.id),

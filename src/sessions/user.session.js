@@ -38,7 +38,7 @@ const getUserSessions = () => {
   return userSessions;
 };
 
-const getUserSessionById = (userId) => {
+const getUserById = (userId) => {
   return userSessions.get(userId);
 };
 

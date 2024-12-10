@@ -1,14 +1,9 @@
 import handleError from '../../utils/error/errorHandler.js';
 import { createCharacter, findCharacterByUserId } from '../../db/model/characters.db.js';
-import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
-import { addUserSession } from '../../sessions/user.session.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 
 const enterHandler = async ({ socket, payload }) => {
   try {
-    //  addUserSession(socket);
-    console.log(`SocketID : ${socket.id}`);
-
     const nickname = payload.nickname;
     const userClass = payload.class;
 

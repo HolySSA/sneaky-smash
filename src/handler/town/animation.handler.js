@@ -4,7 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getUserSessions } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
 
-const animationHandler = async (socket, payload) => {
+const animationHandler = async ({ socket, payload }) => {
   try {
     const { animCode } = payload;
 

@@ -4,7 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getUserSessions } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
 
-const chatHandler = async (socket, payload) => {
+const chatHandler = async ({ socket, payload }) => {
   try {
     const { chatMsg } = payload;
 

@@ -45,14 +45,11 @@ const logInHandler = async ({ socket, payload }) => {
 
       // 로그인 검증 통과 - socket.id 할당
       socket.id = existUser.id.toString();
-
+      addUserSession(socket);
       const character = await findCharacterByUserId(existUser.id);
       if (character) {
-        addUserSession(socket);
-        await Promise.all([
-          addRedisUser(existUser.id, character.nickname, character.myClass),
-          enterLogic(socket),
-        ]);
+        await addRedisUser(existUser.id, character.nickname, character.myClass);
+        await enterLogic(socket, character);
       }
       token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
         expiresIn: JWT_EXPIRES_IN,

@@ -4,18 +4,19 @@ import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.
 import { addUserSession } from '../../sessions/user.session.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 
-const enterHandler = async (socket, payload) => {
+const enterHandler = async ({ socket, payload }) => {
   try {
-    addUserSession(socket);
-    const user = await addRedisUser(socket.id, payload.nickname, payload.class);
+    //  addUserSession(socket);
+    console.log(`SocketID : ${socket.id}`);
+
+    const nickname = payload.nickname;
+    const userClass = payload.class;
 
     const character = await findCharacterByUserId(parseInt(socket.id));
-    if (!character) {
+    if (character == null) {
       // sql에서 gold default 선언해서 만들면 gold 입력 빼도 됨
-      await createCharacter(parseInt(user.id), user.nickname, user.myClass, 0);
+      await createCharacter(parseInt(socket.id), nickname, userClass, 0);
     }
-
-    await enterLogic(socket);
   } catch (e) {
     handleError(socket, e);
   }

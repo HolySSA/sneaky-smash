@@ -16,7 +16,6 @@ const enterLogic = async (socket, user) => {
   };
 
   logger.error('enterLogic. 미완성된 기능 호출함');
-  // const result = await job.finished();
 
   // if (!result.success) {
   //   logger.error(`유저 ${socket.id} 접속 실패.`);

@@ -37,7 +37,7 @@ const getDungeonSession = (dungeonId) => {
 const getDungeonUsersUUID = (dungeonId) => {
   const session = getDungeonSession(dungeonId);
 
-  return Array.from(session.users.values()).map((user) => user.userInfo.socket.UUID);
+  return Array.from(session.users.values()).map((user) => user.user.socket.UUID);
 };
 
 const removeDungeonSession = (dungeonId) => {

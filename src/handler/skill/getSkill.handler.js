@@ -37,15 +37,17 @@ const getSkillHandler = async ({ socket, payload }) => {
     const skillData = getGameAssets().skillInfo.data;
     const skillInfo = skillData.find((id) => id.skillId === skillId);
 
+    if (!skillInfo) {
+      throw new Error(`스킬 정보를 찾을 수 없습니다. skillId: ${skillId}`);
+    }
+
     const skillPayload = {
       skillInfo,
       playerId,
       itemInstanceId,
     };
 
-    const response = createResponse(PACKET_ID.S_GetSkill, skillPayload);
-
-    createNotificationPacket(PACKET_ID.S_GetSkill);
+    createNotificationPacket(PACKET_ID.S_GetSkill, skillPayload);
   } catch (error) {
     handleError(socket, error);
   }

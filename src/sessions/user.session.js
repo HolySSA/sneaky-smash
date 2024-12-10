@@ -40,7 +40,7 @@ const getUserSessions = () => {
   return userSessions;
 };
 
-const getUserSessionById = (id) => {
+const getUserById = (id) => {
   const userId = id.toString();
 
   if (!userSessions.has(userId)) {

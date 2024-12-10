@@ -4,8 +4,9 @@ import { enqueueSend } from '../socket/messageQueue.js';
 import createResponse from '../packet/createResponse.js';
 import configs from '../../configs/configs.js';
 import createNotificationPacket from '../notification/createNotification.js';
-
+import { getProtoMessages } from '../../init/loadProtos.js';
 const { PACKET_ID } = configs;
+
 // message S_Enter {
 //     PlayerInfo player = 1;      // 플레이어 정보 (추후 정의 예정)
 // }
@@ -15,14 +16,15 @@ const { PACKET_ID } = configs;
 
 const enterLogic = async (socket, user) => {
   const playerPayload = {
-    playerId: parseInt(user.id),
-    nickname: user.nickname,
-    class: user.myClass,
-    transform: getUserTransformById(user.id),
+    player: {
+      playerId: parseInt(user.id),
+      nickname: user.nickname,
+      class: user.myClass,
+      transform: getUserTransformById(user.id),
+    },
   };
 
   logger.error('enterLogic. 미완성된 기능 호출함');
-
   let buffer = createResponse(PACKET_ID.S_Enter, playerPayload);
   enqueueSend(socket.UUID, buffer);
 

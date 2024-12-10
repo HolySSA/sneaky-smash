@@ -18,7 +18,7 @@ import {
 // 	int32 roomId = 2;
 // }
 
-const partyLeaveHandler = async (socket, payload) => {
+const partyLeaveHandler = async ({ socket, payload }) => {
   try {
     const { roomId } = payload;
 

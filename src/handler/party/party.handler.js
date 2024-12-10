@@ -14,7 +14,7 @@ import createResponse from '../../utils/packet/createResponse.js';
 // 	int32 dungeonLevel = 3; // 던전 난이도
 // }
 
-const partyHandler = async (socket, payload) => {
+const partyHandler = async ({ socket, payload }) => {
   try {
     const parties = await getRedisParties();
 

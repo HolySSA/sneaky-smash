@@ -1,6 +1,10 @@
+/** 접속된 모든 유저 정보가 보관되고있는 곳. 여기를 통해서 다른 세션에'도' 복사된체로 보관되는 것이므로 일단 로그인 성공시
+ * 이곳에 먼저 등록되어야한다.
+ */
 import User from '../classes/model/user.class.js';
 import logger from '../utils/logger.js';
 import { userSessions } from './sessions.js';
+
 const allUsersUUID = [];
 
 const addUserSession = (socket) => {

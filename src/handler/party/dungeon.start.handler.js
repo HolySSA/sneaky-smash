@@ -6,7 +6,7 @@ import {
   getStatsByUserId,
   setSessionId,
 } from '../../sessions/redis/redis.user.js';
-import { getUserSessionById, getUserSessions } from '../../sessions/user.session.js';
+import { getUserById, getUserSessions } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -91,15 +91,15 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     );
 
     party.members.forEach(async (memberId) => {
-      const userSession = getUserSessionById(memberId);
+      const user = getUserById(memberId);
       await setSessionId(memberId, sessionId);
 
-      if (userSession) {
+      if (user) {
         // 레이턴시 추가하면
         // userSession.updateLatency(latency);
 
         // 던전 세션 유저 추가
-        dungeon.addDungeonUser(userSession);
+        await dungeon.addDungeonUser(user);
 
         const enterDungeonPayload = {
           dungeonInfo,
@@ -109,7 +109,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);
         // 던전 유저 진입
-        userSession.socket.write(enterDungeonResponse);
+        user.socket.write(enterDungeonResponse);
       }
     });
 

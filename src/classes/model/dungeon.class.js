@@ -17,12 +17,8 @@ class Dungeon {
     this.latencyManager = new LatencyManager();
   }
 
-  async addDungeonUser(userSession) {
-    if (!userSession.socket.id) {
-      throw new Error('유효하지 않은 유저 세션입니다.');
-    }
-
-    const userId = userSession.socket.id.toString();
+  async addDungeonUser(user) {
+    const userId = user.socket.id.toString();
 
     if (this.users.has(userId)) {
       throw new Error('이미 던전에 참여 중인 유저입니다.');
@@ -31,15 +27,14 @@ class Dungeon {
     const statsInfo = await getStatsByUserId(userId);
 
     const dungeonUser = {
-      userInfo: userSession,
-      currentHp: statsInfo.stats.maxHp,
+      user: user,
       statsInfo,
     };
 
     this.users.set(userId, dungeonUser);
-    this.latencyManager.addUser(userId, userSession.ping.bind(userSession), 1000);
+    this.latencyManager.addUser(userId, user.ping.bind(user), 1000);
 
-    return userSession;
+    return user;
   }
 
   removeDungeonUser(userId) {

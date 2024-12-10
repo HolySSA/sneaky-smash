@@ -18,8 +18,9 @@ class Result {
       throw new Error(`responseType is unknown : ${packetType}`);
     }
 
-    this.responseType = packetType;
+    this.packetType = packetType;
     this.payload = payload;
+    this.targetUUIDs = targetUUIDs;
   }
 }
 

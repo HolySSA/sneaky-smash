@@ -141,8 +141,10 @@ const processReceiveQueue = async (socketUUID) => {
         logger.error(error);
       } finally {
         if (result) {
+          console.log(result);
           const response = createResponse(result.packetType, result.payload);
-          if (result.targetUUIDs > 0) {
+
+          if (result.targetUUIDs.length > 0) {
             for (const uuid of result.targetUUIDs) {
               enqueueSend(uuid, response);
             }

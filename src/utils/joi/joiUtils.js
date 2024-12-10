@@ -1,7 +1,8 @@
 import joi from 'joi';
+import logger from '../logger.js';
 
-class JoiUtils {
-  async validateRegister(payload) {
+export const validateRegister = async ({ account, password }) => {
+  try {
     const joiSchema = joi.object({
       account: joi.string().min(4).max(12).required().messages({
         'string.base': 'ID를 제대로 입력해주세요.',
@@ -15,11 +16,10 @@ class JoiUtils {
       }),
     });
 
-    const validation = await joiSchema.validateAsync(payload);
-
-    return validation;
+    await joiSchema.validateAsync({ account, password });
+  } catch (error) {
+    logger.error(error);
+    return false;
   }
-}
-
-const joiUtils = new JoiUtils();
-export default joiUtils;
+  return true;
+};

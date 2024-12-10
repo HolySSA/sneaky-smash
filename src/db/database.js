@@ -50,12 +50,10 @@ class MysqlService {
       const texts = text
         .split(';')
         .map((text) => text.trim())
-        .filter((text) => !text.length);
+        .filter((text) => text.length > 0);
       logger.info(`${filePath} : ${texts.length}`);
       texts.forEach((qry) => {
-        if (qry) {
-          jobs.push(this.execute(qry));
-        }
+        jobs.push(this.execute(qry));
       });
     }
 

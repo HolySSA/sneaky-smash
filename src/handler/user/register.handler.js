@@ -1,5 +1,3 @@
-import handleError from '../../utils/error/errorHandler.js';
-import createResponse from '../../utils/packet/createResponse.js';
 import { validateRegister } from '../../utils/joi/joiUtils.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { findUserByAccount, createUser } from '../../db/model/user.db.js';

@@ -45,7 +45,14 @@ const logInHandler = async ({ socket, payload }) => {
       } else {
         // 로그인 검증 통과 - socket.id 할당
         socket.id = existUser.id.toString();
-
+        message = '로그인에 성공하였습니다.';
+        token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
+          expiresIn: JWT_EXPIRES_IN,
+          algorithm: JWT_ALGORITHM,
+          issuer: JWT_ISSUER,
+          audience: JWT_AUDIENCE,
+        });
+        token = `Bearer ${token}`;
         const loginBuffer = createResponse(PACKET_ID.S_Login, { success, message, token });
         enqueueSend(socket.UUID, loginBuffer);
         const character = await findCharacterByUserId(existUser.id);
@@ -54,14 +61,6 @@ const logInHandler = async ({ socket, payload }) => {
           await addRedisUser(existUser.id, character.nickname, character.myClass);
           await enterLogic(socket, character);
         }
-        token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
-          expiresIn: JWT_EXPIRES_IN,
-          algorithm: JWT_ALGORITHM,
-          issuer: JWT_ISSUER,
-          audience: JWT_AUDIENCE,
-        });
-        message = '로그인에 성공하였습니다.';
-        token = `Bearer ${token}`;
       }
     }
   } catch (error) {

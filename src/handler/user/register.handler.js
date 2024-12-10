@@ -13,7 +13,7 @@ const registerHandler = async ({ socket, payload }) => {
   const isValidate = await validateRegister({ account, password });
   let success = true;
   let message = undefined;
-  if (isValidate) {
+  if (isValidate == false) {
     success = false;
     message = '잘못된 아이디 혹은 비밀번호입니다.';
   } else {

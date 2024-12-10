@@ -17,11 +17,13 @@ const chatHandler = async ({ socket, payload }) => {
     handleError(socket, e);
   }
   const allUsers = getAllUserUUID();
+  console.log("채팅 보내는 유저세션 :  " ,allUsers);
   if (!allUsers || allUsers.length === 0) {
     logger.error('유저세션이 없습니다.');
     return;
   }
-  return new Result({ chatPayload, message: '채팅 송신' }, PACKET_ID.S_Chat, allUsers);
+  console.log("채팅 페이로드 : ",chatPayload);
+  return new Result(chatPayload, PACKET_ID.S_Chat, allUsers);
 };
 
 export default chatHandler;

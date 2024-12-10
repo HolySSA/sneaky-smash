@@ -2,7 +2,7 @@ import Client from './client.test.js';
 import { getOrCreateClient } from './client.test.js';
 import configs from '../configs/configs.js';
 import testEnv from './env.test.js';
-// await import('./register.test.js');
+await import('./register.test.js');
 await import('./login.test.js');
 const { PACKET_ID } = configs;
 

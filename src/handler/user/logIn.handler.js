@@ -1,26 +1,16 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import handleError from '../../utils/error/errorHandler.js';
-import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { findUserByAccount } from '../../db/model/user.db.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
-import { addRedisUser, getRedisUserById } from '../../sessions/redis/redis.user.js';
+import { addRedisUser } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 import configs from '../../configs/configs.js';
+import logger from '../../utils/logger.js';
+import Result from '../result.js';
+
 const { JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE } = configs;
-
-// message C_Login {
-//     string account = 1;  // 아이디
-//     string password = 2;  // 비밀번호
-// }
-
-// message S_Login {
-//     bool success = 1;     // 성공 여부
-//     string message = 2;   // 메시지
-//     string token = 3;     // 토큰
-// }
 
 function isTokenValid(token) {
   try {
@@ -33,53 +23,54 @@ function isTokenValid(token) {
     return false; // 토큰이 유효하지 않음
   }
 }
+const logInHandler = async ({ socket, payload }) => {
+  const { account, password } = payload;
+  let success = true;
+  let message = undefined;
+  let token = undefined;
 
-const writeLoginResponse = (socket, success, message, token) => {
-  const loginPayload = { success, message, token };
-
-  const response = createResponse(PACKET_ID.S_Login, loginPayload);
-  socket.write(response);
-};
-
-const logInHandler = async (socket, payload) => {
   try {
-    const { account, password } = payload;
-
     // db에서 해당 아이디 찾기
     const existUser = await findUserByAccount(account);
     if (!existUser) {
-      writeLoginResponse(socket, false, '존재하지 않는 아이디입니다.', null);
-      return;
-    }
+      success = false;
+      message = '존재하지 않는 아이디입니다.';
+    } else {
+      // 비밀번호 비교
+      const isPasswordValid = await bcrypt.compare(password, existUser.password);
+      if (!isPasswordValid) {
+        success = false;
+        message = '비밀번호가 일치하지 않습니다.';
+      }
 
-    // 비밀번호 비교
-    const isPasswordValid = await bcrypt.compare(password, existUser.password);
-    if (!isPasswordValid) {
-      writeLoginResponse(socket, false, '비밀번호가 일치하지 않습니다.', null);
-      return;
-    }
+      // 로그인 검증 통과 - socket.id 할당
+      socket.id = existUser.id.toString();
 
-    // 로그인 검증 통과 - socket.id 할당
-    socket.id = existUser.id.toString();
-
-    const character = await findCharacterByUserId(existUser.id);
-    if (character) {
-      addUserSession(socket);
-      await addRedisUser(existUser.id, character.nickname, character.myClass);
-      await enterLogic(socket);
-      return;
+      const character = await findCharacterByUserId(existUser.id);
+      if (character) {
+        addUserSession(socket);
+        await Promise.all([
+          addRedisUser(existUser.id, character.nickname, character.myClass),
+          enterLogic(socket),
+        ]);
+      }
+      token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
+        expiresIn: JWT_EXPIRES_IN,
+        algorithm: JWT_ALGORITHM,
+        issuer: JWT_ISSUER,
+        audience: JWT_AUDIENCE,
+      });
+      message = '로그인에 성공하였습니다.';
+      token = `Bearer ${token}`;
     }
-    const token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
-      algorithm: JWT_ALGORITHM,
-      issuer: JWT_ISSUER,
-      audience: JWT_AUDIENCE,
-    });
-    const bearerToken = `Bearer ${token}`;
-    writeLoginResponse(socket, true, '로그인에 성공했습니다.', bearerToken);
-  } catch (e) {
-    handleError(socket, e);
+  } catch (error) {
+    logger.error(error);
+    token = undefined;
+    success = false;
+    message = '알 수 없는 문제가 발생했습니다.';
   }
+
+  return new Result({ success, message, token }, PACKET_ID.S_Login);
 };
 
 export default logInHandler;

@@ -10,6 +10,6 @@ client.addHandler(PACKET_ID.S_Register, async (payload) => {
 });
 
 client.sendMessage(PACKET_ID.C_Register, {
-  account: 'qkrdydgus123',
-  password: 'ajdcjddl12!2#',
+  account: testEnv.userName,
+  password: testEnv.password,
 });

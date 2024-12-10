@@ -2,6 +2,7 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import { removeRedisUser } from '../../sessions/redis/redis.user.js';
 import { getUserSessions, removeUserSession } from '../../sessions/user.session.js';
+import logger from '../logger.js';
 import createNotificationPacket from '../notification/createNotification.js';
 
 // message S_Despawn {
@@ -9,6 +10,10 @@ import createNotificationPacket from '../notification/createNotification.js';
 // }
 
 const despawnLogic = async (socket) => {
+  if (!socket.id) {
+    logger.warn(`despawnLogic이 호출되었으나 id값이 할당되지 않았습니다. [${socket.UUID}]`);
+    return;
+  }
   const payload = {
     playerIds: [parseInt(socket.id)],
   };

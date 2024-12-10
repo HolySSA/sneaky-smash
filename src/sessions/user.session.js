@@ -1,4 +1,5 @@
 import User from '../classes/model/user.class.js';
+import logger from '../utils/logger.js';
 import { userSessions } from './sessions.js';
 
 const addUserSession = (socket) => {
@@ -13,10 +14,12 @@ const addUserSession = (socket) => {
 
 const removeUserSession = (socket) => {
   if (!userSessions.has(socket.id)) {
-    throw new Error('존재하지 않는 유저 세션입니다.');
+    logger.warn(
+      `removeUserSession. 유저 세션을 제거하려는데 해당 유저는 존재하지 않습니다. ${socket.id}`,
+    );
+  } else {
+    userSessions.delete(socket.id);
   }
-
-  userSessions.delete(socket.id);
 };
 
 const getUserSessions = () => {

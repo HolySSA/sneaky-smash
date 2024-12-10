@@ -24,14 +24,7 @@ const addRedisUser = async (userId, nickname, myClass) => {
 const removeRedisUser = async (socket) => {
   const redis = await getRedis();
   const userKey = `user:${socket.id}`;
-  const user = await redis.hgetall(userKey);
-
-  if (!user || Object.keys(user).length === 0) {
-    throw new Error('존재하지 않는 레디스 유저입니다.');
-  }
-
-  await redis.del(userKey);
-  return user;
+  return await redis.unlink(userKey);
 };
 
 const getRedisUsers = async () => {

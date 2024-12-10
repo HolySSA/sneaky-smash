@@ -7,9 +7,9 @@ const addRedisUser = async (userId, nickname, myClass) => {
   const userKey = `user:${userId}`;
 
   const redisUser = await redis.hset(userKey, {
-    id: userId.toString(),
+    id: userId,
     nickname: nickname,
-    myClass: myClass.toString(),
+    myClass: myClass,
     locationType: 'town',
   });
 
@@ -124,13 +124,7 @@ const setStatsByUserId = async (userId, statInfo) => {
 const setSessionId = async (userId, sessionId) => {
   const redis = await getRedis();
   const userKey = `user:${userId}`;
-  const user = await redis.exists(userKey);
-
-  if (!user) {
-    throw new Error(`유저 레디스 데이터가 존재하지 않습니다.`);
-  }
-
-  await redis.hset(userKey, 'sessionId', sessionId.toString());
+  await redis.hset(userKey, 'sessionId', sessionId);
 };
 
 export {

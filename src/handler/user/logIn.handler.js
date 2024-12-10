@@ -44,7 +44,7 @@ const logInHandler = async ({ socket, payload }) => {
         message = '비밀번호가 일치하지 않습니다.';
       } else {
         // 로그인 검증 통과 - socket.id 할당
-        socket.id = existUser.id.toString();
+        socket.id = existUser.id;
         message = '로그인에 성공하였습니다.';
         token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
           expiresIn: JWT_EXPIRES_IN,

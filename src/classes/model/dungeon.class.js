@@ -22,7 +22,7 @@ class Dungeon {
       throw new Error('유효하지 않은 유저 세션입니다.');
     }
 
-    const userId = userSession.socket.id.toString();
+    const userId = userSession.socket.id;
 
     if (this.users.has(userId)) {
       throw new Error('이미 던전에 참여 중인 유저입니다.');
@@ -43,11 +43,9 @@ class Dungeon {
   }
 
   removeDungeonUser(userId) {
-    const userIdStr = userId.toString();
-
-    if (this.users.has(userIdStr)) {
-      this.latencyManager.removeUser(userIdStr);
-      const result = this.users.delete(userIdStr);
+    if (this.users.has(userId)) {
+      this.latencyManager.removeUser(userId);
+      const result = this.users.delete(userId);
 
       if (this.users.size === 0) {
         this.monsterLogic.pathServer.onClose();
@@ -79,9 +77,7 @@ class Dungeon {
   }
 
   getDungeonUser(userId) {
-    const userIdStr = userId.toString();
-
-    return this.users.get(userIdStr) || null;
+    return this.users.get(userId) || null;
   }
 
   // 인포만 매핑해서 받기
@@ -105,8 +101,7 @@ class Dungeon {
   }
 
   setUserStats(userId) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     if (!user) {
       throw new Error('유저가 존재하지 않습니다.');
@@ -131,13 +126,12 @@ class Dungeon {
   }
 
   addUserExp(userId, exp) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
     if (!user) {
       logger.info(user);
     }
     user.statsInfo.exp += exp;
-    logger.info(`플레이어 ${userIdStr}의 경험치 get +${exp} 현재경험치 ${user.statsInfo.exp}`);
+    logger.info(`플레이어 ${userId}의 경험치 get +${exp} 현재경험치 ${user.statsInfo.exp}`);
     return user.statsInfo.exp;
   }
 
@@ -157,8 +151,7 @@ class Dungeon {
   }
 
   damagedUser(userId, damage) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     // 방어력 관련
     user.currentHp -= damage;
@@ -167,8 +160,7 @@ class Dungeon {
   }
 
   updatePlayerHp(userId, amount) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     // 스탯 불러오기 수정
     const maxHp = user.statsInfo.stats.maxHp;
@@ -179,8 +171,7 @@ class Dungeon {
   }
 
   increasePlayerAtk(userId, amount) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     user.atk = Math.min(amount + user.atk, user.atk);
 
@@ -188,8 +179,7 @@ class Dungeon {
   }
 
   increasePlayerDef(userId, amount) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     user.def = Math.min(amount + user.def, user.def);
 
@@ -197,8 +187,7 @@ class Dungeon {
   }
 
   increasePlayerMaxHp(userId, amount) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     user.maxHp = Math.min(amount + user.maxHp, user.maxHp);
 
@@ -206,8 +195,7 @@ class Dungeon {
   }
 
   increasePlayerMoveSpeed(userId, amount) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     user.d = Math.min(amount + user.moveSpeed, user.moveSpeed);
 
@@ -215,16 +203,14 @@ class Dungeon {
   }
 
   increasePlayerCriticalProbability(userId, amount) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     user.d = Math.min(amount + user.criticalProbability, user.criticalProbability);
 
     return user.criticalProbability;
   }
   increasePlayerCriticalDamageRate(userId, amount) {
-    const userIdStr = userId.toString();
-    const user = this.users.get(userIdStr);
+    const user = this.users.get(userId);
 
     user.d = Math.min(amount + user.criticalDamageRate, user.criticalDamageRate);
 

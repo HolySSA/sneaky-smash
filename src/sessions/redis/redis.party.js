@@ -11,20 +11,20 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
   }
 
   // 파티 생성
-  await redis.sadd(partyKey, userId.toString());
+  await redis.sadd(partyKey, userId);
   // 파티 리스트
-  await redis.sadd('partyList', roomId.toString());
+  await redis.sadd('partyList', roomId);
   // 파티 던전 난이도
   await redis.hset(infoKey, {
-    dungeonLevel: dungeonLevel.toString(),
-    owner: userId.toString(),
+    dungeonLevel: dungeonLevel,
+    owner: userId,
   });
 
   const party = {
     roomId: parseInt(roomId),
-    members: [userId.toString()],
+    members: [userId],
     dungeonLevel: parseInt(dungeonLevel),
-    owner: userId.toString(),
+    owner: userId,
   };
 
   return party;
@@ -45,7 +45,7 @@ const removeRedisParty = async (roomId) => {
   // info 제거
   await redis.del(infoKey);
   // 파티 리스트에서 제거
-  await redis.srem('partyList', roomId.toString());
+  await redis.srem('partyList', roomId);
 };
 
 const joinRedisParty = async (roomId, userId) => {
@@ -58,7 +58,7 @@ const joinRedisParty = async (roomId, userId) => {
     throw new Error('존재하지 않는 파티입니다.');
   }
 
-  const addUser = await redis.sadd(partyKey, userId.toString());
+  const addUser = await redis.sadd(partyKey, userId);
   if (!addUser) {
     throw new Error('이미 파티에 존재합니다.');
   }
@@ -79,7 +79,7 @@ const leaveRedisParty = async (roomId, userId) => {
   const partyKey = `party:${roomId}`;
   const infoKey = `party:${roomId}:info`;
 
-  const removeUser = await redis.srem(partyKey, userId.toString());
+  const removeUser = await redis.srem(partyKey, userId);
   if (removeUser === 0) {
     throw new Error('파티에 존재하지 않는 유저입니다.');
   }
@@ -110,7 +110,7 @@ const getRedisParty = async (roomId) => {
 
   const party = {
     roomId: parseInt(roomId),
-    members: members.map((m) => m.toString()),
+    members: members.map(),
     dungeonLevel: parseInt(info.dungeonLevel),
     owner: info.owner.toString(),
   };
@@ -126,7 +126,7 @@ const getRedisPartyByUserId = async (userId) => {
     const partyKey = `party:${roomId}`;
     const infoKey = `party:${roomId}:info`;
 
-    const isMember = await redis.sismember(partyKey, userId.toString());
+    const isMember = await redis.sismember(partyKey, userId);
 
     if (isMember) {
       const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);

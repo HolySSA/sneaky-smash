@@ -38,32 +38,15 @@ const getUserSessions = () => {
   return userSessions;
 };
 
-const getUserSessionById = (id) => {
-  const userId = id.toString();
-
-  if (!userSessions.has(userId)) {
-    throw new Error('존재하지 않는 유저 세션입니다.');
-  }
-
+const getUserSessionById = (userId) => {
   return userSessions.get(userId);
 };
 
-const getUserTransformById = (id) => {
-  const userId = id.toString();
-
-  if (!userSessions.has(userId)) {
-    throw new Error('존재하지 않는 유저 세션입니다.');
-  }
-
+const getUserTransformById = (userId) => {
   return userSessions.get(userId).transform;
 };
 
-const updateUserTransformById = (id, posX, posY, posZ, rot) => {
-  const userId = id.toString();
-  if (!userSessions.has(userId)) {
-    throw new Error('존재하지 않는 유저 세션입니다.');
-  }
-
+const updateUserTransformById = (userId, posX, posY, posZ, rot) => {
   const user = userSessions.get(userId);
   user.updateUserTransform(posX, posY, posZ, rot);
 

@@ -31,8 +31,7 @@ const getAllUserUUIDByTown = () => {
   return allUsersUUID;
 };
 
-const getUserSessionById = (id) => {
-  const userId = id.toString();
+const getUserSessionById = (userId) => {
   return townSessions.get(userId);
 };
 
@@ -40,9 +39,7 @@ const getAllUserByTown = () => {
   return townSessions;
 };
 
-const getUserTransformById = (id) => {
-  const userId = id.toString();
-
+const getUserTransformById = (userId) => {
   if (!townSessions.has(userId)) {
     throw new Error('존재하지 않는 유저 세션입니다.');
   }
@@ -50,8 +47,7 @@ const getUserTransformById = (id) => {
   return townSessions.get(userId).transform;
 };
 
-const updateUserTransformById = (id, posX, posY, posZ, rot) => {
-  const userId = id.toString();
+const updateUserTransformById = (userId, posX, posY, posZ, rot) => {
   if (!townSessions.has(userId)) {
     throw new Error('존재하지 않는 유저 세션입니다.');
   }

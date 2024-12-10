@@ -26,7 +26,7 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 //  float projectileSpeed = 5;
 // }
 
-const shootProjectileHandler = async (socket, payload) => {
+const shootProjectileHandler = async ({ socket, payload }) => {
   try {
     const { projectileId, transform, dir } = payload;
 

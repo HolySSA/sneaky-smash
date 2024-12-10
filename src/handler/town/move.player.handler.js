@@ -9,7 +9,7 @@ import Result from '../result.js';
  * @param {object} socket - 클라이언트 소켓
  * @param {object} payload - 클라이언트에서 전송한 데이터
  */
-const movePlayerHandler = async (socket, payload) => {
+const movePlayerHandler = async ({ socket, payload }) => {
   try {
     const { posX, posY, posZ, rot } = payload.transform;
 

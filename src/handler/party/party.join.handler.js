@@ -18,7 +18,7 @@ import { addRedisParty, joinRedisParty } from '../../sessions/redis/redis.party.
 // 	int32 dungeonLevel = 3;
 // }
 
-const partyJoinHandler = async (socket, payload) => {
+const partyJoinHandler = async ({ socket, payload }) => {
   try {
     const { dungeonLevel, roomId, isOwner } = payload;
 

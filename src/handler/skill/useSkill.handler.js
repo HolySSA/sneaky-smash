@@ -23,7 +23,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 //   TransformInfo transform = 4;
 //   }
 
-const useSkillHandler = async (socket, payload) => {
+const useSkillHandler = async ({ socket, payload }) => {
   try {
     const { skillId, dir, transform } = payload;
 

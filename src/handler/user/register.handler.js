@@ -8,12 +8,12 @@ import Result from '../result.js';
 const registerHandler = async ({ socket, payload }) => {
   const { account, password } = payload;
 
-  const isValidate = await validateRegister({ account, password });
+  const isNotValidate = await validateRegister({ account, password });
   let success = true;
   let message = undefined;
-  if (isValidate == false) {
+  if (isNotValidate) {
     success = false;
-    message = '잘못된 아이디 혹은 비밀번호입니다.';
+    message = isNotValidate;
   } else {
     try {
       // db에서 중복 아이디 찾기

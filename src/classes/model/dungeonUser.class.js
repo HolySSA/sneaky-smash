@@ -1,0 +1,3 @@
+class dungeonUser {
+  constructor(socket) {}
+}

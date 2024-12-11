@@ -1,8 +1,9 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getUserSessions } from '../../sessions/user.session.js';
+import { getAllUserUUID } from '../../sessions/user.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { addRedisParty, joinRedisParty } from '../../sessions/redis/redis.party.js';
+import Result from '../result.js';
 
 // 패킷명세
 // **C_PartyJoin** - 파티에 참여 요청 메시지
@@ -19,6 +20,7 @@ import { addRedisParty, joinRedisParty } from '../../sessions/redis/redis.party.
 // }
 
 const partyJoinHandler = async ({ socket, payload }) => {
+  var partyPayload;
   try {
     const { dungeonLevel, roomId, isOwner } = payload;
 
@@ -29,22 +31,16 @@ const partyJoinHandler = async ({ socket, payload }) => {
       party = await joinRedisParty(roomId, socket.id);
     }
 
-    const userSessions = getUserSessions();
-
-    const partyPayload = {
+    partyPayload = {
       playerId: parseInt(socket.id),
       roomId,
       dungeonLevel,
     };
-
-    const notification = createNotificationPacket(PACKET_ID.S_PartyJoin, partyPayload);
-
-    userSessions.forEach((session) => {
-      session.socket.write(notification);
-    });
   } catch (e) {
     handleError(socket, e);
   }
+  const allUsers = getAllUserUUID();
+  return new Result(partyPayload, PACKET_ID.S_PartyJoin, allUsers);
 };
 
 export default partyJoinHandler;

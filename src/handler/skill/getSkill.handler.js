@@ -12,23 +12,10 @@ const getSkillHandler = async ({ socket, payload }) => {
   const playerId = socket.id;
   try {
     const redisUser = await getRedisUserById(playerId);
-    if (!redisUser) {
-      throw new Error(`getSkillHandler error. Cannot find redisUser by socket.id : ${socket.id}`);
-    }
 
-    const dungeon = getDungeonSession(redisUser.sessionId);
-    if (!dungeon) {
-      throw new Error(`던전 세션을 찾을 수 없습니다. sessionId: ${redisUser.sessionId}`);
-    }
+    const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
 
-    const dungeonUsersUUID = getDungeonUsersUUID(dungeon.dungeonId);
-    if (!Array.isArray(dungeonUsersUUID) || dungeonUsersUUID.length === 0) {
-      throw new Error(`던전에 유저가 존재하지 않습니다. dungeonId: ${dungeonSession.dungeonId}`);
-    }
-
-    const skillData = getGameAssets().skillInfo.data;
-    const skillInfo = skillData.find((skill) => skill.skillId === skillId);
-
+    const skillInfo = getGameAssets().skillInfo.data.find((id) => id.skillId === skillId);
     if (!skillInfo) {
       throw new Error(`스킬 정보를 찾을 수 없습니다. skillId: ${skillId}`);
     }

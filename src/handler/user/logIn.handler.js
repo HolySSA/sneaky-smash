@@ -59,7 +59,7 @@ const logInHandler = async ({ socket, payload }) => {
         addUserSession(socket);
         if (character) {
           await addRedisUser(existUser.id, character.nickname, character.myClass);
-          await enterLogic(socket, character);
+          // await enterLogic(socket, character);
         }
       }
     }

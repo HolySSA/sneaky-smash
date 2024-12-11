@@ -1,9 +1,9 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 // notification
 const shootProjectileHandler = async ({ socket, payload }) => {
@@ -11,7 +11,7 @@ const shootProjectileHandler = async ({ socket, payload }) => {
   const playerId = socket.id;
 
   try {
-    const redisUser = await getRedisUserById(socket.id);
+    const redisUser = await findCharacterByUserId(socket.id);
     const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
 
     const projectileInfo = getGameAssets().projectile.data.find(

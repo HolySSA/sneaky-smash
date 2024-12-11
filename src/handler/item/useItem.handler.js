@@ -3,7 +3,7 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 const attributeHandlers = {
   curHp: (dungeon, socketId, value) => dungeon.updatePlayerHp(socketId, value),
@@ -27,7 +27,7 @@ const useItemHandler = async (socket, payload) => {
     const item = itemAssets.find((item) => item.itemId === itemId);
 
     // 유저가 속한 던전 세션 가져오기
-    const redisUser = await getRedisUserById(socket.id);
+    const redisUser = await findCharacterByUserId(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
 

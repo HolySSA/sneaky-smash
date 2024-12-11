@@ -1,11 +1,8 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { addDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
-import {
-  getRedisUserById,
-  getStatsByUserId,
-  setSessionId,
-} from '../../sessions/redis/redis.user.js';
+import { getStatsByUserId, setSessionId } from '../../sessions/redis/redis.user.js';
 import { getUserById, getUserSessions } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/packet/createResponse.js';
@@ -77,7 +74,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
-        const userRedis = await getRedisUserById(memberId);
+        const userRedis = await findCharacterByUserId(memberId);
         const statInfo = await getStatsByUserId(memberId);
 
         return {

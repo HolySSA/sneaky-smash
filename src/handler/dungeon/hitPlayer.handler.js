@@ -1,9 +1,9 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
 import deathPlayerNotification from '../game/deathPlayer.notification.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 // message C_HitPlayer {
 //   int32 playerId = 1;  // 파격자 ID
@@ -22,7 +22,7 @@ const hitPlayerHandler = async (socket, payload) => {
 
     // 여기의 소켓은 공격자, playerId는 피격자.
     // 맞은 사람이 클라이언트에서 히트 처리 패킷 보냄
-    const redisUser = await getRedisUserById(playerId);
+    const redisUser = await findCharacterByUserId(playerId);
 
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();

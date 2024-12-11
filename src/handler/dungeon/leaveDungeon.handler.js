@@ -1,8 +1,8 @@
 import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession, removeDungeonSession } from '../../sessions/dungeon.session.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 // message C_LeaveDungeon {
 //   // 던전에서 나가기 요청
@@ -17,7 +17,7 @@ import { getDungeonSession, removeDungeonSession } from '../../sessions/dungeon.
 const leaveDungeonHandler = async (socket, payload) => {
   try {
     const playerId = socket.id;
-    const redisUser = await getRedisUserById(playerId);
+    const redisUser = await findCharacterByUserId(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
 

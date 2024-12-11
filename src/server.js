@@ -5,7 +5,7 @@ import onConnection from './events/onConnection.js';
 import configs from './configs/configs.js';
 import logger from './utils/logger.js';
 
-const { SERVER_BIND, SERVER_PORT } = configs;
+const { SERVER_BIND, SERVER_PORT, ServerUUID } = configs;
 
 const server = net.createServer(onConnection);
 
@@ -13,7 +13,7 @@ initServer()
   .then(() => {
     server.listen(SERVER_PORT, SERVER_BIND, () => {
       const bindInfo = server.address();
-      logger.info(`서버가 ${bindInfo.address}:${bindInfo.port}에서 실행 중입니다.`);
+      logger.info(`Server[${ServerUUID}] is on ${bindInfo.address}:${bindInfo.port}`);
     });
   })
   .catch((err) => {

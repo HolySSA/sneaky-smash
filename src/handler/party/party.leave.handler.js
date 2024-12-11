@@ -38,7 +38,6 @@ const partyLeaveHandler = async ({ socket, payload }) => {
       };
     } else if (party.owner === socket.id.toString()) {
       await removeRedisParty(roomId);
-      console.log("방장 나감",party.owner," = " , socket.id);
       users = getAllUserUUID();
       /*
       party.members.forEach((memberId) => {
@@ -53,7 +52,6 @@ const partyLeaveHandler = async ({ socket, payload }) => {
       // });
     } else {
       const remainMembers = await leaveRedisParty(roomId, socket.id);
-      console.log("방장아닌 사람 나감",party.owner," = " , socket.id);
       users = getAllUserUUID();
       // const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
 

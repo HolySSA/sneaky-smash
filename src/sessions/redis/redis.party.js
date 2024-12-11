@@ -1,9 +1,12 @@
 import { getRedis } from '../../utils/redis/redisManager.js';
+import configs from '../../configs/configs.js';
+
+const { ServerUUID } = configs;
 
 const addRedisParty = async (roomId, dungeonLevel, userId) => {
   const redis = await getRedis();
-  const partyKey = `party:${roomId}`;
-  const infoKey = `party:${roomId}:info`;
+  const partyKey = ServerUUID + `:party:${roomId}`;
+  const infoKey = ServerUUID + `:party:${roomId}:info`;
 
   const existingParty = await redis.exists(partyKey);
   if (existingParty) {
@@ -32,8 +35,8 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
 
 const removeRedisParty = async (roomId) => {
   const redis = await getRedis();
-  const partyKey = `party:${roomId}`;
-  const infoKey = `party:${roomId}:info`;
+  const partyKey = ServerUUID + `:party:${roomId}`;
+  const infoKey = ServerUUID + `:party:${roomId}:info`;
 
   const existingParty = await redis.exists(partyKey);
   if (!existingParty) {
@@ -50,8 +53,8 @@ const removeRedisParty = async (roomId) => {
 
 const joinRedisParty = async (roomId, userId) => {
   const redis = await getRedis();
-  const partyKey = `party:${roomId}`;
-  const infoKey = `party:${roomId}:info`;
+  const partyKey = ServerUUID + `:party:${roomId}`;
+  const infoKey = ServerUUID + `:party:${roomId}:info`;
 
   const exists = await redis.exists(partyKey);
   if (!exists) {
@@ -76,8 +79,8 @@ const joinRedisParty = async (roomId, userId) => {
 
 const leaveRedisParty = async (roomId, userId) => {
   const redis = await getRedis();
-  const partyKey = `party:${roomId}`;
-  const infoKey = `party:${roomId}:info`;
+  const partyKey = ServerUUID + `:party:${roomId}`;
+  const infoKey = ServerUUID + `:party:${roomId}:info`;
 
   const removeUser = await redis.srem(partyKey, userId);
   if (removeUser === 0) {
@@ -98,8 +101,8 @@ const leaveRedisParty = async (roomId, userId) => {
 
 const getRedisParty = async (roomId) => {
   const redis = await getRedis();
-  const partyKey = `party:${roomId}`;
-  const infoKey = `party:${roomId}:info`;
+  const partyKey = ServerUUID + `:party:${roomId}`;
+  const infoKey = ServerUUID + `:party:${roomId}:info`;
 
   const exists = await redis.exists(partyKey);
   if (!exists) {
@@ -123,8 +126,8 @@ const getRedisPartyByUserId = async (userId) => {
   const roomIds = await redis.smembers('partyList');
 
   for (const roomId of roomIds) {
-    const partyKey = `party:${roomId}`;
-    const infoKey = `party:${roomId}:info`;
+    const partyKey = ServerUUID + `:party:${roomId}`;
+    const infoKey = ServerUUID + `:party:${roomId}:info`;
 
     const isMember = await redis.sismember(partyKey, userId);
 
@@ -149,8 +152,8 @@ const getRedisParties = async () => {
 
   const parties = await Promise.all(
     roomIds.map(async (roomId) => {
-      const partyKey = `party:${roomId}`;
-      const infoKey = `party:${roomId}:info`;
+      const partyKey = ServerUUID + `:party:${roomId}`;
+      const infoKey = ServerUUID + `:party:${roomId}:info`;
 
       const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 

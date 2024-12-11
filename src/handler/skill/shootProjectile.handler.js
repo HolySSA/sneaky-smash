@@ -1,9 +1,41 @@
-import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
-import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
+
+// notification
+const shootProjectileHandler = async ({ socket, payload }) => {
+  const { projectileId, transform, dir } = payload;
+  const playerId = socket.id;
+
+  try {
+    const redisUser = await getRedisUserById(socket.id);
+    const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
+
+    const projectileInfo = getGameAssets().projectile.data.find(
+      (projectile) => projectile.projectileId === projectileId,
+    );
+    if (!projectileInfo) {
+      throw new Error(`Projectile with ID ${projectileId} not found in projectile.data.`);
+    }
+
+    const shootProjectilePayload = {
+      playerId,
+      projectileId,
+      transform,
+      dir,
+      projectileSpeed: projectileInfo.projectileSpeed,
+    };
+
+    createNotificationPacket(PACKET_ID.S_ShootProjectile, shootProjectilePayload, dungeonUsersUUID);
+  } catch (err) {
+    handleError(socket, err);
+  }
+};
+
+export default shootProjectileHandler;
 
 // message TransformInfo {
 //     float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
@@ -25,37 +57,3 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 // 	ProjectileDirection dir = 4;
 //  float projectileSpeed = 5;
 // }
-
-const shootProjectileHandler = async ({ socket, payload }) => {
-  try {
-    const { projectileId, transform, dir } = payload;
-
-    const playerId = socket.id;
-    const projectileInfo = getGameAssets().projectile.data.find(
-      (id) => id.projectileId === projectileId,
-    );
-
-    const shootProjectilePayload = {
-      playerId,
-      projectileId,
-      transform,
-      dir,
-      projectileSpeed: projectileInfo.projectileSpeed,
-    };
-
-    const response = createResponse(PACKET_ID.S_ShootProjectile, shootProjectilePayload);
-
-    const redisUser = await getRedisUserById(socket.id);
-    const dungeon = getDungeonSession(redisUser.sessionId);
-
-    const allUsers = dungeon.getAllUsers();
-
-    allUsers.forEach((value) => {
-      value.socket.write(response);
-    });
-  } catch (err) {
-    handleError(socket, err);
-  }
-};
-
-export default shootProjectileHandler;

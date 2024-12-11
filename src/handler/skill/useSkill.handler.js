@@ -2,8 +2,39 @@ import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getRedisUserById } from '../../sessions/redis/redis.user.js';
-import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import { getGameAssets } from '../../init/loadAsset.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
+
+// notification
+const useSkillHandler = async ({ socket, payload }) => {
+  const { skillId, dir, transform } = payload;
+  const playerId = socket.id;
+  try {
+    const redisUser = await getRedisUserById(playerId);
+
+    // 내부에서 에러 처리
+    const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
+
+    // 스킬 인포 정보 가져오기
+    const skillInfo = getGameAssets().skillInfo.data.find((id) => id.skillId === skillId);
+    if (!skillInfo) {
+      throw new Error(`Skill with ID ${skillId} not found in skillInfo.data.`);
+    }
+
+    const skillPayload = {
+      playerId,
+      skillInfo,
+      dir,
+      transform,
+    };
+
+    createNotificationPacket(PACKET_ID.S_UseSkill, skillPayload, dungeonUsersUUID);
+  } catch (e) {
+    handleError(socket, e);
+  }
+};
+export default useSkillHandler;
 
 // message SkillInfo {
 // 	int32	skillId	= 1	// 스킬 ID
@@ -22,35 +53,3 @@ import { getGameAssets } from '../../init/loadAsset.js';
 //   ProjectileDirection dir = 3;
 //   TransformInfo transform = 4;
 //   }
-
-const useSkillHandler = async ({ socket, payload }) => {
-  try {
-    const { skillId, dir, transform } = payload;
-
-    // 스킬 인포 정보 가져오기
-    const skillData = getGameAssets().skillInfo.data.find((id) => id.skillId === skillId);
-
-    const skillPayload = {
-      playerId: socket.id,
-      skillInfo: {
-        skillId,
-        damageRate: skillData.damageRate,
-        coolTime: skillData.coolTime,
-      },
-      dir,
-      transform,
-    };
-
-    const response = createResponse(PACKET_ID.S_UseSkill, skillPayload);
-    const redisUser = await getRedisUserById(socket.id);
-    const dungeon = getDungeonSession(redisUser.sessionId);
-    const allUsers = dungeon.getAllUsers();
-
-    allUsers.forEach((value) => {
-      value.socket.write(response);
-    });
-  } catch (e) {
-    handleError(socket, e);
-  }
-};
-export default useSkillHandler;

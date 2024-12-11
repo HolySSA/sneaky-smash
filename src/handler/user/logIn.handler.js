@@ -10,6 +10,7 @@ import logger from '../../utils/logger.js';
 import Result from '../result.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
+import { setAccountByRedis } from '../../sessions/redis/redis.account.js';
 
 const { PACKET_ID, JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE } = configs;
 

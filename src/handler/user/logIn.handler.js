@@ -53,14 +53,8 @@ const logInHandler = async ({ socket, payload }) => {
           audience: JWT_AUDIENCE,
         });
         token = `Bearer ${token}`;
-        const loginBuffer = createResponse(PACKET_ID.S_Login, { success, message, token });
-        enqueueSend(socket.UUID, loginBuffer);
-        const character = await findCharacterByUserId(existUser.id);
+
         addUserSession(socket);
-        if (character) {
-          await addRedisUser(existUser.id, character.nickname, character.myClass);
-          // await enterLogic(socket, character);
-        }
       }
     }
   } catch (error) {
@@ -68,6 +62,15 @@ const logInHandler = async ({ socket, payload }) => {
     token = undefined;
     success = false;
     message = '알 수 없는 문제가 발생했습니다.';
+  }
+  const loginBuffer = createResponse(PACKET_ID.S_Login, { success, message, token });
+  enqueueSend(socket.UUID, loginBuffer);
+  if (success) {
+    const character = await findCharacterByUserId(socket.id);
+    if (character) {
+      await addRedisUser(socket.id, character.nickname, character.myClass);
+      await enterLogic(socket, character);
+    }
   }
 };
 

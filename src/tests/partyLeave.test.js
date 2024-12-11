@@ -10,20 +10,15 @@ client.addHandler(PACKET_ID.S_Login, async (payload) => {
     //console.log(payload);
   });
 client.sendMessage(PACKET_ID.C_Login, {
-    account : "test1234",
-    password : "test1234"
-});
-client.addHandler(PACKET_ID.S_PartyJoin, async (payload) => {
-  //console.log(payload);
-});
-client.sendMessage(PACKET_ID.C_PartyJoin, {
-    dungeonLevel : 1,
-    roomId : 1,
-    isOwner : false,
-    
+    account : "test123",
+    password : "test123"
 });
 client.addHandler(PACKET_ID.S_PartyLeave, async (payload) => {
   //console.log(payload);
+});
+client.sendMessage(PACKET_ID.C_PartyLeave, {
+    roomId : 1,
+    
 });
 
 /*

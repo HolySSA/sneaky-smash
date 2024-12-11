@@ -22,6 +22,9 @@ client.sendMessage(PACKET_ID.C_PartyJoin, {
     isOwner : true,
     
 });
+client.addHandler(PACKET_ID.S_PartyLeave, async (payload) => {
+  //console.log(payload);
+});
 
 /*
 message C_PartyJoin {

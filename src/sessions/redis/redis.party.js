@@ -110,7 +110,7 @@ const getRedisParty = async (roomId) => {
 
   const party = {
     roomId: parseInt(roomId),
-    members: members.map(),
+    members: members.map((m) => m.toString()),
     dungeonLevel: parseInt(info.dungeonLevel),
     owner: info.owner.toString(),
   };

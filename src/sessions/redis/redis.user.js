@@ -57,7 +57,7 @@ const getRedisUserById = async (id) => {
   const user = await redis.hgetall(userKey);
 
   if (!user || Object.keys(user).length === 0) {
-    return null;
+    throw new Error(`Cannot find redisUser by socket.id : ${id}`);
   }
 
   return {

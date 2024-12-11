@@ -37,6 +37,10 @@ const getDungeonSession = (dungeonId) => {
 const getDungeonUsersUUID = (dungeonId) => {
   const session = getDungeonSession(dungeonId);
 
+  if (!session.users || session.users.size === 0) {
+    throw new Error(`던전에 유저가 존재하지 않습니다. dungeonId: ${dungeonId}`);
+  }
+
   return Array.from(session.users.values()).map((user) => user.user.socket.UUID);
 };
 

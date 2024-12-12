@@ -5,6 +5,7 @@ import createResponse from '../../utils/packet/createResponse.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import monsterSpawnNotification from '../../handler/monster/monsterSpawn.notification.js';
 import logger from '../../utils/logger.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 class MonsterLogic {
   constructor(dungeonInstance) {
@@ -192,10 +193,7 @@ class MonsterLogic {
       },
     };
 
-    this.dungeonInstance.users.forEach((user) => {
-      monsterSpawnNotification(user.userInfo.socket, { payload });
-    });
-
+    createNotificationPacket(PACKET_ID.S_MonsterSpawn, payload, this.dungeonInstance.usersUUID);
     // console.log(`몬스터 스폰 ${monster.name} 포지션 : ${transform.posX}, ${transform.posY}, ${transform.posZ}`)
   }
 

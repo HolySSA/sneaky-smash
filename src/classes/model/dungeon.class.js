@@ -9,6 +9,7 @@ class Dungeon {
     this.dungeonId = dungeonInfo.dungeonId;
     this.name = dungeonInfo.name;
     this.users = new Map();
+    this.usersUUID = [];
     this.monsterLogic = new MonsterLogic(this);
 
     this.nexusCurrentHp = 100;
@@ -24,6 +25,7 @@ class Dungeon {
       throw new Error('이미 던전에 참여 중인 유저입니다.');
     }
 
+    this.usersUUID.push(user.socket.UUID);
     const statsInfo = await getStatsByUserId(userId);
 
     const dungeonUser = {
@@ -39,8 +41,14 @@ class Dungeon {
 
   removeDungeonUser(userId) {
     if (this.users.has(userId)) {
+      const userUUID = this.users.get(userId).socket.UUID;
       this.latencyManager.removeUser(userId);
       const result = this.users.delete(userId);
+
+      const index = this.usersUUID.indexOf((uuid) => uuid === userUUID);
+      if (index !== -1) {
+        this.usersUUID.splice(index, 1);
+      }
 
       if (this.users.size === 0) {
         this.monsterLogic.pathServer.onClose();

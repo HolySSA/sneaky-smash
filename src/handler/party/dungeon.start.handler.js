@@ -54,6 +54,7 @@ import { v4 as uuidv4 } from 'uuid';
 // 	int32 roomId = 2; // 방번호
 // }
 
+//TODO : 2명이상이면 출발할 수 있음
 const dungeonStartHandler = async ({ socket, payload }) => {
   try {
     const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기

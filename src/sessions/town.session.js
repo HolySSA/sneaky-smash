@@ -17,7 +17,7 @@ const addUserForTown = (user) => {
  * @param {string} userId  socket.id 혹은 db의 user.id
  */
 const removeUserForTown = (userId) => {
-  const user = getUserSessionById(userId);
+  const user = getUserSessionByIdFromTown(userId);
   if (user) {
     townSessions.delete(user.id);
     const index = allUsersUUID.indexOf(user.socket.UUID);
@@ -31,7 +31,7 @@ const getAllUserUUIDByTown = () => {
   return allUsersUUID;
 };
 
-const getUserSessionById = (userId) => {
+const getUserSessionByIdFromTown = (userId) => {
   return townSessions.get(userId);
 };
 
@@ -62,7 +62,7 @@ const updateUserTransformById = (userId, posX, posY, posZ, rot) => {
 export {
   addUserForTown,
   removeUserForTown,
-  getUserSessionById,
+  getUserSessionByIdFromTown,
   getUserTransformById,
   updateUserTransformById,
   getAllUserUUIDByTown,

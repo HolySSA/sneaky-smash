@@ -17,14 +17,17 @@ export const subscribeChatChannels = async () => {
       const info = message.split(',');
       createNotificationPacket(
         PACKET_ID.S_Chat,
-        { nickname: info[1], chatMsg: info[2], serverIndex: info[0] },
+        { playerId: info[3], nickname: info[1], chatMsg: info[2], serverIndex: info[0] },
         AllUUID,
       );
     }
   });
 };
 
-export const pubChat = async (nickname, message) => {
+export const pubChat = async (userId, nickname, message) => {
   const redis = await getRedis();
-  await redis.publish(TOWN_CHAT_CHANNEL_KEY, `${configs.ServerIndex},${nickname},${message}`);
+  await redis.publish(
+    TOWN_CHAT_CHANNEL_KEY,
+    `${configs.ServerIndex},${nickname},${message},${userId}`,
+  );
 };

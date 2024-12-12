@@ -24,6 +24,17 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
   return dungeon;
 };
 
+export const findDungeonByUserId = (userId) => {
+  let result = null;
+  for (const [_, dungeon] of dungeonSessions.entries()) {
+    if (dungeon.users.has(userId)) {
+      result = dungeon;
+      break;
+    }
+  }
+  return result;
+};
+
 const getDungeonSession = (dungeonId) => {
   const session = dungeonSessions.get(dungeonId);
   if (!session) {

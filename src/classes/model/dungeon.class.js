@@ -74,11 +74,7 @@ class Dungeon {
   }
 
   getDungeonUser(userId) {
-    const user = this.users.get(userId);
-    if (!user) {
-      throw new Error(`유저가 존재하지 않습니다. userId: ${userId}`);
-    }
-    return user;
+    return this.users.get(userId);
   }
 
   getDungeonUsersUUID() {

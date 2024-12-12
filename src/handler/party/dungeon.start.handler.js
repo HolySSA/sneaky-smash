@@ -54,7 +54,7 @@ import { v4 as uuidv4 } from 'uuid';
 // 	int32 roomId = 2; // 방번호
 // }
 
-//TODO : 2명이상이면 출발할 수 있음
+//TODO :2명이상이면 출발할 수 있음
 const dungeonStartHandler = async ({ socket, payload }) => {
   try {
     const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기
@@ -69,7 +69,9 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       dungeonCode: dungeon.dungeonId,
       dungeonName: dungeon.name,
     };
-    
+
+    const infoText = dungeon.name;
+
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
@@ -97,7 +99,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const enterDungeonPayload = {
           dungeonInfo,
           player: playerInfo,
-          infoText: dungeon.name,
+          infoText,
         };
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);

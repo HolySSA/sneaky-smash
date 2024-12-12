@@ -1,9 +1,13 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getAllUserUUID } from '../../sessions/user.session.js';
-import createNotificationPacket from '../../utils/notification/createNotification.js';
-import { addRedisParty, getRedisUUIDbyMembers, joinRedisParty } from '../../sessions/redis/redis.party.js';
+import {
+  addRedisParty,
+  getRedisUUIDbyMembers,
+  joinRedisParty,
+} from '../../sessions/redis/redis.party.js';
 import Result from '../result.js';
+import logger from '../../utils/logger.js';
+import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 
 // 패킷명세
 // **C_PartyJoin** - 파티에 참여 요청 메시지
@@ -21,7 +25,7 @@ import Result from '../result.js';
 
 const partyJoinHandler = async ({ socket, payload }) => {
   var partyPayload;
-  var Members;
+
   try {
     const { dungeonLevel, roomId, isOwner } = payload;
 
@@ -31,21 +35,21 @@ const partyJoinHandler = async ({ socket, payload }) => {
     } else {
       party = await joinRedisParty(roomId, socket.id);
     }
-    if(party.members.length >= 4){
-      throw new Error('파티의 인원이 가득찼습니다.');
+    if (party.members.length >= 4) {
+      logger.info(`${roomId}의 파티의 인원이 가득찼습니다.`);
       return;
     }
-    Members = await getRedisUUIDbyMembers(party.members);
 
     partyPayload = {
-      playerId: parseInt(socket.id),
+      playerId: socket.id,
       roomId,
       dungeonLevel,
-    }; 
+    };
+
+    return new Result(partyPayload, PACKET_ID.S_PartyJoin, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);
   }
-  return new Result(partyPayload, PACKET_ID.S_PartyJoin, Members);
 };
 
 export default partyJoinHandler;

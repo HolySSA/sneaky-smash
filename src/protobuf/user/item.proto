@@ -2,6 +2,16 @@ syntax = "proto3";
 
 import "../dungeon/monster.proto";
 
+message Stats {
+  int32 atk = 1;
+  int32 def = 2; 
+  int32 curHp = 3;
+  int32 maxHp = 4; 
+  int32 moveSpeed = 5;
+  float criticalProbability = 6;
+  float criticalDamageRate = 7;
+}
+
 message ItemInfo {
   int32 itemId = 1; // 아이템 ID
   Stats stats = 2;

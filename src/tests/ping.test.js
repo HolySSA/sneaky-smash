@@ -8,7 +8,6 @@ const client = getOrCreateClient(testEnv.url, testEnv.port);
 await client.connect();
 
 client.addHandler(PACKET_ID.S_Ping, async ({ payload }) => {
-  console.log(payload);
   await new Promise((resolve) => setTimeout(resolve, 500));
   client.sendMessage(PACKET_ID.C_Pong, {
     clientTime: Date.now(),

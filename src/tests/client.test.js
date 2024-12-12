@@ -4,8 +4,8 @@ import configs from '../configs/configs.js';
 import createResponse from '../utils/packet/createResponse.js';
 await loadProtos();
 import { PACKET_ID } from '../configs/constants/packetId.js';
+import { reverseMapping } from '../configs/constants/packetId.js';
 import decodeMessageByPacketId from '../utils/packet/decodePacket.js';
-import { getHandlerByPacketId } from '../handler/index.js';
 const { PACKET_TYPE_LENGTH, PACKET_TOTAL_LENGTH, PACKET_LENGTH } = configs;
 const connections = [];
 
@@ -89,11 +89,9 @@ class Client {
         try {
           const payload = decodeMessageByPacketId(packetType, packet);
           const handler = this.#handlers[packetType];
-          console.log(`수신[packetType:${packetType}]\n`, payload);
+          console.log(`수신[packetType:${packetType}] ${reverseMapping[packetType]}\n`, payload);
           if (handler) {
             await handler({ payload });
-          } else {
-            console.log(`등록되지 않은 핸들러 : [${packetType}]\n${payload}`);
           }
         } catch (err) {
           // handleError(socket, err);

@@ -5,6 +5,7 @@ import { enqueueSend } from '../../utils/socket/messageQueue.js';
 
 class User {
   #pingQueue = [];
+  #intervalId = null;
   constructor(socket) {
     this.socket = socket;
     this.id = socket.id;
@@ -21,7 +22,7 @@ class User {
     this.myClass = 0;
     this.nickname = '';
 
-    setInterval(this.ping.bind(this), 1000);
+    this.#intervalId = setInterval(this.ping.bind(this), 1000);
   }
 
   ping() {
@@ -57,6 +58,13 @@ class User {
 
   updateUserTransform(posX, posY, posZ, rot) {
     this.transform = { posX, posY, posZ, rot };
+  }
+
+  dispose() {
+    if (this.#intervalId !== null) {
+      clearInterval(this.#intervalId);
+      this.#intervalId = null;
+    }
   }
 }
 

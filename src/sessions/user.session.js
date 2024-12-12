@@ -19,10 +19,14 @@ const addUserSession = (socket) => {
 };
 
 const removeUserSession = (socket) => {
-  userSessions.delete(socket.id);
-  const index = allUsersUUID.indexOf(socket.UUID);
-  if (index !== -1) {
-    allUsersUUID.splice(index, 1);
+  const user = userSessions.get(socket.id);
+  if (user) {
+    user.dispose();
+    userSessions.delete(socket.id);
+    const index = allUsersUUID.indexOf(socket.UUID);
+    if (index !== -1) {
+      allUsersUUID.splice(index, 1);
+    }
   }
 };
 

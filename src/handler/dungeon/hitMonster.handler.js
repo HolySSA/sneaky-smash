@@ -50,7 +50,7 @@ const hitMonsterHandler = async ({ socket, payload }) => {
 
     // 몬스터의 죽음을 알리지 마라 이놈들아!
     if (currentHp <= 0) {
-      monsterKillNotification(socket, {
+      await monsterKillNotification(socket, {
         monsterId: monster.id,
         transform: monster.transform,
       });

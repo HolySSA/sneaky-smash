@@ -7,23 +7,17 @@ import levelUpNotification from '../game/levelUp.notification.js';
 import configs from '../../configs/configs.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
-const { ITEM_DROP_RATE, SKILL_DROP_RATE } = configs;
+const { ITEM_DROP_RATE, SKILL_DROP_RATE, MONSTER_EXP } = configs;
 
 // 패킷명세
-// message S_MonsterKill {
-//   int32 monsterId = 1; // 몬스터 식별 ID
-//   int32 itemId = 2;
-//   int32 playerId = 3;
-//   int32 skillId = 4;
-//   TransformInfo transform = 5;
-//   float exp = 6;
-// }
+
 // message TransformInfo {
 //   float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
 //   float posY = 2;   // Y 좌표 (기본값 : 1)
 //   float posZ = 3;   // Z 좌표 (기본값 : -8 ~ 8)
 //   float rot = 4;    // 회전 값 (기본값 : 0 ~ 360)
 // }
+
 // **StatInfo** - 플레이어의 상세 스탯 정보
 // message StatInfo {
 //   int32 level = 1;                 // 플레이어 레벨
@@ -32,13 +26,19 @@ const { ITEM_DROP_RATE, SKILL_DROP_RATE } = configs;
 //   float maxExp = 4;
 // }
 
+// message S_MonsterKill {
+//   int32 monsterId = 1; // 몬스터 식별 ID
+//   int32 itemId = 2;
+//   int32 playerId = 3;
+//   int32 skillId = 4;
+//   TransformInfo transform = 5;
+//   float exp = 6;
+// }
+
 // message S_GetExp { ★
 //   int32 playerId = 1;
 //   int32 expAmount = 2;
 //   }
-
-//기본 경험치 상수
-const MONSTER_EXP = 110; // 몬스터 처치 시 얻는 기본 경험치
 
 let itemInstanceId = 0;
 

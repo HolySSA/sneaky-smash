@@ -2,7 +2,7 @@ const testEnv = {
   userName: 'test1234',
   password: 'test1234',
   url: 'localhost',
-  port: 3000,
+  port: 25565,
 };
 
 export default testEnv;

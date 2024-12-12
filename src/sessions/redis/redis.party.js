@@ -1,10 +1,12 @@
 import { getRedis } from '../../utils/redis/redisManager.js';
 import configs from '../../configs/configs.js';
+import { tryGetValue } from './helper.js';
 
 const { ServerUUID } = configs;
 const PARTY_KEY = `${ServerUUID}:party`;
 const PARTY_INFO_KEY = `${PARTY_KEY}:info`;
 const PARTY_LIST_KEY = `${ServerUUID}:partyList`;
+const ENTERED_PARTY_KEY = `${ServerUUID}:enteredParty`;
 
 const addRedisParty = async (roomId, dungeonLevel, userId) => {
   const redis = await getRedis();
@@ -15,12 +17,13 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
   if (existingParty) {
     throw new Error('이미 존재하는 레디스 파티입니다.');
   }
-  const isInParty = await redis.hget(`user:${userId}`, 'enteredParty');
-  if (isInParty < 0) {
-    console.log(`${roomId}파티를 ${userId}번 유저가 만듭니다.`);
-    await redis.hset(`user:${userId}`, 'enteredParty', roomId);
-  } else {
+
+  const enteredPartyKey = `${ENTERED_PARTY_KEY}:${userId}`;
+  if (await redis.exists(enteredPartyKey)) {
     throw new Error('이미 파티에 가입되어 있습니다.');
+  } else {
+    await redis.set(enteredPartyKey, roomId);
+    await redis.expire(enteredPartyKey, 3600);
   }
 
   // 파티 생성
@@ -33,10 +36,14 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
     owner: userId,
   });
 
+  await redis.expire(partyKey, 3600);
+  await redis.expire(PARTY_LIST_KEY, 3600);
+  await redis.expire(infoKey, 3600);
+
   const party = {
-    roomId: parseInt(roomId),
+    roomId: roomId,
     members: [userId],
-    dungeonLevel: parseInt(dungeonLevel),
+    dungeonLevel: dungeonLevel,
     owner: userId,
   };
 
@@ -53,9 +60,8 @@ const removeRedisParty = async (roomId) => {
     throw new Error('존재하지 않는 레디스 파티입니다.');
   }
   const partyMembers = await redis.smembers(partyKey);
-  console.log(partyMembers);
-  for(let i = 0 ;i < partyMembers.length ; i++){
-    await redis.hset(`user:${partyMembers[i]}`, 'enteredParty', -1);
+  for (let i = 0; i < partyMembers.length; i++) {
+    await redis.unlink(`${ENTERED_PARTY_KEY}:${partyMembers[i]}`);
   }
   // 멤버 제거
   await redis.unlink(partyKey);
@@ -79,19 +85,24 @@ const joinRedisParty = async (roomId, userId) => {
   if (!addUser) {
     throw new Error('이미 파티에 존재합니다.');
   }
-  const isInParty = await redis.hget(`user:${userId}`, 'enteredParty');
-  if (Number(isInParty) < 0) {
-    console.log(`${roomId}파티에 ${userId}번 유저가 가입합니다.`);
-    await redis.hset(`user:${userId}`, 'enteredParty', roomId);
-  } else {
+
+  const enteredPartyKey = `${ENTERED_PARTY_KEY}:${userId}`;
+  if (await redis.exists(enteredPartyKey)) {
     throw new Error('이미 파티에 가입되어 있습니다.');
+  } else {
+    await redis.set(enteredPartyKey, roomId);
+    await redis.expire(enteredPartyKey, 3600);
   }
+
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
   const updatedParty = {
-    roomId: parseInt(roomId),
+    roomId: roomId,
     members: members.map((m) => m.toString()),
-    dungeonLevel: parseInt(info.dungeonLevel),
+    dungeonLevel: info.dungeonLevel,
   };
+
+  await redis.expire(partyKey, 3600);
+  await redis.expire(infoKey, 3600);
 
   return updatedParty;
 };
@@ -111,12 +122,15 @@ const leaveRedisParty = async (roomId, userId) => {
     redis.hgetall(infoKey),
   ]);
 
-  await redis.hset(`user:${userId}`, 'enteredParty', -1);
+  const enteredPartyKey = `${ENTERED_PARTY_KEY}:${userId}`;
+  await redis.unlink(enteredPartyKey);
+  await redis.expire(partyKey, 3600);
+  await redis.expire(infoKey, 3600);
 
   return {
-    roomId: parseInt(roomId),
+    roomId: roomId,
     members: remainingMembers.map((m) => m.toString()),
-    dungeonLevel: parseInt(info.dungeonLevel),
+    dungeonLevel: info.dungeonLevel,
   };
 };
 
@@ -133,9 +147,9 @@ const getRedisParty = async (roomId) => {
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 
   const party = {
-    roomId: parseInt(roomId),
+    roomId: roomId,
     members: members.map((m) => m.toString()),
-    dungeonLevel: parseInt(info.dungeonLevel),
+    dungeonLevel: info.dungeonLevel,
     owner: info.owner.toString(),
   };
 
@@ -154,11 +168,10 @@ const getRedisPartyByUserId = async (userId) => {
 
     if (isMember) {
       const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
-
       return {
-        roomId: parseInt(roomId),
-        members: members.map((m) => m.toString()),
-        dungeonLevel: parseInt(info.dungeonLevel),
+        roomId,
+        members,
+        dungeonLevel: info.dungeonLevel,
         owner: info.owner.toString(),
       };
     }
@@ -178,9 +191,9 @@ const getRedisParties = async () => {
       const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 
       return {
-        roomId: parseInt(roomId),
+        roomId: roomId,
         members: members.map((m) => m.toString()),
-        dungeonLevel: parseInt(info.dungeonLevel),
+        dungeonLevel: info.dungeonLevel,
         owner: info.owner,
       };
     }),
@@ -191,15 +204,15 @@ const getRedisParties = async () => {
 
 const getRedisUUIDbyMembers = async (members) => {
   const redis = await getRedis();
-//  const userKey = `user:${userId}`;
+  //  const userKey = `user:${userId}`;
   const UUID = [];
-  for(let i = 0 ;i < members.length ; i++){
+  for (let i = 0; i < members.length; i++) {
     const userKey = `user:${members[i]}`;
-    const temp = await redis.hget(userKey, "UUID");
+    const temp = await redis.hget(userKey, 'UUID');
     UUID.push(temp);
   }
   return UUID;
-}
+};
 
 /*
 export const setRedisUserUUID = async (socket) => {

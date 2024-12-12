@@ -4,7 +4,7 @@ import { tryGetValue } from './helper.js';
 
 export const setRedisUser = async (characterDB) => {
   const redis = await getRedis();
-  const userKey = `user:${characterDB.id}`;
+  const userKey = `user:${characterDB.userId}`;
   await redis.hset(userKey, characterDB);
   await redis.expire(userKey, 3600);
 };
@@ -12,7 +12,7 @@ export const setRedisUser = async (characterDB) => {
 export const setRedisUserUUID = async (socket) => {
   const redis = await getRedis();
   const userKey = `user:${socket.id}`;
-  await redis.hset(userKey, "UUID", socket.UUID);
+  await redis.hset(userKey, 'UUID', socket.UUID);
   await redis.expire(userKey, 3600);
 };
 

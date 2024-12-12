@@ -18,7 +18,9 @@ import Result from '../result.js';
 const partyHandler = async ({ socket, payload }) => {
   try {
     const parties = await getRedisParties();
-
+    if(!parties){
+      return;
+    }
     var partyInfo = [];
 
     parties.forEach((party) => {

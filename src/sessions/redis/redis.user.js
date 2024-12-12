@@ -9,6 +9,13 @@ export const setRedisUser = async (characterDB) => {
   await redis.expire(userKey, 3600);
 };
 
+export const setRedisUserUUID = async (socket) => {
+  const redis = await getRedis();
+  const userKey = `user:${socket.id}`;
+  await redis.hset(userKey, "UUID", socket.UUID);
+  await redis.expire(userKey, 3600);
+};
+
 export const removeRedisUser = async (socket) => {
   const redis = await getRedis();
   const userKey = `user:${socket.id}`;

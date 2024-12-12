@@ -68,9 +68,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       dungeonCode: dungeon.dungeonId,
       dungeonName: dungeon.name,
     };
-
-    const infoText = dungeon.name;
-
+    
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
@@ -98,7 +96,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const enterDungeonPayload = {
           dungeonInfo,
           player: playerInfo,
-          infoText,
+          infoText: dungeon.name,
         };
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);

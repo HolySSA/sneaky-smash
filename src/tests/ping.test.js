@@ -1,15 +1,16 @@
 import { getOrCreateClient } from './client.test.js';
 import configs from '../configs/configs.js';
 import testEnv from './env.test.js';
-const { PacketType } = configs;
+const { PACKET_ID } = configs;
 
-await import('./gameAuthorize.test.js');
+await import('./login.test.js');
 const client = getOrCreateClient(testEnv.url, testEnv.port);
 await client.connect();
 
-client.addHandler(PacketType.PING_REQUEST, async ({ payload }) => {
+client.addHandler(PACKET_ID.S_Ping, async ({ payload }) => {
+  console.log(payload);
   await new Promise((resolve) => setTimeout(resolve, 500));
-  client.sendMessage(PacketType.PONG_RESPONSE, {
+  client.sendMessage(PACKET_ID.C_Pong, {
     clientTime: Date.now(),
   });
 });

@@ -2,21 +2,6 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedis } from '../../utils/redis/redisManager.js';
 import { tryGetValue } from './helper.js';
 
-export const addRedisUser = async (userId, nickname, myClass) => {
-  const redis = await getRedis();
-  const userKey = `user:${userId}`;
-
-  const redisUser = await redis.hset(userKey, {
-    id: userId,
-    nickname: nickname,
-    myClass: myClass,
-  });
-
-  await redis.expire(userKey, 3600);
-
-  return redisUser;
-};
-
 export const setRedisUser = async (characterDB) => {
   const redis = await getRedis();
   const userKey = `user:${characterDB.id}`;

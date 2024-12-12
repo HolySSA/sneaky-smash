@@ -1,4 +1,10 @@
+import { PACKET_ID } from '../../configs/constants/packetId.js';
+import logger from '../../utils/logger.js';
+import createResponse from '../../utils/packet/createResponse.js';
+import { enqueueSend } from '../../utils/socket/messageQueue.js';
+
 class User {
+  #pingQueue = [];
   constructor(socket) {
     this.socket = socket;
     this.id = socket.id;
@@ -12,25 +18,37 @@ class User {
     this.monsterKillCount = 0;
     this.userKillCount = 0;
     this.latency = 0;
-    this.lastPingTime = Date.now();
     this.myClass = 0;
     this.nickname = '';
-  }
 
-  updateLatency(latency) {
-    this.latency = latency;
+    setInterval(this.ping.bind(this), 1000);
   }
 
   ping() {
-    this.lastPingTime = Date.now();
-    //this.socket.write(createPingPacket(this.lastPingTime));
+    if (this.#pingQueue.length === 4) {
+      logger.warn(`User[${this.socket.id}] is reached maximum ping size`);
+      return;
+    }
+
+    if (this.#pingQueue.length >= 4) {
+      return;
+    }
+
+    const serverTime = Date.now();
+    const buffer = createResponse(PACKET_ID.S_Ping, { serverTime });
+    enqueueSend(this.socket.UUID, buffer);
+    this.#pingQueue.push(serverTime);
   }
 
-  handlePong(data) {
-    const now = Date.now();
-    this.latency = (now - data.timestamp) / 2;
-
-    // console.log(`${this.id}: ${this.latency}ms`);
+  handlePong(clientTime) {
+    if (this.#pingQueue.length <= 0) {
+      logger.error(
+        `User[${this.socket.id}] recevied pong message but pingQueue is empty : ${clientTime}`,
+      );
+      return;
+    }
+    const serverTime = this.#pingQueue.shift();
+    this.latency = (clientTime - serverTime) / 2;
   }
 
   getLatency() {

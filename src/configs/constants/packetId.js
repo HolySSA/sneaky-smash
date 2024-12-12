@@ -57,6 +57,8 @@ export const PACKET_ID = {
   C_MatchStart: 50,
   C_GetNavPath: 99,
   S_GetNavPath: 100,
+  S_Ping: 254,
+  C_Pong: 255,
 };
 
 for (const [key, value] of Object.entries(PACKET_ID)) {

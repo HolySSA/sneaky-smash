@@ -26,13 +26,12 @@ class User {
   }
 
   ping() {
-    if (this.#pingQueue.length === 4) {
-      logger.warn(`User[${this.socket.id}] is reached maximum ping size`);
+    if (this.#pingQueue.length > 4) {
       return;
     }
 
-    if (this.#pingQueue.length >= 4) {
-      return;
+    if (this.#pingQueue.length === 4) {
+      logger.warn(`User[${this.socket.id}] is reached maximum ping size`);
     }
 
     const serverTime = Date.now();

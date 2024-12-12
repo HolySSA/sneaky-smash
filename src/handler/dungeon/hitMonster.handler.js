@@ -1,20 +1,9 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import createResponse from '../../utils/packet/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
 import monsterKillNotification from '../monster/monsterKill.notification.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
-
-// message C_HitMonster{
-//     int32 monsterId = 1;  // 플레이어 ID
-//     int32 damage = 2;    // 데미지
-//   }
-//   // 몬스터 공격 알림
-//   message S_HitMonster{
-//     int32 monsterId = 1;  // 플레이어 ID
-//     int32 damage = 2;    // 데미지
-//   }
 
 const hitMonsterHandler = async ({ socket, payload }) => {
   const { monsterId, damage } = payload;
@@ -50,10 +39,7 @@ const hitMonsterHandler = async ({ socket, payload }) => {
 
     // 몬스터의 죽음을 알리지 마라 이놈들아!
     if (currentHp <= 0) {
-      await monsterKillNotification(socket, {
-        monsterId: monster.id,
-        transform: monster.transform,
-      });
+      await monsterKillNotification(socket, monster, dungeon, dungeonAllUsersUUID);
     }
   } catch (err) {
     handleError(socket, err);
@@ -61,3 +47,13 @@ const hitMonsterHandler = async ({ socket, payload }) => {
 };
 
 export default hitMonsterHandler;
+
+// message C_HitMonster{
+//     int32 monsterId = 1;  // 플레이어 ID
+//     int32 damage = 2;    // 데미지
+//   }
+//   // 몬스터 공격 알림
+//   message S_HitMonster{
+//     int32 monsterId = 1;  // 플레이어 ID
+//     int32 damage = 2;    // 데미지
+//   }

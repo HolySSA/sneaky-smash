@@ -1,6 +1,6 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/packet/createResponse.js';
 
@@ -13,7 +13,7 @@ const levelUpNotification = async (socket) => {
   try {
     const playerId = socket.id;
 
-    const user = await getRedisUserById(playerId);
+    const user = await findCharacterByUserId(playerId);
 
     const dungeon = getDungeonSession(user.sessionId);
 

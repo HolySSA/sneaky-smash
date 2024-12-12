@@ -1,8 +1,8 @@
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedis } from '../../utils/redis/redisManager.js';
-import logger from '../../utils/logger.js';
+import { tryGetValue } from './helper.js';
 
-const addRedisUser = async (userId, nickname, myClass) => {
+export const addRedisUser = async (userId, nickname, myClass) => {
   const redis = await getRedis();
   const userKey = `user:${userId}`;
 
@@ -10,71 +10,39 @@ const addRedisUser = async (userId, nickname, myClass) => {
     id: userId,
     nickname: nickname,
     myClass: myClass,
-    locationType: 'town',
   });
+
+  await redis.expire(userKey, 3600);
 
   return redisUser;
 };
 
-const removeRedisUser = async (socket) => {
+export const setRedisUser = async (characterDB) => {
+  const redis = await getRedis();
+  const userKey = `user:${characterDB.id}`;
+  await redis.hset(userKey, characterDB);
+  await redis.expire(userKey, 3600);
+};
+
+export const removeRedisUser = async (socket) => {
   const redis = await getRedis();
   const userKey = `user:${socket.id}`;
   return await redis.unlink(userKey);
 };
 
-const getRedisUsers = async () => {
-  const redis = await getRedis();
-  // keys 명령어로 직접 조회
-  const userKeys = await redis.keys('user:*');
-  logger.info('Redis 유저 키 조회 결과:', userKeys);
-
-  if (!userKeys.length) {
-    return [];
-  }
-
-  // pipeline - 명령 묶어서 실행(최적화)
-  const pipeline = redis.pipeline();
-  userKeys.forEach((key) => pipeline.hgetall(key));
-
-  const results = await pipeline.exec();
-
-  return results.map(([err, data]) => {
-    if (err || !data) return null;
-
-    return {
-      id: data.id,
-      nickname: data.nickname,
-      myClass: parseInt(data.myClass),
-      locationType: data.locationType,
-      sessionId: data.sessionId,
-    };
-  });
-};
-
-const getRedisUserById = async (id) => {
+export const getRedisUserById = async (id) => {
   const redis = await getRedis();
   const userKey = `user:${id}`;
   const user = await redis.hgetall(userKey);
-
-  if (!user || Object.keys(user).length === 0) {
-    throw new Error(`Cannot find redisUser by socket.id : ${id}`);
-  }
-
-  return {
-    id: user.id,
-    nickname: user.nickname,
-    myClass: parseInt(user.myClass),
-    locationType: user.locationType,
-    sessionId: user.sessionId,
-  };
+  return tryGetValue(user);
 };
 
-const getStatsByUserId = async (userId) => {
+export const getStatsByUserId = async (userId) => {
   const redis = await getRedis();
   const userKey = `user:${userId}`;
   const user = await redis.hgetall(userKey);
 
-  if (!user || Object.keys(user).length === 0) {
+  if (tryGetValue(user) == null) {
     throw new Error('존재하지 않는 레디스 유저입니다.');
   }
 
@@ -89,50 +57,9 @@ const getStatsByUserId = async (userId) => {
   };
 };
 
-const setStatsByUserId = async (userId, statInfo) => {
-  const redis = await getRedis();
-  const userKey = `user:${userId}`;
-  const user = await redis.hgetall(userKey);
-
-  if (!user || Object.keys(user).length === 0) {
-    throw new Error('유저가 존재하지 않습니다.');
-  }
-
-  // StatInfo 메시지 형식 검증
-  const StatInfo = {
-    stats: {
-      level: statInfo.stats.level + 1,
-      atk: statInfo.stats.atk + statInfo.level * 2,
-      def: statInfo.stats.def + statInfo.level * 1,
-      curHp: statInfo.stats.curHp + statInfo.level * 10,
-      maxHp: statInfo.stats.maxHp + statInfo.level * 20,
-      moveSpeed: statInfo.stats.moveSpeed,
-      criticalProbability: statInfo.stats.criticalProbability,
-      criticalDamageRate: statInfo.stats.criticalDamageRate,
-    },
-    exp: statInfo.exp,
-  };
-
-  // Redis에 스탯 정보 저장
-  await redis.hset(userKey, {
-    stats: JSON.stringify(StatInfo),
-  });
-
-  return StatInfo;
-};
-
-const setSessionId = async (userId, sessionId) => {
+export const setSessionId = async (userId, sessionId) => {
   const redis = await getRedis();
   const userKey = `user:${userId}`;
   await redis.hset(userKey, 'sessionId', sessionId);
-};
-
-export {
-  addRedisUser,
-  removeRedisUser,
-  getRedisUsers,
-  getRedisUserById,
-  getStatsByUserId,
-  setSessionId,
-  setStatsByUserId,
+  await redis.expire(userKey, 3600);
 };

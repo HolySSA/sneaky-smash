@@ -1,9 +1,9 @@
 import createResponse from '../../utils/packet/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import updateNexusHpNotification from './updateNexusHp.notification.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 // message C_AttackedNexus {
 //     int32 damage = 1;    // 데미지
@@ -20,7 +20,7 @@ const attackedNexusHandler = async (socket, payload) => {
 
     const response = createResponse(PACKET_ID.S_AttackedNexus, { playerId, damage });
 
-    const redisUser = await getRedisUserById(playerId);
+    const redisUser = await findCharacterByUserId(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
 

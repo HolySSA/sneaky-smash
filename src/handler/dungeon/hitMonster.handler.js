@@ -1,9 +1,9 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
 import monsterKillNotification from '../monster/monsterKill.notification.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 // message C_HitMonster{
 //     int32 monsterId = 1;  // 플레이어 ID
@@ -21,7 +21,7 @@ const hitMonsterHandler = async (socket, payload) => {
 
     const response = createResponse(PACKET_ID.S_HitMonster, { monsterId, damage });
 
-    const redisUser = await getRedisUserById(socket.id);
+    const redisUser = await findCharacterByUserId(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
 

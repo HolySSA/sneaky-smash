@@ -15,7 +15,7 @@ const SQL_QUERIES = {
     WHERE id = ?
   `,
   DELETE_USER: `
-    DELETE FROM user WHERE id = ?
+    DELETE FROM user WHERE account = ?
   `,
 };
 

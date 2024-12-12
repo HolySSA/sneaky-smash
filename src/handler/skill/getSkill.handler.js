@@ -1,17 +1,17 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import logger from '../../utils/logger.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 // Notification
 const getSkillHandler = async ({ socket, payload }) => {
   const { skillId, itemInstanceId } = payload;
   const playerId = socket.id;
   try {
-    const redisUser = await getRedisUserById(playerId);
+    const redisUser = await findCharacterByUserId(playerId);
 
     const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
 

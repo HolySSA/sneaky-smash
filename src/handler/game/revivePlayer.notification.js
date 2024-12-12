@@ -1,9 +1,9 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import createResponse from '../../utils/packet/createResponse.js';
-import { getRedisUserById } from '../../sessions/redis/redis.user.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import logger from '../../utils/logger.js';
+import { findCharacterByUserId } from '../../db/model/characters.db.js';
 // message S_RevivePlayer {
 //     int32 playerId = 1;
 //     TransformInfo transform = 2;
@@ -12,7 +12,7 @@ import logger from '../../utils/logger.js';
 
 const revivePlayerNotification = async (socket, playerId) => {
   try {
-    const redisUser = await getRedisUserById(socket.id);
+    const redisUser = await findCharacterByUserId(socket.id);
     const dungeon = getDungeonSession(redisUser.sessionId);
     const allUsers = dungeon.getAllUsers();
 

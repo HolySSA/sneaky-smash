@@ -18,8 +18,8 @@ client.addHandler(PACKET_ID.S_PartyJoin, async (payload) => {
 });
 client.sendMessage(PACKET_ID.C_PartyJoin, {
     dungeonLevel : 1,
-    roomId : 2,
-    isOwner : true,
+    roomId : 1,
+    isOwner : false,
     
 });
 client.addHandler(PACKET_ID.S_PartyLeave, async (payload) => {

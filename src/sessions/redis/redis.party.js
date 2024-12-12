@@ -15,6 +15,14 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
   if (existingParty) {
     throw new Error('이미 존재하는 레디스 파티입니다.');
   }
+  const isInParty = await redis.hget(`user:${userId}`, 'enteredParty');
+  if (isInParty < 0) {
+    console.log(`${roomId}파티를 ${userId}번 유저가 만듭니다.`);
+    await redis.hset(`user:${userId}`, 'enteredParty', roomId);
+  }
+  else{
+    throw new Error('이미 파티에 가입되어 있습니다.');
+  }
 
   // 파티 생성
   await redis.sadd(partyKey, userId);
@@ -68,9 +76,14 @@ const joinRedisParty = async (roomId, userId) => {
   if (!addUser) {
     throw new Error('이미 파티에 존재합니다.');
   }
-
+  if (Number(isInParty) < 0) {
+    console.log(`${roomId}파티에 ${userId}번 유저가 가입합니다.`);
+    await redis.hset(`user:${userId}`, 'enteredParty', roomId);
+  }
+  else{
+    throw new Error('이미 파티에 가입되어 있습니다.');
+  }
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
-
   const updatedParty = {
     roomId: parseInt(roomId),
     members: members.map((m) => m.toString()),

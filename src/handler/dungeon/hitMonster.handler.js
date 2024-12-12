@@ -15,7 +15,7 @@ import { findCharacterByUserId } from '../../db/model/characters.db.js';
 //     int32 damage = 2;    // 데미지
 //   }
 
-const hitMonsterHandler = async (socket, payload) => {
+const hitMonsterHandler = async ({ socket, payload }) => {
   try {
     const { monsterId, damage } = payload;
 

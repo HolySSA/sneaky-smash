@@ -141,7 +141,6 @@ const processReceiveQueue = async (socketUUID) => {
         logger.error(error);
       } finally {
         if (result) {
-          console.log(result);
           const response = createResponse(result.packetType, result.payload);
 
           if (result.targetUUIDs.length > 0) {

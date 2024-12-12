@@ -2,15 +2,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { findUserByAccount } from '../../db/model/user.db.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
-import { addRedisUser } from '../../sessions/redis/redis.user.js';
 import { addUserSession } from '../../sessions/user.session.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 import configs from '../../configs/configs.js';
 import logger from '../../utils/logger.js';
-import Result from '../result.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
-import { setAccountByRedis } from '../../sessions/redis/redis.account.js';
 
 const { PACKET_ID, JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE } = configs;
 
@@ -69,7 +66,6 @@ const logInHandler = async ({ socket, payload }) => {
   if (success) {
     const character = await findCharacterByUserId(socket.id);
     if (character) {
-      await addRedisUser(socket.id, character.nickname, character.myClass);
       await enterLogic(socket, character);
     }
   }

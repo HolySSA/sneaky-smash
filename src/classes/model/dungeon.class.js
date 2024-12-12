@@ -1,5 +1,4 @@
 import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
-import LatencyManager from '../manager/latency.manager.js';
 import MonsterLogic from './monsterLogic.class.js';
 import logger from '../../utils/logger.js';
 import { removeDungeonSession } from '../../sessions/dungeon.session.js';
@@ -14,8 +13,6 @@ class Dungeon {
 
     this.nexusCurrentHp = 100;
     this.nexusMaxHp = 100;
-
-    this.latencyManager = new LatencyManager();
   }
 
   async addDungeonUser(user) {
@@ -34,7 +31,6 @@ class Dungeon {
     };
 
     this.users.set(userId, dungeonUser);
-    this.latencyManager.addUser(userId, user.ping.bind(user), 1000);
 
     return user;
   }
@@ -42,7 +38,6 @@ class Dungeon {
   removeDungeonUser(userId) {
     if (this.users.has(userId)) {
       const userUUID = this.users.get(userId).socket.UUID;
-      this.latencyManager.removeUser(userId);
       const result = this.users.delete(userId);
 
       const index = this.usersUUID.indexOf((uuid) => uuid === userUUID);
@@ -52,7 +47,6 @@ class Dungeon {
 
       if (this.users.size === 0) {
         this.monsterLogic.pathServer.onClose();
-        this.latencyManager.clearAll();
       }
 
       return result;

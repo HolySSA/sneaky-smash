@@ -26,6 +26,8 @@ import partyLeaveHandler from './party/party.leave.handler.js';
 import partyHandler from './party/party.handler.js';
 import dungeonStartHandler from './party/dungeon.start.handler.js';
 import partyJoinHandler from './party/party.join.handler.js';
+//healthCheck
+import pongHandler from './healthCheck/pong.handler.js';
 
 const handlers = {
   // town
@@ -89,6 +91,9 @@ const handlers = {
   },
   [PACKET_ID.C_PartyLeave]: {
     handler: partyLeaveHandler,
+  },
+  [PACKET_ID.C_Pong]: {
+    handler: pongHandler,
   },
   // 다른 핸들러들 추가
 };

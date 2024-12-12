@@ -92,9 +92,6 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       await setSessionId(memberId, sessionId);
 
       if (user) {
-        // 레이턴시 추가하면
-        // userSession.updateLatency(latency);
-
         // 던전 세션 유저 추가
         await dungeon.addDungeonUser(user);
 

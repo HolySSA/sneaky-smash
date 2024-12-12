@@ -74,7 +74,19 @@ class Dungeon {
   }
 
   getDungeonUser(userId) {
-    return this.users.get(userId) || null;
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error(`유저가 존재하지 않습니다. userId: ${userId}`);
+    }
+    return user;
+  }
+
+  getDungeonUsersUUID() {
+    if (!this.users || this.users.size === 0) {
+      throw new Error(`던전에 유저가 존재하지 않습니다. dungeonId: ${this.dungeonId}`);
+    }
+
+    return Array.from(this.users.values()).map((user) => user.user.socket.UUID);
   }
 
   // 인포만 매핑해서 받기

@@ -8,6 +8,7 @@ import configs from '../../configs/configs.js';
 import logger from '../../utils/logger.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
+import { setRedisUserUUID } from '../../sessions/redis/redis.user.js';
 
 const { PACKET_ID, JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE } = configs;
 
@@ -65,6 +66,7 @@ const logInHandler = async ({ socket, payload }) => {
   enqueueSend(socket.UUID, loginBuffer);
   if (success) {
     const character = await findCharacterByUserId(socket.id);
+    setRedisUserUUID(socket); // 소켓으로 레디스에서 해당 유저의 UUID 설정
     if (character) {
       await enterLogic(socket, character);
     }

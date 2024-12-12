@@ -52,7 +52,11 @@ const removeRedisParty = async (roomId) => {
   if (!existingParty) {
     throw new Error('존재하지 않는 레디스 파티입니다.');
   }
-
+  const partyMembers = await redis.smembers(partyKey);
+  console.log(partyMembers);
+  for(let i = 0 ;i < partyMembers.length ; i++){
+    await redis.hset(`user:${partyMembers[i]}`, 'enteredParty', -1);
+  }
   // 멤버 제거
   await redis.unlink(partyKey);
   // info 제거
@@ -106,6 +110,8 @@ const leaveRedisParty = async (roomId, userId) => {
     redis.smembers(partyKey),
     redis.hgetall(infoKey),
   ]);
+
+  await redis.hset(`user:${userId}`, 'enteredParty', -1);
 
   return {
     roomId: parseInt(roomId),
@@ -183,6 +189,27 @@ const getRedisParties = async () => {
   return parties;
 };
 
+const getRedisUUIDbyMembers = async (members) => {
+  const redis = await getRedis();
+//  const userKey = `user:${userId}`;
+  const UUID = [];
+  for(let i = 0 ;i < members.length ; i++){
+    const userKey = `user:${members[i]}`;
+    const temp = await redis.hget(userKey, "UUID");
+    UUID.push(temp);
+  }
+  return UUID;
+}
+
+/*
+export const setRedisUserUUID = async (socket) => {
+  const redis = await getRedis();
+  const userKey = `user:${socket.id}`;
+  await redis.hset(userKey, "UUID", socket.UUID);
+  await redis.expire(userKey, 3600);
+};
+*/
+
 export {
   addRedisParty,
   removeRedisParty,
@@ -191,4 +218,5 @@ export {
   getRedisParty,
   getRedisPartyByUserId,
   getRedisParties,
+  getRedisUUIDbyMembers,
 };

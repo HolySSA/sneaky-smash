@@ -4,6 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getAllUserUUID, getUserById, getUserSessions } from '../../sessions/user.session.js';
 import {
   getRedisParty,
+  getRedisUUIDbyMembers,
   leaveRedisParty,
   removeRedisParty,
 } from '../../sessions/redis/redis.party.js';
@@ -20,8 +21,8 @@ import Result from '../result.js';
 // }
 
 const partyLeaveHandler = async ({ socket, payload }) => {
-  var leavePayload,
-    users = [];
+  var leavePayload;
+  var users;
   try {
     const { roomId } = payload;
 
@@ -36,9 +37,11 @@ const partyLeaveHandler = async ({ socket, payload }) => {
         playerId: -1,
         roomId,
       };
+      users = await getRedisUUIDbyMembers(party.members);
     } else if (party.owner === socket.id.toString()) {
+      users = await getRedisUUIDbyMembers(party.members);
       await removeRedisParty(roomId);
-      users = getAllUserUUID();
+      
       /*
       party.members.forEach((memberId) => {
         const user = getUserById(memberId);
@@ -52,7 +55,7 @@ const partyLeaveHandler = async ({ socket, payload }) => {
       // });
     } else {
       const remainMembers = await leaveRedisParty(roomId, socket.id);
-      users = getAllUserUUID();
+      users = await getRedisUUIDbyMembers(remainMembers.members);
       // const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
 
       // remainMembers.members.forEach((memberId) => {

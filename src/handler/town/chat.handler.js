@@ -1,27 +1,15 @@
-import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getAllUserUUID } from '../../sessions/user.session.js';
-import logger from '../../utils/logger.js';
-import Result from '../result.js';
+import { getUserById } from '../../sessions/user.session.js';
+import { pubChat } from '../../sessions/redis/redis.chat.js';
 
 const chatHandler = async ({ socket, payload }) => {
-  var chatPayload;
   try {
     const { chatMsg } = payload;
-
-    chatPayload = {
-      playerId: socket.id,
-      chatMsg,
-    };
+    const nickname = getUserById(socket.id).nickname;
+    await pubChat(nickname, chatMsg);
   } catch (e) {
     handleError(socket, e);
   }
-  const allUsers = getAllUserUUID();
-  if (!allUsers || allUsers.length === 0) {
-    logger.error('유저세션이 없습니다.');
-    return;
-  }
-  return new Result(chatPayload, PACKET_ID.S_Chat, allUsers);
 };
 
 export default chatHandler;

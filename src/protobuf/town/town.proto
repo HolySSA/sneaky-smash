@@ -34,8 +34,9 @@ message C_Chat {
     string chatMsg = 1;             // 채팅 메시지 내용
 }
 message S_Chat {
-    int32 playerId = 1;             // 채팅을 받는 플레이어 ID
+    string nickname = 1;             // 채팅을 받는 플레이어 ID
     string chatMsg = 2;             // 채팅 메시지 내용
+    string serverIndex = 3;          // 몇번째 서버에서 온 메세지인지
 }
 message S_EnterDungeon {
     DungeonInfo dungeonInfo = 1;    // 던전 정보 (추후 정의 예정)

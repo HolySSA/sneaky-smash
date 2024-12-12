@@ -3,6 +3,7 @@ import { loadProtos } from './loadProtos.js';
 import logger from '../utils/logger.js';
 import dbPool from '../db/database.js';
 import { connect } from '../utils/redis/redisManager.js';
+import { subscribeChatChannels } from '../sessions/redis/redis.chat.js';
 
 const initServer = async () => {
   try {
@@ -11,6 +12,7 @@ const initServer = async () => {
     await loadGameAssets();
     await connect();
     await dbPool.init();
+    await subscribeChatChannels();
   } catch (err) {
     logger.error(err);
     process.exit(1); // 에러 발생 시 게임 종료

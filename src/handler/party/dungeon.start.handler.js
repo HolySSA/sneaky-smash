@@ -100,7 +100,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       party.members.map(async (memberId) => {
         const user = await getUserById(memberId);
         console.log("유저의 클래스 : ",user.myClass);
-        const statInfo = getStatsByUserClass(user.myClass);
+        const statInfo = await getStatsByUserClass(user.myClass);
         const transformData = transforms.pop() || [0, 0, 0];
         const transform = {
           posX: transformData[0],

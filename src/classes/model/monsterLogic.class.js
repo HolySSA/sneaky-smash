@@ -91,17 +91,18 @@ class MonsterLogic {
         posX: monster.transform.posX,
         posY: monster.transform.posY,
         posZ: monster.transform.posZ,
-        rot: monster.transform.rot, // 추가: 회전값 포함
+        rot: 0,//monster.transform.rot, // 추가: 회전값 포함
       },
     };
+    //console.log("몬스터 무브 페이로드 : ",payload);
     createNotificationPacket(PACKET_ID.S_MonsterMove, payload, this.dungeonInstance.usersUUID);
   }
 
   requestPathAndMove(monster) {
     if (!monster.target) return;
-
+    
     this.pathServer
-      .sendPathRequest(monster.transform, monster.target.userInfo.transform)
+      .sendPathRequest(monster.transform, monster.target.user.transform)
       .then((response) => {
         // response는 S_GetNavPath 메시지에서 디코딩된 값
         const { pathPosition } = response;
@@ -130,7 +131,8 @@ class MonsterLogic {
     let closestPlayer = null;
 
     this.dungeonInstance.users.forEach((value) => {
-      const { posX, posY, posZ } = value.userInfo.transform;
+      //console.log("던전 인스턴스의 유저 트랜스폼 : ",value.user.transform);
+      const { posX, posY, posZ, rot } = value.user.transform;
       const distance = Math.sqrt(
         (posX - monster.transform.posX) ** 2 +
           (posY - monster.transform.posY) ** 2 +
@@ -199,7 +201,7 @@ class MonsterLogic {
           // 타겟이 없거나 비활성화 상태일 때
           const closestPlayer = this.findClosestPlayer(monster);
           if (closestPlayer) {
-            const isPlayerDetected = monster.detectPlayer(closestPlayer.userInfo.transform);
+            const isPlayerDetected = monster.detectPlayer(closestPlayer.user.transform);
             if (isPlayerDetected) {
               // 플레이어 감지 시 활성화
               if (!monster.targetOn) {
@@ -220,7 +222,7 @@ class MonsterLogic {
         } else {
           // 타겟이 있고 활성화 상태일 때 - 이동과 공격 실행
           const isPlayerStillDetected = monster.detectPlayer(
-            monster.target.userInfo.transform,
+            monster.target.user.transform,
             true, // 어그로해제됐나?
           );
           if (isPlayerStillDetected) {

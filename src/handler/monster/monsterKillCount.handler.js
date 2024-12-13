@@ -1,8 +1,5 @@
-import createResponse from '../../utils/packet/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { PACKET_ID } from '../../constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import User from '../../classes/model/user.class.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 //   message S_MonsterKillCount {

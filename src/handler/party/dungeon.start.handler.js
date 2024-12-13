@@ -97,7 +97,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
         const user = await getUserById(memberId);
-        const statInfo = user.statInfo;
+        const statInfo = getStatsByUserId(user.myClass);
         const transformData = transforms.pop() || [0, 0, 0];
         const transform = {
           posX: transformData[0],
@@ -142,16 +142,17 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       roomId,
     };
 
-    const partyResponse = createResponse(PACKET_ID.S_PartyLeave, partyPayload);
+    // const partyResponse = createResponse(PACKET_ID.S_PartyLeave, partyPayload);
 
     // 파티 세션 삭제
     await removeRedisParty(roomId);
 
-    // 모든 유저에게 파티 퇴장 패킷 전송
-    const userSessions = getUserSessions();
-    userSessions.forEach((session) => {
-      session.socket.write(partyResponse);
-    });
+    // // 모든 유저에게 파티 퇴장 패킷 전송
+    // const userSessions = getUserSessions();
+    // userSessions.forEach((session) => {
+    //   session.socket.write(partyResponse);
+    // });
+    return new Result(partyPayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);
   }

@@ -3,6 +3,7 @@ import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/re
 import { getAllUserUUIDByTown, removeUserForTown } from '../../sessions/town.session.js';
 import { removeUserSession } from '../../sessions/user.session.js';
 import logger from '../logger.js';
+import broadcastBySession from '../notification/broadcastBySession.js';
 import createNotificationPacket from '../notification/createNotification.js';
 import { removeUserQueue } from '../socket/messageQueue.js';
 
@@ -35,7 +36,7 @@ const despawnLogic = async (socket) => {
     createNotificationPacket(PACKET_ID.S_PartyLeave, leavePayload, AllUUID);
   }
 
-  createNotificationPacket(PACKET_ID.S_Despawn, payload, AllUUID);
+  broadcastBySession(socket, PACKET_ID.S_Despawn, payload, true);
 };
 
 export default despawnLogic;

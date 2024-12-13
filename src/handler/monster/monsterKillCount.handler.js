@@ -6,6 +6,7 @@ import { findCharacterByUserId } from '../../db/model/characters.db.js';
 //      int32 playerId = 1;
 //      int32 monsterKillCount = 2;
 //   }
+// 유저가 몬스터를 몇명을 죽였느냐
 
 const monsterKillCountHandler = async (socket) => {
   try {

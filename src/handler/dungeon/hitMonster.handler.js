@@ -4,6 +4,7 @@ import handleError from '../../utils/error/errorHandler.js';
 import monsterKillNotification from '../monster/monsterKill.notification.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
+import logger from '../../utils/logger.js';
 
 const hitMonsterHandler = async ({ socket, payload }) => {
   const { monsterId, damage } = payload;
@@ -11,7 +12,8 @@ const hitMonsterHandler = async ({ socket, payload }) => {
   try {
     const redisUser = await findCharacterByUserId(playerId);
     if (!redisUser) {
-      throw new Error('HitMonsterHandler: User not found.');
+      logger.error('HitMonsterHandler: User not found.');
+      return;
     }
 
     const dungeonId = redisUser.sessionId;
@@ -19,7 +21,8 @@ const hitMonsterHandler = async ({ socket, payload }) => {
 
     const monster = dungeon.monsterLogic.getMonsterById(monsterId);
     if (!monster) {
-      throw new Error(`HitMonsterHandler: Monster not found by monsterId:${monsterId}`);
+      logger.error(`HitMonsterHandler: Monster not found by monsterId:${monsterId}`);
+      return;
     }
 
     const targetUser = dungeon.getDungeonUser(playerId);

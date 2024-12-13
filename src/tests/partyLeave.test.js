@@ -10,8 +10,8 @@ client.addHandler(PACKET_ID.S_Login, async (payload) => {
     //console.log(payload);
   });
 client.sendMessage(PACKET_ID.C_Login, {
-    account : "test123",
-    password : "test123"
+    account : "test1234",
+    password : "test1234"
 });
 client.addHandler(PACKET_ID.S_PartyLeave, async (payload) => {
   //console.log(payload);

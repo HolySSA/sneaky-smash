@@ -7,24 +7,31 @@ import { PACKET_ID } from '../configs/constants/packetId.js';
 const client = getOrCreateClient(testEnv.url, testEnv.port);
 await client.connect();
 client.addHandler(PACKET_ID.S_Login, async (payload) => {
-    //console.log(payload);
-  });
+  //console.log(payload);
+});
 client.sendMessage(PACKET_ID.C_Login, {
-    account : "test1234",
-    password : "test1234"
+  account: 'test1234',
+  password: 'test1234',
 });
 client.addHandler(PACKET_ID.S_PartyJoin, async (payload) => {
   //console.log(payload);
 });
 client.sendMessage(PACKET_ID.C_PartyJoin, {
-    dungeonLevel : 1,
-    roomId : 1,
-    isOwner : false,
-    
+  dungeonLevel: 1,
+  roomId: 1,
+  isOwner: false,
 });
 client.addHandler(PACKET_ID.S_PartyLeave, async (payload) => {
   //console.log(payload);
 });
+client.addHandler(PACKET_ID.S_PartyLeave, async (payload) => {
+  //console.log(payload);
+});
+setTimeout(() => {
+  client.sendMessage(PACKET_ID.C_PartyLeave, {
+    roomId: 1,
+  });
+}, 2000);
 
 /*
 message C_PartyJoin {

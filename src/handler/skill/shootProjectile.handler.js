@@ -4,6 +4,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
+import logger from '../../utils/logger.js';
 
 // notification
 const shootProjectileHandler = async ({ socket, payload }) => {
@@ -18,7 +19,8 @@ const shootProjectileHandler = async ({ socket, payload }) => {
       (projectile) => projectile.projectileId === projectileId,
     );
     if (!projectileInfo) {
-      throw new Error(`Projectile with ID ${projectileId} not found in projectile.data.`);
+      logger.error(`Projectile with ID ${projectileId} not found in projectile.data.`);
+      return;
     }
 
     const shootProjectilePayload = {

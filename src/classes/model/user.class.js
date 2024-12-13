@@ -22,17 +22,18 @@ class User {
     this.myClass = 0;
     this.nickname = '';
 
+    this.dungeonId = '';
+
     this.#intervalId = setInterval(this.ping.bind(this), 1000);
   }
 
   ping() {
-    if (this.#pingQueue.length === 4) {
-      logger.warn(`User[${this.socket.id}] is reached maximum ping size`);
+    if (this.#pingQueue.length > 4) {
       return;
     }
 
-    if (this.#pingQueue.length >= 4) {
-      return;
+    if (this.#pingQueue.length === 4) {
+      logger.warn(`User[${this.socket.id}] is reached maximum ping size`);
     }
 
     const serverTime = Date.now();

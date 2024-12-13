@@ -1,27 +1,35 @@
-import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getAllUserUUID } from '../../sessions/user.session.js';
+import { getUserById } from '../../sessions/user.session.js';
+import { pubChat } from '../../sessions/redis/redis.chat.js';
+import { getUserSessionByIdFromTown } from '../../sessions/town.session.js';
+import { findDungeonByUserId } from '../../sessions/dungeon.session.js';
 import logger from '../../utils/logger.js';
-import Result from '../result.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
+import configs from '../../configs/configs.js';
 
 const chatHandler = async ({ socket, payload }) => {
-  var chatPayload;
   try {
     const { chatMsg } = payload;
-
-    chatPayload = {
-      playerId: socket.id,
-      chatMsg,
-    };
+    const isTownUser = getUserSessionByIdFromTown(socket.id);
+    const nickname = getUserById(socket.id).nickname;
+    if (isTownUser) {
+      await pubChat(socket.id, nickname, chatMsg);
+    } else {
+      const dungeon = findDungeonByUserId(socket.id);
+      if (dungeon) {
+        createNotificationPacket(
+          PACKET_ID.S_Chat,
+          { playerId: socket.id, nickname, chatMsg, serverIndex: configs.ServerIndex },
+          dungeon.usersUUID,
+        );
+      } else {
+        logger.error(`chatHandler. ${socket.id}에서 던전에 없는데 던전 채팅 보냄.`);
+      }
+    }
   } catch (e) {
     handleError(socket, e);
   }
-  const allUsers = getAllUserUUID();
-  if (!allUsers || allUsers.length === 0) {
-    logger.error('유저세션이 없습니다.');
-    return;
-  }
-  return new Result(chatPayload, PACKET_ID.S_Chat, allUsers);
 };
 
 export default chatHandler;

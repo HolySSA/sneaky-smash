@@ -14,4 +14,8 @@ const configs = {
   ServerUUID,
 };
 
+export const addConfig = (key, value) => {
+  configs[key] = value;
+};
+
 export default configs;

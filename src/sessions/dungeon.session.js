@@ -7,8 +7,7 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
     throw new Error('세션 중복');
   }
 
-  // 일단 1 ~ 2 던전 중 하나
-  const dungeonCode = Math.floor(Math.random() * 2) + 1;
+  const dungeonCode = 1;
 
   const gameAssets = getGameAssets().dungeonInfo;
   const dungeonInfos = gameAssets.dungeons.find(
@@ -23,6 +22,17 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
   dungeonSessions.set(sessionId, dungeon);
 
   return dungeon;
+};
+
+export const findDungeonByUserId = (userId) => {
+  let result = null;
+  for (const [_, dungeon] of dungeonSessions.entries()) {
+    if (dungeon.users.has(userId)) {
+      result = dungeon;
+      break;
+    }
+  }
+  return result;
 };
 
 const getDungeonSession = (dungeonId) => {

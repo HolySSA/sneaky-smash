@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "../dungeon/monster.proto";
+import "../user/customMessage.proto";
 
 message ItemInfo {
   int32 itemId = 1; // 아이템 ID

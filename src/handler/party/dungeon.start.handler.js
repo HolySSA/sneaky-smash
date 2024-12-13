@@ -5,8 +5,8 @@ import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.part
 import { getStatsByUserId, setSessionId } from '../../sessions/redis/redis.user.js';
 import { getUserById, getUserSessions } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
+import makeUUID from '../../utils/makeUUID.js';
 import createResponse from '../../utils/packet/createResponse.js';
-import { v4 as uuidv4 } from 'uuid';
 
 // message S_EnterDungeon {
 //   DungeonInfo dungeonInfo = 1;    // 던전 정보 (추후 정의 예정)
@@ -19,19 +19,24 @@ import { v4 as uuidv4 } from 'uuid';
 //     string dungeonName = 2;
 // }
 
-// **StatInfo** - 플레이어의 상세 스탯 정보
+// message Stats {
+//   int32 atk = 1;
+//   int32 def = 2; 
+//   int32 curHp = 3;
+//   int32 maxHp = 4; 
+//   int32 moveSpeed = 5;
+//   float criticalProbability = 6;
+//   float criticalDamageRate = 7;
+// }
+
+// // **StatInfo** - 플레이어의 상세 스탯 정보
 // message StatInfo {
 //   int32 level = 1;                 // 플레이어 레벨
-//   float hp = 2;                    // 현재 체력
-//   float maxHp = 3;                 // 최대 체력
-//   float mp = 4;                    // 현재 마나
-//   float maxMp = 5;                 // 최대 마나
-//   float atk = 6;                   // 공격력
-//   float def = 7;                   // 방어력
-//   float speed = 8;                 // 속도
-//   float criticalProbability = 9;   // 크리티컬 확률
-//   float criticalDamageRate = 10;   // 크리티컬 데미지 비율
+//   Stats stats = 2;
+//   float exp = 3;                   // 경험치
+//   float maxExp = 4;
 // }
+
 
 // // **TransformInfo** - 위치 및 회전 정보
 // message TransformInfo {
@@ -54,15 +59,32 @@ import { v4 as uuidv4 } from 'uuid';
 // 	int32 roomId = 2; // 방번호
 // }
 
+//TODO :2명이상이면 출발할 수 있음
+/**
+ *  TODO
+ *
+ *  addDungeonUser에 하자가 심각히 있음.
+ *  user를 value값으로 넣어주는데 별도의 객체로 만듦.
+ *  userClass를 보면 statsInfo가 전혀없음.
+ *  따라서 던전에 유저를 추가할떄 StatsInfo를 추가해주는데,
+ *  Stats와 Exp를 담고 있음.
+ *
+ *  Proto메세지를 보면 StatInfo가 있음. 이름 통일 필요
+ *
+ *  그리고 레디스에서 유저 스탯을 가져오는데, 애초에 여기서 가져올 이유도 없는 것 같음.
+ *  정상화 필요
+ *
+ */
 const dungeonStartHandler = async ({ socket, payload }) => {
+  const transforms = [[2.5, 0.5, 112], [(2.5, 0.5, -5.5)], [(42, 0.5, 52.5)], [(-38, 0.5, 52.5)]];
   try {
     const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기
 
     // 파티 세션
     const party = await getRedisParty(roomId);
     // 던전 세션 생성 - dungeonLevel = dungeonId = dungeonCode ???
-    const sessionId = uuidv4();
-    const dungeon = addDungeonSession(sessionId, dungeonLevel);
+    const dungeonId = makeUUID();
+    const dungeon = addDungeonSession(dungeonId, dungeonLevel);
 
     const dungeonInfo = {
       dungeonCode: dungeon.dungeonId,
@@ -74,14 +96,21 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
-        const userRedis = await findCharacterByUserId(memberId);
-        const statInfo = await getStatsByUserId(memberId);
+        const user = await getUserById(memberId);
+        const statInfo = user.statInfo;
+        const transformData = transforms.pop() || [0, 0, 0];
+        const transform = {
+          posX: transformData[0],
+          posY: transformData[1],
+          posZ: transformData[2],
+          rot: 0, // rotation 값은 나중에 받으면 수정
+        };
 
         return {
-          playerId: parseInt(memberId),
-          nickname: userRedis.nickname,
-          class: parseInt(userRedis.myClass),
-          transform: { posX: 2.75, posY: -4.65, posZ: 73, rot: 0 },
+          playerId: memberId,
+          nickname: user.nickname,
+          class: user.myClass,
+          transform: transform,
           statInfo,
         };
       }),
@@ -89,16 +118,17 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
     party.members.forEach(async (memberId) => {
       const user = getUserById(memberId);
-      await setSessionId(memberId, sessionId);
+      await setSessionId(memberId, dungeonId);
 
       if (user) {
+        // 해당 유저 던전아이디 추가
+        user.dungeonId = dungeonId;
         // 던전 세션 유저 추가
         await dungeon.addDungeonUser(user);
 
         const enterDungeonPayload = {
           dungeonInfo,
           player: playerInfo,
-          infoText,
         };
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);
@@ -108,7 +138,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     });
 
     const partyPayload = {
-      playerId: parseInt(party.owner),
+      playerId: party.owner,
       roomId,
     };
 

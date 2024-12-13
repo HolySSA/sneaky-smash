@@ -27,7 +27,7 @@ const enterLogic = async (socket, character) => {
   const user = getUserById(socket.id);
   const playerPayload = {
     player: {
-      playerId: parseInt(socket.id),
+      playerId: socket.id,
       nickname: character.nickname,
       class: character.myClass,
       transform: user.transform,
@@ -46,7 +46,7 @@ const enterLogic = async (socket, character) => {
     const players = [];
     for (const [_, user] of getAllUserByTown()) {
       players.push({
-        playerId: parseInt(user.id),
+        playerId: user.id,
         nickname: user.nickname,
         class: user.myClass,
         transform: user.transform,

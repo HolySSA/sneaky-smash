@@ -4,8 +4,15 @@ import { tryGetValue } from './helper.js';
 
 export const setRedisUser = async (characterDB) => {
   const redis = await getRedis();
-  const userKey = `user:${characterDB.id}`;
+  const userKey = `user:${characterDB.userId}`;
   await redis.hset(userKey, characterDB);
+  await redis.expire(userKey, 3600);
+};
+
+export const setRedisUserUUID = async (socket) => {
+  const redis = await getRedis();
+  const userKey = `user:${socket.id}`;
+  await redis.hset(userKey, 'UUID', socket.UUID);
   await redis.expire(userKey, 3600);
 };
 
@@ -31,7 +38,7 @@ export const getStatsByUserId = async (userId) => {
     throw new Error('존재하지 않는 레디스 유저입니다.');
   }
 
-  const classId = parseInt(user.myClass);
+  const classId = user.myClass;
   const classInfos = getGameAssets().classInfo.data.find(
     (classInfo) => classInfo.classId === classId,
   );

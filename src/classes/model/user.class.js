@@ -22,6 +22,8 @@ class User {
     this.myClass = 0;
     this.nickname = '';
 
+    this.dungeonId = '';
+
     this.#intervalId = setInterval(this.ping.bind(this), 1000);
   }
 

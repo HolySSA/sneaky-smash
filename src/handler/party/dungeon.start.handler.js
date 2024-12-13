@@ -5,8 +5,8 @@ import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.part
 import { getStatsByUserId, setSessionId } from '../../sessions/redis/redis.user.js';
 import { getUserById, getUserSessions } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
+import makeUUID from '../../utils/makeUUID.js';
 import createResponse from '../../utils/packet/createResponse.js';
-import { v4 as uuidv4 } from 'uuid';
 
 // message S_EnterDungeon {
 //   DungeonInfo dungeonInfo = 1;    // 던전 정보 (추후 정의 예정)
@@ -62,14 +62,14 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     // 파티 세션
     const party = await getRedisParty(roomId);
     // 던전 세션 생성 - dungeonLevel = dungeonId = dungeonCode ???
-    const sessionId = uuidv4();
-    const dungeon = addDungeonSession(sessionId, dungeonLevel);
+    const dungeonId = makeUUID();
+    const dungeon = addDungeonSession(dungeonId, dungeonLevel);
 
     const dungeonInfo = {
       dungeonCode: dungeon.dungeonId,
       dungeonName: dungeon.name,
     };
-    
+
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
@@ -88,9 +88,11 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
     party.members.forEach(async (memberId) => {
       const user = getUserById(memberId);
-      await setSessionId(memberId, sessionId);
+      await setSessionId(memberId, dungeonId);
 
       if (user) {
+        // 해당 유저 던전아이디 추가
+        user.dungeonId = dungeonId;
         // 던전 세션 유저 추가
         await dungeon.addDungeonUser(user);
 

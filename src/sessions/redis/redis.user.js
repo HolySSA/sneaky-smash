@@ -1,5 +1,6 @@
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getRedis } from '../../utils/redis/redisManager.js';
+import { getUserById } from '../user.session.js';
 import { tryGetValue } from './helper.js';
 
 export const setRedisUser = async (characterDB) => {
@@ -29,15 +30,31 @@ export const getRedisUserById = async (id) => {
   return tryGetValue(user);
 };
 
-export const getStatsByUserId = async (userClass) => {
-  const classInfos = getGameAssets().classInfo.data.find(
-    (classInfo) => classInfo.classId === userClass,
+export const getStatsByUserId = async (userId) => {
+  const userInfo = getUserById(userId);
+  const classInfos = await getGameAssets().classInfo.data.find(
+    (classInfo) => classInfo.classId == userInfo.myClass,
   );
 
-  const expInfos = getGameAssets().userExp.data.find(
+  const expInfos = await getGameAssets().expInfo.data.find(
     (expInfo) => expInfo.level === 1,
   );
+  return {
+    Level : 1,
+    stats: classInfos.stats,
+    exp: 0,
+    maxExp : expInfos.maxExp,
+  };
+};
 
+export const getStatsByUserClass = async (userClass) => {
+  const classInfos = await getGameAssets().classInfo.data.find(
+    (classInfo) => classInfo.classId == userClass,
+  );
+
+  const expInfos = await getGameAssets().expInfo.data.find(
+    (expInfo) => expInfo.level === 1,
+  );
   return {
     Level : 1,
     stats: classInfos.stats,

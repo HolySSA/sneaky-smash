@@ -88,9 +88,9 @@ class Monster {
       return;
     }
     const distanceToTarget = Math.sqrt(
-      (this.target.userInfo.transform.posX - this.transform.posX) ** 2 +
-        (this.target.userInfo.transform.posY - this.transform.posY) ** 2 +
-        (this.target.userInfo.transform.posZ - this.transform.posZ) ** 2,
+      (this.target.user.transform.posX - this.transform.posX) ** 2 +
+        (this.target.user.transform.posY - this.transform.posY) ** 2 +
+        (this.target.user.transform.posZ - this.transform.posZ) ** 2,
     );
 
     if (distanceToTarget <= this.attackRange) {
@@ -104,7 +104,7 @@ class Monster {
 
       const response = createResponse(PACKET_ID.S_MonsterAttack, attackPayload);
       users.forEach((value) => {
-        value.userInfo.socket.write(response);
+        value.user.socket.write(response);
       });
       // 공격 시간 갱신
       this.lastAttackTime = currentTime;
@@ -132,7 +132,7 @@ class Monster {
       this.target = targetYou; // 공격자가 타겟으로 설정됨
       this.targetOn = true; // 타겟 활성화
       logger.info(
-        `${this.name}이(가) ${targetYou}.userInfo.nickname}을(를) 타겟으로 설정했습니다.`,
+        `${this.name}이(가) ${targetYou}.user.nickname}을(를) 타겟으로 설정했습니다.`,
       );
     }
 

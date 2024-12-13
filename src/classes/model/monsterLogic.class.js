@@ -5,7 +5,9 @@ import createResponse from '../../utils/packet/createResponse.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import logger from '../../utils/logger.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
+import configs from '../../configs/configs.js';
 
+const { PATH_HOST, PATH_PORT } = configs;
 class MonsterLogic {
   constructor(dungeonInstance) {
     this.dungeonInstance = dungeonInstance;
@@ -53,7 +55,7 @@ class MonsterLogic {
 
     // 패스파인딩 서버 연결
     this.pathServer
-      .connectToUnityServer('20.157.13.232', 9000)
+      .connectToUnityServer(PATH_HOST, PATH_PORT)
       .then(() => {
         logger.info('패스파인딩 서버에 연결되었습니다.');
       })
@@ -83,31 +85,24 @@ class MonsterLogic {
   }
 
   sendMonsterMove(monster) {
-    // 몬스터 데이터 직렬화
-    const response = createResponse(PACKET_ID.S_MonsterMove, {
+    const payload = {
       monsterId: monster.id,
       transform: {
         posX: monster.transform.posX,
         posY: monster.transform.posY,
         posZ: monster.transform.posZ,
-        rot: monster.transform.rot, // 추가: 회전값 포함
+        rot: 0,//monster.transform.rot, // 추가: 회전값 포함
       },
-    });
-
-    // 모든 유저 세션에 데이터 전송
-    this.dungeonInstance.users.forEach((value) => {
-      // console.log(
-      //   `몬스터 ID: ${monster.id} 위치 데이터 전송 - (${monster.transform.posX}, ${monster.transform.posY}, ${monster.transform.posZ})`,
-      // );
-      value.userInfo.socket.write(response); // 데이터 전송
-    });
+    };
+    //console.log("몬스터 무브 페이로드 : ",payload);
+    createNotificationPacket(PACKET_ID.S_MonsterMove, payload, this.dungeonInstance.usersUUID);
   }
 
   requestPathAndMove(monster) {
     if (!monster.target) return;
-
+    
     this.pathServer
-      .sendPathRequest(monster.transform, monster.target.userInfo.transform)
+      .sendPathRequest(monster.transform, monster.target.user.transform)
       .then((response) => {
         // response는 S_GetNavPath 메시지에서 디코딩된 값
         const { pathPosition } = response;
@@ -136,7 +131,8 @@ class MonsterLogic {
     let closestPlayer = null;
 
     this.dungeonInstance.users.forEach((value) => {
-      const { posX, posY, posZ } = value.userInfo.transform;
+      //console.log("던전 인스턴스의 유저 트랜스폼 : ",value.user.transform);
+      const { posX, posY, posZ, rot } = value.user.transform;
       const distance = Math.sqrt(
         (posX - monster.transform.posX) ** 2 +
           (posY - monster.transform.posY) ** 2 +
@@ -205,7 +201,7 @@ class MonsterLogic {
           // 타겟이 없거나 비활성화 상태일 때
           const closestPlayer = this.findClosestPlayer(monster);
           if (closestPlayer) {
-            const isPlayerDetected = monster.detectPlayer(closestPlayer.userInfo.transform);
+            const isPlayerDetected = monster.detectPlayer(closestPlayer.user.transform);
             if (isPlayerDetected) {
               // 플레이어 감지 시 활성화
               if (!monster.targetOn) {
@@ -226,7 +222,7 @@ class MonsterLogic {
         } else {
           // 타겟이 있고 활성화 상태일 때 - 이동과 공격 실행
           const isPlayerStillDetected = monster.detectPlayer(
-            monster.target.userInfo.transform,
+            monster.target.user.transform,
             true, // 어그로해제됐나?
           );
           if (isPlayerStillDetected) {

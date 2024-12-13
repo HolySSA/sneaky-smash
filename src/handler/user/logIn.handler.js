@@ -66,7 +66,6 @@ const logInHandler = async ({ socket, payload }) => {
   enqueueSend(socket.UUID, loginBuffer);
   if (success) {
     const character = await findCharacterByUserId(socket.id);
-    setRedisUserUUID(socket); // 소켓으로 레디스에서 해당 유저의 UUID 설정
     if (character) {
       await enterLogic(socket, character);
     }

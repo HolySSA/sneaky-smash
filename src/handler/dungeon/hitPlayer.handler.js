@@ -37,7 +37,7 @@ const hitPlayerHandler = async ({ socket, payload }) => {
       dungeon.getAmountHpByKillUser(attackerId);
 
       // 여기서부터 시작
-      deathPlayerNotification(socket, playerId);
+      // deathPlayerNotification(socket, playerId);
     }
   } catch (err) {
     handleError(socket, err);

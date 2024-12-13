@@ -72,8 +72,8 @@ class Dungeon {
     );
 
     createNotificationPacket(
-      PACKET_ID.S_MonsterKillCount,
-      { playerId: userId, userKillCount: user.userKillCount },
+      PACKET_ID.S_PlayerKillCount,
+      { playerId: userId, playerKillCount: user.userKillCount },
       this.getDungeonUsersUUID(),
     );
   }

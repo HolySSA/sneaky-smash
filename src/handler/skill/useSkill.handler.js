@@ -5,6 +5,7 @@ import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.s
 import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
+import logger from '../../utils/logger.js';
 
 // notification
 const useSkillHandler = async ({ socket, payload }) => {
@@ -19,7 +20,8 @@ const useSkillHandler = async ({ socket, payload }) => {
     // 스킬 인포 정보 가져오기
     const skillInfo = getGameAssets().skillInfo.data.find((id) => id.skillId === skillId);
     if (!skillInfo) {
-      throw new Error(`Skill with ID ${skillId} not found in skillInfo.data.`);
+      logger.error(`Skill with ID ${skillId} not found in skillInfo.data.`);
+      return;
     }
 
     const skillPayload = {

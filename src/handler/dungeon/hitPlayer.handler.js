@@ -1,9 +1,6 @@
-import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import createResponse from '../../utils/packet/createResponse.js';
 import handleError from '../../utils/error/errorHandler.js';
 import deathPlayerNotification from '../game/deathPlayer.notification.js';
-import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { getUserById } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
 
@@ -34,11 +31,12 @@ const hitPlayerHandler = async ({ socket, payload }) => {
     const dungeon = getDungeonSession(dungeonId);
 
     // 플레이어가 플레이어를 잡으면 피회복을 하는 로직
-    // const victim = dungeon.getDungeonUser(playerId);
     const currentHp = dungeon.damagedUser(playerId, damage);
 
     if (currentHp <= 0) {
       dungeon.getAmountHpByKillUser(attackerId);
+
+      // 여기서부터 시작
       deathPlayerNotification(socket, playerId);
     }
   } catch (err) {

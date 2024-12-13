@@ -2,21 +2,21 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import monsterKillNotification from '../monster/monsterKill.notification.js';
-import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import logger from '../../utils/logger.js';
+import { getUserById } from '../../sessions/user.session.js';
 
 const hitMonsterHandler = async ({ socket, payload }) => {
   const { monsterId, damage } = payload;
   const playerId = socket.id;
   try {
-    const redisUser = await findCharacterByUserId(playerId);
-    if (!redisUser) {
+    const user = getUserById(playerId);
+    if (!user) {
       logger.error('HitMonsterHandler: User not found.');
       return;
     }
 
-    const dungeonId = redisUser.sessionId;
+    const dungeonId = user.dungeonId;
     const dungeon = getDungeonSession(dungeonId);
 
     const monster = dungeon.monsterLogic.getMonsterById(monsterId);

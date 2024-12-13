@@ -36,12 +36,7 @@ export const findDungeonByUserId = (userId) => {
 };
 
 const getDungeonSession = (dungeonId) => {
-  const session = dungeonSessions.get(dungeonId);
-  if (!session) {
-    throw new Error(`던전 세션이 존재하지 않습니다.`);
-  }
-
-  return session;
+  return dungeonSessions.get(dungeonId);
 };
 
 const getDungeonUsersUUID = (dungeonId) => {

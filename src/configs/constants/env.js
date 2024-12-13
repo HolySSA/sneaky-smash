@@ -25,6 +25,7 @@ const requiredEnv = {
     'REFRESH_EXPIRES_IN',
     'ALGORITHM',
   ],
+  PATH: ['HOST', 'PORT'],
 };
 
 /**

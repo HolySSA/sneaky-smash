@@ -233,10 +233,31 @@ class Dungeon {
   damagedUser(userId, damage) {
     const user = this.users.get(userId);
 
-    // 방어력 관련
-    user.currentHp -= damage;
+    // 방어 로직 있으면 여기다 추가
+    user.statsInfo.stats.curHp -= damage;
 
-    return user.currentHp;
+    createNotificationPacket(
+      PACKET_ID.S_HitPlayer,
+      { playerId: userId, damage },
+      this.getDungeonUsersUUID(),
+    );
+
+    return user.statsInfo.stats.curHp;
+  }
+
+  getAmountHpByKillUser(userId) {
+    const user = this.users.get(userId);
+    const userMaxHp = user.statsInfo.stats.maxHp;
+
+    const healAmount = Math.floor(userMaxHp * 0.5);
+
+    user.statsInfo.stats.curHp = Math.min(user.statsInfo.stats.curHp + healAmount, userMaxHp);
+
+    createNotificationPacket(
+      PACKET_ID.S_UpdatePlayerHp,
+      { playerId: userId, hp: user.statsInfo.stats.curHp },
+      this.getDungeonUsersUUID(),
+    );
   }
 
   updatePlayerHp(userId, amount) {

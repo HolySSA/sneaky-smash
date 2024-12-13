@@ -20,6 +20,7 @@ import logger from '../../utils/logger.js';
 
 const hitPlayerHandler = async ({ socket, payload }) => {
   const { playerId, damage } = payload;
+  const attackerId = socket.id;
   try {
     // 여기의 소켓은 공격자, playerId는 피격자.
     // 맞은 사람이 클라이언트에서 히트 처리 패킷 보냄
@@ -37,37 +38,9 @@ const hitPlayerHandler = async ({ socket, payload }) => {
     const currentHp = dungeon.damagedUser(playerId, damage);
 
     if (currentHp <= 0) {
-      const attacker = dungeon.getDungeonUser(socket.id);
-      const healAmount = Math.floor(attacker.statsInfo.stats.maxHp * 0.5);
-      attacker.currentHp = Math.min(
-        attacker.currentHp + healAmount,
-        attacker.statsInfo.stats.maxHp,
-      );
-      // 플레이어 회복 시 보내주는 updatePlayerHp
-
-      const updateAttackerHpResponse = createResponse(PACKET_ID.S_UpdatePlayerHp, {
-        playerId: attacker.id,
-        hp: currentHp,
-      });
-
-      allUsers.forEach((value) => {
-        value.socket.write(updateAttackerHpResponse);
-      });
+      dungeon.getAmountHpByKillUser(attackerId);
+      deathPlayerNotification(socket, playerId);
     }
-
-    // updatePlayerHp 노티피케이션
-    const updatePlayerHpResponse = createResponse(PACKET_ID.S_UpdatePlayerHp, {
-      playerId,
-      hp: currentHp,
-    });
-    if (currentHp <= 0) deathPlayerNotification(socket, playerId);
-
-    const response = createResponse(PACKET_ID.S_HitPlayer, { playerId, damage });
-
-    allUsers.forEach((value) => {
-      value.socket.write(response);
-      value.socket.write(updatePlayerHpResponse);
-    });
   } catch (err) {
     handleError(socket, err);
   }

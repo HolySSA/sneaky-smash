@@ -50,12 +50,30 @@ class Dungeon {
     }
     user.monsterKillCount += 1;
     logger.info(
-      `플레이어 ${userId}의 몬스터 킬 수가 증가했습니다. 현재 킬 수: ${user.monsterKillCount}`,
+      `플레이어 ${userId}의 몬스터 킬 수가 증가했습니다. 현재 몬스터 킬 수: ${user.monsterKillCount}`,
     );
 
     createNotificationPacket(
       PACKET_ID.S_MonsterKillCount,
       { playerId: userId, monsterKillCount: user.monsterKillCount },
+      this.getDungeonUsersUUID(),
+    );
+  }
+
+  increaseUserKillCount(userId) {
+    const user = this.users.get(userId);
+    if (!user) {
+      logger.error(`해당 userId (${userId})를 가진 사용자가 던전에 없습니다.`);
+      return;
+    }
+    user.userKillCount += 1;
+    logger.info(
+      `플레이어 ${userId}의 유저 킬 수가 증가했습니다. 현재 유저 킬 수: ${user.userKillCount}`,
+    );
+
+    createNotificationPacket(
+      PACKET_ID.S_MonsterKillCount,
+      { playerId: userId, userKillCount: user.userKillCount },
       this.getDungeonUsersUUID(),
     );
   }

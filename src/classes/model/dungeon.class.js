@@ -33,11 +33,49 @@ class Dungeon {
     const dungeonUser = {
       user: user,
       statsInfo,
+      monsterKillCount: 0,
+      userKillCount: 0,
     };
 
     this.users.set(userId, dungeonUser);
 
     return user;
+  }
+
+  increaseMonsterKillCount(userId) {
+    const user = this.users.get(userId);
+    if (!user) {
+      logger.error(`해당 userId (${userId})를 가진 사용자가 던전에 없습니다.`);
+      return;
+    }
+    user.monsterKillCount += 1;
+    logger.info(
+      `플레이어 ${userId}의 몬스터 킬 수가 증가했습니다. 현재 몬스터 킬 수: ${user.monsterKillCount}`,
+    );
+
+    createNotificationPacket(
+      PACKET_ID.S_MonsterKillCount,
+      { playerId: userId, monsterKillCount: user.monsterKillCount },
+      this.getDungeonUsersUUID(),
+    );
+  }
+
+  increaseUserKillCount(userId) {
+    const user = this.users.get(userId);
+    if (!user) {
+      logger.error(`해당 userId (${userId})를 가진 사용자가 던전에 없습니다.`);
+      return;
+    }
+    user.userKillCount += 1;
+    logger.info(
+      `플레이어 ${userId}의 유저 킬 수가 증가했습니다. 현재 유저 킬 수: ${user.userKillCount}`,
+    );
+
+    createNotificationPacket(
+      PACKET_ID.S_MonsterKillCount,
+      { playerId: userId, userKillCount: user.userKillCount },
+      this.getDungeonUsersUUID(),
+    );
   }
 
   removeDungeonUser(userId) {
@@ -195,10 +233,31 @@ class Dungeon {
   damagedUser(userId, damage) {
     const user = this.users.get(userId);
 
-    // 방어력 관련
-    user.currentHp -= damage;
+    // 방어 로직 있으면 여기다 추가
+    user.statsInfo.stats.curHp -= damage;
 
-    return user.currentHp;
+    createNotificationPacket(
+      PACKET_ID.S_HitPlayer,
+      { playerId: userId, damage },
+      this.getDungeonUsersUUID(),
+    );
+
+    return user.statsInfo.stats.curHp;
+  }
+
+  getAmountHpByKillUser(userId) {
+    const user = this.users.get(userId);
+    const userMaxHp = user.statsInfo.stats.maxHp;
+
+    const healAmount = Math.floor(userMaxHp * 0.5);
+
+    user.statsInfo.stats.curHp = Math.min(user.statsInfo.stats.curHp + healAmount, userMaxHp);
+
+    createNotificationPacket(
+      PACKET_ID.S_UpdatePlayerHp,
+      { playerId: userId, hp: user.statsInfo.stats.curHp },
+      this.getDungeonUsersUUID(),
+    );
   }
 
   updatePlayerHp(userId, amount) {

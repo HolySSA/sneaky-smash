@@ -64,6 +64,9 @@ const monsterKillNotification = async (socket, monster, dungeon, dungeonAllUsers
     }
   }
 
+  // 해당 유저 몬스터 죽인 숫자 노티
+  dungeon.increaseMonsterKillCount(playerId);
+
   // 해당 유저 경험치 증가 + 레벨 체크
   dungeon.addExp(playerId, MONSTER_EXP);
 

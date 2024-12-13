@@ -6,7 +6,6 @@ import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import { getGameAssets } from '../../init/loadAsset.js';
-import levelUpNotification from '../../handler/game/levelUp.notification.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 class Dungeon {

@@ -1,11 +1,6 @@
-import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getGameAssets } from '../../init/loadAsset.js';
-import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import levelUpNotification from '../game/levelUp.notification.js';
 import configs from '../../configs/configs.js';
-import { findCharacterByUserId } from '../../db/model/characters.db.js';
-import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 const { ITEM_DROP_RATE, SKILL_DROP_RATE, MONSTER_EXP } = configs;

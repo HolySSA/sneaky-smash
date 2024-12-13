@@ -74,6 +74,14 @@ class Dungeon {
     }
   }
 
+  isRemainedUser() {
+    if (this.users.size === 0) {
+      this.removeDungeonSession();
+      return true;
+    }
+    return false;
+  }
+
   removeDungeonSession() {
     removeDungeonSession(this.sessionId);
   }

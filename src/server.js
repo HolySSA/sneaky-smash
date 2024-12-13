@@ -2,11 +2,11 @@ import net from 'net';
 import { createInterface } from 'readline';
 import initServer from './init/index.js';
 import onConnection from './events/onConnection.js';
-import configs from './configs/configs.js';
+import configs, { addConfig } from './configs/configs.js';
 import logger from './utils/logger.js';
 import { getRedis } from './utils/redis/redisManager.js';
 import AsyncExitHook from 'async-exit-hook';
-import { userSessions } from './sessions/sessions.js';
+import { registServerAndGetIndex, unregistServer } from './sessions/redis/redis.server.js';
 
 const { SERVER_BIND, SERVER_PORT, ServerUUID } = configs;
 
@@ -19,9 +19,13 @@ let isShuttingDown = false;
 
 initServer()
   .then(() => {
-    server.listen(SERVER_PORT, SERVER_BIND, () => {
+    server.listen(SERVER_PORT, SERVER_BIND, async () => {
       const bindInfo = server.address();
-      logger.info(`Server[${ServerUUID}] is on ${bindInfo.address}:${bindInfo.port}`);
+      const serverIndex = await registServerAndGetIndex();
+      addConfig('ServerIndex', serverIndex);
+      logger.info(
+        `Server[${serverIndex}] ${ServerUUID} is on ${bindInfo.address}:${bindInfo.port}`,
+      );
     });
   })
   .catch((err) => {
@@ -45,6 +49,7 @@ const shutDownServer = async () => {
         resolve();
       });
     });
+    await unregistServer();
     await deleteKeysByPattern();
   } catch (error) {
     logger.error(error);
@@ -73,8 +78,13 @@ const deleteKeysByPattern = async () => {
 };
 
 AsyncExitHook(async (done) => {
-  await shutDownServer();
-  done();
+  try {
+    await shutDownServer();
+  } catch (error) {
+    logger.error(error);
+  } finally {
+    done();
+  }
 });
 
 // Windows SIGINT (Ctrl+C) 처리

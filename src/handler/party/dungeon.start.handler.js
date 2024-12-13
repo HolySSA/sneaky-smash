@@ -54,7 +54,22 @@ import createResponse from '../../utils/packet/createResponse.js';
 // 	int32 roomId = 2; // 방번호
 // }
 
-//TODO : 2명이상이면 출발할 수 있음
+//TODO :2명이상이면 출발할 수 있음
+/**
+ *  TODO
+ *
+ *  addDungeonUser에 하자가 심각히 있음.
+ *  user를 value값으로 넣어주는데 별도의 객체로 만듦.
+ *  userClass를 보면 statsInfo가 전혀없음.
+ *  따라서 던전에 유저를 추가할떄 StatsInfo를 추가해주는데,
+ *  Stats와 Exp를 담고 있음.
+ *
+ *  Proto메세지를 보면 StatInfo가 있음. 이름 통일 필요
+ *
+ *  그리고 레디스에서 유저 스탯을 가져오는데, 애초에 여기서 가져올 이유도 없는 것 같음.
+ *  정상화 필요
+ *
+ */
 const dungeonStartHandler = async ({ socket, payload }) => {
   try {
     const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기
@@ -77,9 +92,9 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const statInfo = await getStatsByUserId(memberId);
 
         return {
-          playerId: parseInt(memberId),
+          playerId: memberId,
           nickname: userRedis.nickname,
-          class: parseInt(userRedis.myClass),
+          class: userRedis.myClass,
           transform: { posX: 2.75, posY: -4.65, posZ: 73, rot: 0 },
           statInfo,
         };
@@ -99,7 +114,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const enterDungeonPayload = {
           dungeonInfo,
           player: playerInfo,
-          infoText: dungeon.name,
+          infoText,
         };
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);
@@ -109,7 +124,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     });
 
     const partyPayload = {
-      playerId: parseInt(party.owner),
+      playerId: party.owner,
       roomId,
     };
 

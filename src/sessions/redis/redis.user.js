@@ -38,7 +38,7 @@ export const getStatsByUserId = async (userId) => {
     throw new Error('존재하지 않는 레디스 유저입니다.');
   }
 
-  const classId = parseInt(user.myClass);
+  const classId = user.myClass;
   const classInfos = getGameAssets().classInfo.data.find(
     (classInfo) => classInfo.classId === classId,
   );

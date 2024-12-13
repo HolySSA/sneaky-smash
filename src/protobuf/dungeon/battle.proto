@@ -36,6 +36,11 @@ message S_AttackedNexus {
   int32 damage = 2;    // 데미지
 }
 
+message S_NexusSpawn {
+  int32 nexusId = 1; //확장성 & 넥서스 특정하기
+  TransformInfo transform = 2;
+}
+
 // HP 변화 등 status 변할 때 알림
 message S_PlayerStatus {
   int32 playerId = 1;   // 플레이어 ID
@@ -83,4 +88,21 @@ message S_RevivePlayer {
 message S_GetExp {
   int32 playerId = 1;
   int32 expAmount = 2;
+}
+
+message S_PlayerKillCount {
+  int32 playerId = 1;
+  int32 playerKillCount = 2;
+}
+
+message GameInfo {
+  string playerId = 1;
+  int32 playerRank = 2;         // 플레이어 순위
+  int32 userKillCount = 3;      // 유저 처치 수
+  int32 monsterKillCount = 4;   // 몬스터 처치 수
+  int32 score = 5;              // 총 점수
+}
+
+message S_GameEnd {
+  repeated GameInfo gameInfo = 1; // 'repeated'로 수정
 }

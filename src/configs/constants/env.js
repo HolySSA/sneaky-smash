@@ -1,6 +1,7 @@
 // 중앙 집중식 관리
 import dotenv from 'dotenv';
 delete process.env.REDIS_PORT;
+delete process.env.SERVER_PORT;
 dotenv.config();
 
 /**

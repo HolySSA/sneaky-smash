@@ -1,7 +1,7 @@
 import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getDungeonSession, removeDungeonSession } from '../../sessions/dungeon.session.js';
+import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
 // message C_LeaveDungeon {

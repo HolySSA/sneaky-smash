@@ -1,7 +1,6 @@
-import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
+import { getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';

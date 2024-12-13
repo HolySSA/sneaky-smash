@@ -129,7 +129,6 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const enterDungeonPayload = {
           dungeonInfo,
           player: playerInfo,
-          infoText,
         };
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);

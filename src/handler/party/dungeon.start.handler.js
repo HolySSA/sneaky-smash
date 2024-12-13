@@ -2,11 +2,13 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { addDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
-import { getStatsByUserId, setSessionId } from '../../sessions/redis/redis.user.js';
+import { getStatsByUserClass, setSessionId } from '../../sessions/redis/redis.user.js';
+import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import { getUserById, getUserSessions } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import makeUUID from '../../utils/makeUUID.js';
 import createResponse from '../../utils/packet/createResponse.js';
+import Result from '../result.js';
 
 // message S_EnterDungeon {
 //   DungeonInfo dungeonInfo = 1;    // 던전 정보 (추후 정의 예정)
@@ -97,7 +99,8 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
         const user = await getUserById(memberId);
-        const statInfo = getStatsByUserId(user.myClass);
+        console.log("유저의 클래스 : ",user.myClass);
+        const statInfo = getStatsByUserClass(user.myClass);
         const transformData = transforms.pop() || [0, 0, 0];
         const transform = {
           posX: transformData[0],

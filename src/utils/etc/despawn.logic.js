@@ -1,4 +1,5 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
+import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import { getAllUserUUIDByTown, removeUserForTown } from '../../sessions/town.session.js';
 import { removeUserSession } from '../../sessions/user.session.js';
@@ -12,19 +13,25 @@ import { removeUserQueue } from '../socket/messageQueue.js';
 // }
 
 const despawnLogic = async (socket) => {
+  const userId = socket.id;
   removeUserQueue(socket);
   removeUserSession(socket);
   if (!socket.id) {
     logger.warn(`despawnLogic이 호출되었으나 id값이 할당되지 않았습니다. [${socket.UUID}]`);
     return;
   }
-  removeUserForTown(socket.id);
+
+  const dungeon = getDungeonSession(socket.dungeonId);
+  if (dungeon) {
+    dungeon.remove(userId);
+  }
+  removeUserForTown(userId);
   const payload = {
-    playerIds: [socket.id],
+    playerIds: [userId],
   };
 
   const AllUUID = getAllUserUUIDByTown();
-  const party = await getRedisPartyByUserId(socket.id);
+  const party = await getRedisPartyByUserId(userId);
   if (party) {
     if (party.members.length <= 1) {
       await removeRedisParty(party.roomId);

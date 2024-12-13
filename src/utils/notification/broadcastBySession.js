@@ -1,6 +1,8 @@
+import { reverseMapping } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import { getUserById } from '../../sessions/user.session.js';
+import logger from '../logger.js';
 import createNotificationPacket from './createNotification.js';
 
 /**
@@ -10,6 +12,10 @@ import createNotificationPacket from './createNotification.js';
  */
 const broadcastBySession = (socket, packetId, payload, isExceptCurrentUser = false) => {
   const user = getUserById(socket.id);
+  if (!user) {
+    logger.error(`broadcastBySession. ${reverseMapping[packetId]} => User is null`);
+    return;
+  }
   const dungeon = getDungeonSession(user.dungeonId);
   let targetUUIDs = [];
   if (dungeon) {

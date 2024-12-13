@@ -94,9 +94,9 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const statInfo = await getStatsByUserId(memberId);
 
         return {
-          playerId: parseInt(memberId),
+          playerId: memberId,
           nickname: userRedis.nickname,
-          class: parseInt(userRedis.myClass),
+          class: userRedis.myClass,
           transform: { posX: 2.75, posY: -4.65, posZ: 73, rot: 0 },
           statInfo,
         };
@@ -124,7 +124,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     });
 
     const partyPayload = {
-      playerId: parseInt(party.owner),
+      playerId: party.owner,
       roomId,
     };
 

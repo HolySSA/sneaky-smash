@@ -29,23 +29,20 @@ export const getRedisUserById = async (id) => {
   return tryGetValue(user);
 };
 
-export const getStatsByUserId = async (userId) => {
-  const redis = await getRedis();
-  const userKey = `user:${userId}`;
-  const user = await redis.hgetall(userKey);
-
-  if (tryGetValue(user) == null) {
-    throw new Error('존재하지 않는 레디스 유저입니다.');
-  }
-
-  const classId = user.myClass;
+export const getStatsByUserId = async (userClass) => {
   const classInfos = getGameAssets().classInfo.data.find(
-    (classInfo) => classInfo.classId === classId,
+    (classInfo) => classInfo.classId === userClass,
+  );
+
+  const expInfos = getGameAssets().userExp.data.find(
+    (expInfo) => expInfo.level === 1,
   );
 
   return {
+    Level : 1,
     stats: classInfos.stats,
     exp: 0,
+    maxExp : expInfos.maxExp,
   };
 };
 

@@ -19,7 +19,6 @@ const revivePlayerNotification = async (socket, playerId) => {
     const userStats = dungeon.getUserStats(playerId);
     // transform = [{
     // },{},{},{}] //게임실행 부탁드립니다
-    logger.info('userStats:', userStats);
     const transforms = {
       posX: 2.75,
       posY: -4.65,

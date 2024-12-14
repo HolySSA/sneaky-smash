@@ -1,5 +1,10 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
-import { addDungeonSession, getStatsByUserClass } from '../../sessions/dungeon.session.js';
+import {
+  addDungeonSession,
+  getDungeonSession,
+  getStatsByUserClass,
+  removeDungeonSession,
+} from '../../sessions/dungeon.session.js';
 import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import { setSessionId } from '../../sessions/redis/redis.user.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
@@ -7,6 +12,7 @@ import { getUserById } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import logger from '../../utils/logger.js';
 import makeUUID from '../../utils/makeUUID.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import Result from '../result.js';
@@ -78,72 +84,69 @@ import Result from '../result.js';
  *
  */
 const dungeonStartHandler = async ({ socket, payload }) => {
-  const transforms = [[2.5, 0.5, 112], [2.5, 0.5, -5.5], [42, 0.5, 52.5], [-38, 0.5, 52.5]];
+  const transforms = [
+    [2.5, 0.5, 112],
+    [2.5, 0.5, -5.5],
+    [42, 0.5, 52.5],
+    [-38, 0.5, 52.5],
+  ];
+  const dungeonId = makeUUID();
+
+  let dungeon = null;
   try {
     const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기
 
     // 파티 세션
     const party = await getRedisParty(roomId);
+
     // 던전 세션 생성 - dungeonLevel = dungeonId = dungeonCode ???
-    const dungeonId = makeUUID();
-    const dungeon = addDungeonSession(dungeonId, dungeonLevel);
+
+    dungeon = addDungeonSession(dungeonId, dungeonLevel);
 
     const dungeonInfo = {
       dungeonCode: dungeon.dungeonId,
       dungeonName: dungeon.name,
     };
 
-    // 파티원 모두의 정보
-    const playerInfo = await Promise.all(
-      party.members.map(async (playerId) => {
-        const user = getUserById(playerId);
-        const transformData = transforms.pop() || [0, 0, 0];
-        const transform = {
-          posX: transformData[0],
-          posY: transformData[1],
-          posZ: transformData[2],
-          rot: 0, // rotation 값은 나중에 받으면 수정
-        };
+    const playerInfo = [];
+    const partyUUID = [];
+    for (let playerId of party.members) {
+      const user = getUserById(playerId);
+      partyUUID.push(user.socket.UUID);
+      const transformData = transforms.pop() || [0, 0, 0];
+      const transform = {
+        posX: transformData[0],
+        posY: transformData[1],
+        posZ: transformData[2],
+        rot: 0, // rotation 값은 나중에 받으면 수정
+      };
 
-        const statInfo = getStatsByUserClass(user.myClass);
+      const statInfo = getStatsByUserClass(user.myClass);
 
-        if (!statInfo) {
-          logger.error('스탯 정보가 존재하지 않습니다');
-          return;
-        }
-
-        return {
-          playerId,
-          nickname: user.nickname,
-          class: user.myClass,
-          transform,
-          statInfo,
-        };
-      }),
-    );
-
-    party.members.forEach(async (memberId) => {
-      const user = getUserById(memberId);
-      await setSessionId(memberId, dungeonId);
-
-      if (user) {
-        // 해당 유저 던전아이디 추가
-        user.dungeonId = dungeonId;
-        // 던전 세션 유저 추가
-        await dungeon.addDungeonUser(user);
-
-        const enterDungeonPayload = {
-          dungeonInfo,
-          player: playerInfo,
-          infoText: ""
-        };
-
-        const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);
-
-        // 던전 유저 진입
-        enqueueSend(user.socket.UUID, enterDungeonResponse);
+      if (!statInfo) {
+        logger.error('스탯 정보가 존재하지 않습니다');
+        return;
       }
-    });
+
+      playerInfo.push({
+        playerId: user.id,
+        nickname: user.nickname,
+        class: user.myClass,
+        transform,
+        statInfo,
+      });
+      await dungeon.addDungeonUser(user);
+    }
+
+    // 파티원 모두의 정보
+    const enterDungeonPayload = {
+      dungeonInfo,
+      player: playerInfo,
+      infoText: '',
+    };
+
+    createNotificationPacket(PACKET_ID.S_EnterDungeon, enterDungeonPayload, partyUUID);
+    console.log('🚀 ~ dungeonStartHandler ~ partyUUID:', partyUUID);
 
     const partyPayload = {
       playerId: party.owner,
@@ -155,6 +158,10 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     return new Result(partyPayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);
+    const dungeon = getDungeonSession(dungeonId);
+    if (dungeon) {
+      dungeon.Dispose();
+    }
   }
 };
 

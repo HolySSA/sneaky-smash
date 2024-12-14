@@ -13,12 +13,12 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
 
   const dungeonAssets = getGameAssets().dungeonInfo; // 맵핑된 던전 데이터 가져오기
   const dungeonInfo = dungeonAssets[dungeonCode]; // ID로 바로 접근
-  
+
   if (!dungeonInfo) {
     logger.error(`던전 정보를 찾을 수 없습니다. dungeonCode: ${dungeonCode}`);
     return null;
   }
-
+  dungeonInfo.dungeonId = sessionId;
   const dungeon = new Dungeon(dungeonInfo, dungeonLevel);
   dungeonSessions.set(sessionId, dungeon);
 
@@ -44,44 +44,44 @@ const getDungeonUsersUUID = (dungeonId) => {
   const session = getDungeonSession(dungeonId);
 
   if (!session.users || session.users.size === 0) {
-        logger.error(`던전에 유저가 존재하지 않습니다. dungeonId: ${dungeonId}`);
-        return null;
+    logger.error(`던전에 유저가 존재하지 않습니다. dungeonId: ${dungeonId}`);
+    return null;
   }
 
   return Array.from(session.users.values()).map((user) => user.user.socket.UUID);
 };
 
 const removeDungeonSession = (dungeonId) => {
-  if (!dungeonSessions.has(dungeonId)) {
+  const dungeon = dungeonSessions.get(dungeonId);
+  if (!dungeon) {
     logger.error(`던전 세션이 존재하지 않습니다.`);
     return;
   }
-
   return dungeonSessions.delete(dungeonId);
 };
 
 const getStatsByUserClass = (userClass) => {
-const classAssets = getGameAssets().classInfo;
-const classInfos = classAssets[userClass];
+  const classAssets = getGameAssets().classInfo;
+  const classInfos = classAssets[userClass];
 
-if (!classInfos) {
-  logger.error(`Class 정보를 찾을 수 없습니다. classId: ${userClass}`);
-  return null;
-}
+  if (!classInfos) {
+    logger.error(`Class 정보를 찾을 수 없습니다. classId: ${userClass}`);
+    return null;
+  }
 
-const expAssets = getGameAssets().expInfo;
-const expInfos = expAssets[1];
+  const expAssets = getGameAssets().expInfo;
+  const expInfos = expAssets[1];
 
-if (!expInfos) {
-  logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
-  return null;
-}
+  if (!expInfos) {
+    logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
+    return null;
+  }
 
   return {
-    Level : 1,
+    Level: 1,
     stats: classInfos.stats,
     exp: 0,
-    maxExp : expInfos.maxExp,
+    maxExp: expInfos.maxExp,
   };
 };
 
@@ -95,5 +95,5 @@ export {
   removeDungeonSession,
   getDungeonSessions,
   getDungeonUsersUUID,
-  getStatsByUserClass
+  getStatsByUserClass,
 };

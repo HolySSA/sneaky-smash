@@ -10,6 +10,7 @@ import {
   getAllUserUUIDByTown,
   getAllUserByTown,
   getUserTransformById as getTownTransformByUserId,
+  getUserSessionByIdFromTown,
 } from '../../sessions/town.session.js';
 import { setRedisUserUUID } from '../../sessions/redis/redis.user.js';
 const { PACKET_ID } = configs;
@@ -34,10 +35,9 @@ const enterLogic = async (socket, character) => {
       transform: user.transform,
     },
   };
-  setRedisUserUUID(socket); // 소켓으로 레디스에서 해당 유저의 UUID 설정
+  await setRedisUserUUID(socket); // 소켓으로 레디스에서 해당 유저의 UUID 설정
   user.nickname = character.nickname;
   user.myClass = character.myClass;
-
   let buffer = createResponse(PACKET_ID.S_Enter, playerPayload);
   addUserForTown(user);
   enqueueSend(socket.UUID, buffer);

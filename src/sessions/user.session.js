@@ -9,7 +9,8 @@ const allUsersUUID = [];
 
 const addUserSession = (socket) => {
   if (userSessions.has(socket.id)) {
-    throw new Error('이미 존재하는 유저 세션입니다.');
+    logger.error('이미 존재하는 유저 세션입니다.');
+    return null;
   }
 
   const user = new User(socket);

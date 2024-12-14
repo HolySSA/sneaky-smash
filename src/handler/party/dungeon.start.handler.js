@@ -96,7 +96,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (playerId) => {
-        const user = await getUserById(playerId);
+        const user = getUserById(playerId);
         const transformData = transforms.pop() || [0, 0, 0];
         const transform = {
           posX: transformData[0],
@@ -111,7 +111,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
           logger.error('스탯 정보가 존재하지 않습니다');
           return;
         }
-        
+
         return {
           playerId,
           nickname: user.nickname,

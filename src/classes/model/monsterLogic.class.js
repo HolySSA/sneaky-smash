@@ -91,7 +91,7 @@ class MonsterLogic {
         posX: monster.transform.posX,
         posY: monster.transform.posY,
         posZ: monster.transform.posZ,
-        rot: 0,//monster.transform.rot, // 추가: 회전값 포함
+        rot: 0, //monster.transform.rot, // 추가: 회전값 포함
       },
     };
     //console.log("몬스터 무브 페이로드 : ",payload);
@@ -100,7 +100,7 @@ class MonsterLogic {
 
   requestPathAndMove(monster) {
     if (!monster.target) return;
-    
+
     this.pathServer
       .sendPathRequest(monster.transform, monster.target.user.transform)
       .then((response) => {
@@ -254,8 +254,16 @@ class MonsterLogic {
     }
   }
 
+  stopMonsterSpawn() {
+    if (this.monsterSpawnInterval) {
+      clearInterval(this.monsterSpawnInterval);
+      this.monsterSpawnInterval = null;
+      logger.info('stopped MonsterSpawn');
+    }
+  }
+
   startMonsterSpawn() {
-    setInterval(() => {
+    this.monsterSpawnInterval = setInterval(() => {
       this.spawnZones.forEach((zone) => {
         const currentCount = this.monsterLists.filter(
           (monster) => monster.zoneId === zone.id,
@@ -265,6 +273,13 @@ class MonsterLogic {
         }
       });
     }, this.spawnInterval);
+  }
+
+  Dispose() {
+    this.pathServer.onClose();
+    this.stopGameLoop();
+    this.stopMonsterSpawn();
+    logger.info(`MonsterLogic disposed`);
   }
 }
 

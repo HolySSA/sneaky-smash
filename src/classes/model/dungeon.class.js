@@ -94,7 +94,7 @@ class Dungeon {
       }
 
       if (this.users.size == 0) {
-        this.monsterLogic.pathServer.onClose();
+        this.monsterLogic.Dispose();
         removeDungeonSession(this.dungeonId);
       }
 

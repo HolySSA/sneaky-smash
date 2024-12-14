@@ -5,7 +5,6 @@ import logger from '../../utils/logger.js';
 class Monster {
   constructor(id, monster, transform, zoneId) {
     this.id = id;
-    this.modelId = monster.monsterId;
     this.name = monster.name;
     this.maxHp = monster.maxHp;
     this.curHp = this.maxHp;

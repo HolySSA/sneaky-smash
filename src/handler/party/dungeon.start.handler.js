@@ -111,7 +111,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     const playerInfo = [];
     const partyUUID = [];
     for (let playerId of party.members) {
-      const user = getUserById(playerId);
+      const user = getUserById(Number(playerId));
       partyUUID.push(user.socket.UUID);
       const transformData = transforms.pop() || [0, 0, 0];
       const transform = {

@@ -178,7 +178,7 @@ class Dungeon {
     }
 
     user.statInfo.exp += getExp;
-    logger.info(`플레이어 ${userId}의 경험치 get +${getExp} 현재경험치 ${user.statInfo.exp}`);
+    //logger.info(`플레이어 ${userId}의 경험치 get +${getExp} 현재경험치 ${user.statInfo.exp}`);
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {
       playerId: userId,
@@ -249,12 +249,11 @@ class Dungeon {
 
     // 스탯 불러오기 수정
     const maxHp = user.statInfo.stats.maxHp;
-    const currentHp = user.currentHp;    
+    const currentHp = user.currentHp;
     const newHp = currentHp + amount;
     user.currentHp = Math.max(0, Math.min(newHp, maxHp));
 
-    if(user.currentHp != currentHp)
-    {      
+    if (user.currentHp != currentHp) {
       createNotificationPacket(
         PACKET_ID.S_UpdatePlayerHp,
         { playerId: userId, hp: user.currentHp },

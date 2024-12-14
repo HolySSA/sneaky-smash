@@ -1,8 +1,8 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import logger from '../../utils/logger.js';
-
 class Monster {
+  #cannotReachCount = 0;
   constructor(id, monster, transform, zoneId) {
     this.id = id;
     this.name = monster.name;
@@ -36,19 +36,25 @@ class Monster {
   move(pathPoint, monsterLogicInterval) {
     if (!pathPoint && this.isDead) return;
 
-    const directionX = pathPoint.x - this.transform.posX;
-    const directionY = pathPoint.y - this.transform.posY;
-    const directionZ = pathPoint.z - this.transform.posZ;
+    if (pathPoint.rot) {
+      this.#cannotReachCount += monsterLogicInterval;
+      if (this.#cannotReachCount > 5000) {
+        this.#cannotReachCount = 0;
+        this.transform = structuredClone(this.target.user.transform);
+      }
+    }
+    const directionX = pathPoint.posX - this.transform.posX;
+    const directionY = pathPoint.posY - this.transform.posY;
+    const directionZ = pathPoint.posZ - this.transform.posZ;
 
     const length = Math.sqrt(directionX ** 2 + directionY ** 2 + directionZ ** 2);
-
+    const moveFactor = monsterLogicInterval * 0.001 * this.moveSpeed;
     if (length > 0) {
-      this.transform.posX +=
-        (directionX / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
-      this.transform.posY +=
-        (directionY / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
-      this.transform.posZ +=
-        (directionZ / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
+      this.transform.posX += (directionX / length) * moveFactor;
+      // this.transform.posY +=
+      //   (directionY / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
+      this.transform.posY = pathPoint.posY;
+      this.transform.posZ += (directionZ / length) * moveFactor;
     }
   }
 
@@ -134,6 +140,12 @@ class Monster {
     }
 
     return this.curHp;
+  }
+  moveToTarget() {
+    if (this.target) {
+      // 타겟의 위치로 이동
+      this.stopMove = false;
+    }
   }
 }
 

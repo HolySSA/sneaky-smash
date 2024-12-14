@@ -108,14 +108,7 @@ class MonsterLogic {
 
         if (pathPosition) {
           // 경로의 첫 번째 점으로 이동
-          monster.move(
-            {
-              x: pathPosition.posX,
-              y: pathPosition.posY,
-              z: pathPosition.posZ,
-            },
-            this.monsterLogicInterval,
-          );
+          monster.move(pathPosition, this.monsterLogicInterval);
         } else {
           logger.error(`몬스터 ID: ${monster.id} 경로 데이터가 없습니다.`);
         }
@@ -152,8 +145,8 @@ class MonsterLogic {
     return zone.transform[randomIndex];
   }
 
-  spawnMonster(zone) {    
-    const transform = this.getRandomPosition(zone);    
+  spawnMonster(zone) {
+    const transform = this.getRandomPosition(zone);
 
     const monsterAssets = getGameAssets().monster; // 몬스터 데이터 가져오기
     const monsterId = Math.floor(Math.random() * monsterAssets.length); // 랜덤 몬스터 아이디

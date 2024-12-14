@@ -22,9 +22,8 @@ const useItemHandler = async (socket, payload) => {
     const { itemId, itemInstanceId } = payload;
 
     // 아이템 에셋 가져와서 id를 통해 아이템 정보 가져오기
-    const gameAssets = getGameAssets();
-    const itemAssets = gameAssets.item.data;
-    const item = itemAssets.find((item) => item.itemId === itemId);
+    const itemAssets = getGameAssets().item;
+    const item = itemAssets[itemId];
 
     // 유저가 속한 던전 세션 가져오기
     const redisUser = await findCharacterByUserId(socket.id);

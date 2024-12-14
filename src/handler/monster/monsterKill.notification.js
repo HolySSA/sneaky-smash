@@ -45,8 +45,8 @@ const monsterKillNotification = async (socket, monster, dungeon, dungeonAllUsers
   const transform = monster.transform;
 
   const gameAssets = getGameAssets();
-  const itemAssets = gameAssets.item.data;
-  const skillAssets = gameAssets.skillInfo.data;
+  const itemAssets = gameAssets.item;
+  const skillAssets = gameAssets.skillInfo;
 
   let itemId = -1;
   let skillId = -1;

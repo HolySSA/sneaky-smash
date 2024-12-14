@@ -17,11 +17,13 @@ const useSkillHandler = async ({ socket, payload }) => {
     const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
 
     // 스킬 인포 정보 가져오기
-    const skillInfo = getGameAssets().skillInfo.data.find((id) => id.skillId === skillId);
+    const skillAssets = getGameAssets().skillInfo; // 맵핑된 스킬 데이터 가져오기
+    const skillInfo = skillAssets[skillId]; // ID로 직접 접근
+    
     if (!skillInfo) {
-      logger.error(`Skill with ID ${skillId} not found in skillInfo.data.`);
+      logger.error(`Skill 정보를 찾을 수 없습니다. skillId: ${skillId}`);
       return;
-    }
+    }    
 
     const skillPayload = {
       playerId,

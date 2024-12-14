@@ -1,4 +1,5 @@
 import { getGameAssets, loadGameAssets } from '../init/loadAsset.js';
+import logger from '../utils/logger.js';
 
 (async () => {
   try {
@@ -8,7 +9,13 @@ import { getGameAssets, loadGameAssets } from '../init/loadAsset.js';
 
     const skillId = 101;
 
-    const skillData = getGameAssets().skillInfo.data.find((skill) => skill.skillId === skillId);
+    const skillAssets = getGameAssets().skillInfo; // 맵핑된 스킬 데이터 가져오기
+    const skillData = skillAssets[skillId]; // ID로 직접 접근
+
+    if (!skillData) {
+      logger.error(`Skill 정보를 찾을 수 없습니다. skillId: ${skillId}`);
+      return;
+    }
 
     if (skillData) {
       console.log(`Skill Data =>`, skillData);

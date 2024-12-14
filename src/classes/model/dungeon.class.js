@@ -183,10 +183,10 @@ class Dungeon {
 
     // 레벨당 필요 경험치 불러오기
     let maxExp = user.statsInfo.maxExp;
+
     if (maxExp === 0) {
-      maxExp = getGameAssets().expInfo.data.find(
-        (exp) => exp.level === user.statsInfo.level,
-      ).maxExp;
+      const expAssets = getGameAssets().expInfo;
+      maxExp = expAssets[user.statsInfo.level].maxExp; // ID로 직접 접근
     }
 
     user.statsInfo.exp += getExp;

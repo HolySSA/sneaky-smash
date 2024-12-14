@@ -149,9 +149,10 @@ class MonsterLogic {
   }
 
   getRandomMonster() {
-    const monsters = getGameAssets().monster.data;
-    const randomIndex = Math.floor(Math.random() * monsters.length);
-    return monsters[randomIndex];
+    const monsterAssets = getGameAssets().monster; // 몬스터 데이터 가져오기
+    const monsterKeys = Object.keys(monsterAssets); // 모든 몬스터 ID를 배열로 가져오기
+    const randomKey = monsterKeys[Math.floor(Math.random() * monsterKeys.length)]; // 랜덤 키 선택
+    return monsterAssets[randomKey]; // 선택된 몬스터 반환
   }
 
   getRandomPosition(zone) {

@@ -1,6 +1,7 @@
 import Dungeon from '../classes/model/dungeon.class.js';
 import { getGameAssets } from '../init/loadAsset.js';
 import { dungeonSessions } from './sessions.js';
+import logger from '../utils/logger.js';
 
 const addDungeonSession = (sessionId, dungeonLevel) => {
   if (dungeonSessions.has(sessionId)) {
@@ -9,16 +10,15 @@ const addDungeonSession = (sessionId, dungeonLevel) => {
 
   const dungeonCode = 1;
 
-  const gameAssets = getGameAssets().dungeonInfo;
-  const dungeonInfos = gameAssets.dungeons.find(
-    (dungeonInfo) => dungeonInfo.dungeonId === dungeonCode,
-  );
-
-  if (!dungeonInfos) {
-    throw new Error('던전 정보가 존재하지 않습니다.');
+  const dungeonAssets = getGameAssets().dungeonInfo; // 맵핑된 던전 데이터 가져오기
+  const dungeonInfo = dungeonAssets[dungeonCode]; // ID로 바로 접근
+  
+  if (!dungeonInfo) {
+    logger.error(`던전 정보를 찾을 수 없습니다. dungeonCode: ${dungeonCode}`);
+    return null;
   }
 
-  const dungeon = new Dungeon(dungeonInfos, dungeonLevel);
+  const dungeon = new Dungeon(dungeonInfo, dungeonLevel);
   dungeonSessions.set(sessionId, dungeon);
 
   return dungeon;

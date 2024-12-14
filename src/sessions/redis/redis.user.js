@@ -1,4 +1,5 @@
 import { getGameAssets } from '../../init/loadAsset.js';
+import logger from '../../utils/logger.js';
 import { getRedis } from '../../utils/redis/redisManager.js';
 import { getUserById } from '../user.session.js';
 import { tryGetValue } from './helper.js';
@@ -32,29 +33,40 @@ export const getRedisUserById = async (id) => {
 
 export const getStatsByUserId = async (userId) => {
   const userInfo = getUserById(userId);
-  const classInfos = await getGameAssets().classInfo.data.find(
-    (classInfo) => classInfo.classId == userInfo.myClass,
-  );
+  const classAssets = getGameAssets().classInfo; // 맵핑된 클래스 데이터 가져오기
+  const classInfos = classAssets[userInfo.myClass]; // ID로 직접 접근
+  
+  if (!classInfos) {
+    logger.error(`Class 정보를 찾을 수 없습니다. classId: ${userInfo.myClass}`);
+  }
 
-  const expInfos = await getGameAssets().expInfo.data.find(
-    (expInfo) => expInfo.level === 1,
-  );
+  const expAssets = getGameAssets().expInfo; // 맵핑된 경험치 데이터 가져오기
+  const expInfos = expAssets[1]; // 레벨 1의 경험치 정보 접근
+  
+  if (!expInfos) {
+    logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
+  }
+
   return {
     Level : 1,
     stats: classInfos.stats,
     exp: 0,
-    maxExp : expInfos.maxExp,
+    maxExp : expInfos.maxExp
   };
 };
 
 export const getStatsByUserClass = async (userClass) => {
-  const classInfos = await getGameAssets().classInfo.data.find(
-    (classInfo) => classInfo.classId == userClass,
-  );
+  const classAssets = getGameAssets().classInfo;
+const classInfos = classAssets[userClass];
+if (!classInfos) {
+  logger.error(`Class 정보를 찾을 수 없습니다. classId: ${userClass}`);
+}
 
-  const expInfos = await getGameAssets().expInfo.data.find(
-    (expInfo) => expInfo.level === 1,
-  );
+const expAssets = getGameAssets().expInfo;
+const expInfos = expAssets[1];
+if (!expInfos) {
+  logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
+}
   return {
     Level : 1,
     stats: classInfos.stats,

@@ -15,11 +15,11 @@ const shootProjectileHandler = async ({ socket, payload }) => {
     const redisUser = await findCharacterByUserId(socket.id);
     const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
 
-    const projectileInfo = getGameAssets().projectile.data.find(
-      (projectile) => projectile.projectileId === projectileId,
-    );
+    const projectileAssets = getGameAssets().projectile; // 맵핑된 Projectile 데이터 가져오기
+    const projectileInfo = projectileAssets[projectileId]; // ID로 직접 접근
+    
     if (!projectileInfo) {
-      logger.error(`Projectile with ID ${projectileId} not found in projectile.data.`);
+      logger.error(`Projectile 정보를 찾을 수 없습니다. projectileId: ${projectileId}`);
       return;
     }
 

@@ -177,7 +177,7 @@ class Dungeon {
     }
 
     //에셋 정보가 없으면 테이블 문제 or 최대 레벨 도달
-    if (expAssets[user.statsInfo.level + 1]) {
+    if (expAssets[user.statInfo.level + 1]) {
       return;
     }
 

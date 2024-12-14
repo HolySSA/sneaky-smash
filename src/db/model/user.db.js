@@ -23,7 +23,7 @@ export const findUserByAccount = async (account) => {
   const [rows] = await dbPool.query(SQL_QUERIES.FIND_USER_BY_ACCOUNT, [account]);
   result = rows.length > 0 ? toCamelCase(rows[0]) : null;
   if (result != null) {
-    setAccountByRedis(result);
+    await setAccountByRedis(result);
   }
   return result;
 };

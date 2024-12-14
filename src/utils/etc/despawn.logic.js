@@ -14,7 +14,6 @@ import { removeUserQueue } from '../socket/messageQueue.js';
 
 const despawnLogic = async (socket) => {
   const userId = socket.id;
-  console.log('🚀 ~ despawnLogic ~ userId:', userId);
   removeUserQueue(socket);
   const user = getUserById(userId);
 

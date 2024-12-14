@@ -146,8 +146,6 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     };
 
     createNotificationPacket(PACKET_ID.S_EnterDungeon, enterDungeonPayload, partyUUID);
-    console.log('🚀 ~ dungeonStartHandler ~ partyUUID:', partyUUID);
-
     const partyPayload = {
       playerId: party.owner,
       roomId,

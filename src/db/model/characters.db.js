@@ -22,14 +22,14 @@ export const createCharacter = async (userId, nickname, myClass, gold = 0) => {
 // 사용자 ID로 캐릭터 찾기
 export const findCharacterByUserId = async (userId) => {
   let result = await getRedisUserById(userId);
-  if (result != null) {
+  if (result != null && result.id) {
     return result;
   }
 
   const [rows] = await dbPool.query(SQL_QUERIES.FIND_CHARACTER_BY_USERID, [userId]);
   result = rows.length > 0 ? toCamelCase(rows[0]) : null;
   if (result != null) {
-    setRedisUser(result);
+    await setRedisUser(result);
   }
   return result;
 };

@@ -33,9 +33,10 @@ const hitPlayerHandler = ({ socket, payload }) => {
     const dungeon = getDungeonSession(dungeonId);
 
     // 플레이어가 플레이어를 잡으면 피회복을 하는 로직
-    const currentHp = dungeon.damagedUser(playerId, damage);
+    dungeon.damagedUser(playerId, damage);
+    const currentHp = dungeon.updatePlayerHp(playerId, -damage);
 
-    if (currentHp <= 0) {
+    if (currentHp <= 0 && attackerId != playerId) {
       dungeon.getAmountHpByKillUser(attackerId);
 
       // 여기서부터 시작

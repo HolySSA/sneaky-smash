@@ -6,7 +6,6 @@
       "stats": {
         "atk": 15,
         "def": 5,
-        "curHp": 300,
         "maxHp": 300,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
@@ -19,7 +18,6 @@
       "stats": {
         "atk": 16,
         "def": 4,
-        "curHp": 290,
         "maxHp": 290,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
@@ -32,7 +30,6 @@
       "stats": {
         "atk": 1000,
         "def": 3,
-        "curHp": 270,
         "maxHp": 270,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
@@ -45,7 +42,6 @@
       "stats": {
         "atk": 13,
         "def": 6,
-        "curHp": 320,
         "maxHp": 320,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
@@ -58,7 +54,6 @@
       "stats": {
         "atk": 19,
         "def": 2,
-        "curHp": 270,
         "maxHp": 270,
         "moveSpeed": 1,
         "criticalProbability": 10.0,

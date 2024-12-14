@@ -10,7 +10,7 @@ const createNotificationPacket = (packetId, data = null, targetUUIDs = []) => {
     );
     return;
   }
-
+  
   const buffer = createResponse(packetId, data);
   for (const uuid of targetUUIDs) {
     enqueueSend(uuid, buffer);

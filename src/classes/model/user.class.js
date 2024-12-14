@@ -15,13 +15,9 @@ class User {
       posZ: 135,
       rot: 0,
     };
-    this.skillList = [];
-    this.monsterKillCount = 0;
-    this.userKillCount = 0;
     this.latency = 0;
     this.myClass = 0;
     this.nickname = '';
-
     this.dungeonId = '';
 
     this.#intervalId = setInterval(this.ping.bind(this), 1000);

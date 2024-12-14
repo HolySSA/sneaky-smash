@@ -5,6 +5,7 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import revivePlayerNotification from './revivePlayer.notification.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 // message S_DeathPlayer { ★
 //     int32 playerId = 1;
@@ -14,19 +15,15 @@ const deathPlayerNotification = async (socket, playerId) => {
   try {
     const redisUser = await findCharacterByUserId(playerId);
     const dungeon = getDungeonSession(redisUser.sessionId);
-    const allUsers = dungeon.getAllUsers();
 
-    const userLevel = dungeon.getUserStats(playerId).stats.level;
-    // const playerLevel = redisUser.level;
+    const userLevel = dungeon.getUserStats(playerId).level;
 
     const spawnTimeAssets = getGameAssets().spawnTimeInfo;
     const spawnTime = spawnTimeAssets[userLevel];
 
     const response = createResponse(PACKET_ID.S_DeathPlayer, { playerId, spawnTime });
 
-    allUsers.forEach((value) => {
-      value.socket.write(response);
-    });
+    createNotificationPacket(PACKET_ID.S_DeathPlayer, response, dungeon.getDungeonUsersUUID());
 
     setTimeout(() => {
       revivePlayerNotification(socket, playerId);

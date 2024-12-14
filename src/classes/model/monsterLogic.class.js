@@ -138,7 +138,7 @@ class MonsterLogic {
           (posZ - monster.transform.posZ) ** 2,
       );
 
-      if (distance < closestDistance) {
+      if (distance < closestDistance && value.currentHp > 0) {
         closestDistance = distance;
         closestPlayer = value;
       }
@@ -198,6 +198,7 @@ class MonsterLogic {
           const closestPlayer = this.findClosestPlayer(monster);
           if (closestPlayer) {
             const isPlayerDetected = monster.detectPlayer(closestPlayer.user.transform);
+
             if (isPlayerDetected) {
               // 플레이어 감지 시 활성화
               if (!monster.targetOn) {
@@ -205,7 +206,6 @@ class MonsterLogic {
                 logger.info(`${monster.name}이(가) 플레이어를 감지했습니다.`);
               }
               monster.target = closestPlayer;
-              monster.moveToTarget();
             } else {
               // 감지 범위 벗어남
               if (monster.targetOn) {
@@ -223,6 +223,7 @@ class MonsterLogic {
           );
           if (isPlayerStillDetected) {
             monster.attack(this.dungeonInstance.users);
+
             // 공격중이 아닐 때만 이동
             if (!monster.stopMove) {
               this.requestPathAndMove(monster);

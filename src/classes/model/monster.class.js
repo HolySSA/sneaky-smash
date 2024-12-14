@@ -137,12 +137,6 @@ class Monster {
 
     return this.curHp;
   }
-  moveToTarget() {
-    if (this.target) {
-      // 타겟의 위치로 이동
-      this.stopMove = false;
-    }
-  }
 }
 
 export default Monster;

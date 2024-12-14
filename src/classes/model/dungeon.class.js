@@ -31,8 +31,6 @@ class Dungeon {
 
     this.usersUUID.push(user.socket.UUID);
 
-    console.log(user);
-
     const dungeonUser = {
       user,
       currentHp: statInfo.stats.maxHp,
@@ -251,16 +249,18 @@ class Dungeon {
 
     // 스탯 불러오기 수정
     const maxHp = user.statInfo.stats.maxHp;
-    const newHp = user.currentHp + amount;
+    const currentHp = user.currentHp;    
+    const newHp = currentHp + amount;
     user.currentHp = Math.max(0, Math.min(newHp, maxHp));
 
-    console.log(JSON.stringify(user));
-
-    createNotificationPacket(
-      PACKET_ID.S_UpdatePlayerHp,
-      { playerId: userId, hp: user.currentHp },
-      this.getDungeonUsersUUID(),
-    );
+    if(user.currentHp != currentHp)
+    {      
+      createNotificationPacket(
+        PACKET_ID.S_UpdatePlayerHp,
+        { playerId: userId, hp: user.currentHp },
+        this.getDungeonUsersUUID(),
+      );
+    }
 
     return user.currentHp;
   }

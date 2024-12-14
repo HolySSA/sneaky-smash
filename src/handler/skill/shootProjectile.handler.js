@@ -5,6 +5,8 @@ import { getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import logger from '../../utils/logger.js';
+import { getUserById } from '../../sessions/user.session.js';
+import broadcastBySession from '../../utils/notification/broadcastBySession.js';
 
 // notification
 const shootProjectileHandler = async ({ socket, payload }) => {
@@ -12,12 +14,9 @@ const shootProjectileHandler = async ({ socket, payload }) => {
   const playerId = socket.id;
 
   try {
-    const redisUser = await findCharacterByUserId(socket.id);
-    const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
-
     const projectileAssets = getGameAssets().projectile; // 맵핑된 Projectile 데이터 가져오기
     const projectileInfo = projectileAssets[projectileId]; // ID로 직접 접근
-    
+
     if (!projectileInfo) {
       logger.error(`Projectile 정보를 찾을 수 없습니다. projectileId: ${projectileId}`);
       return;
@@ -31,7 +30,7 @@ const shootProjectileHandler = async ({ socket, payload }) => {
       projectileSpeed: projectileInfo.projectileSpeed,
     };
 
-    createNotificationPacket(PACKET_ID.S_ShootProjectile, shootProjectilePayload, dungeonUsersUUID);
+    broadcastBySession(socket, PACKET_ID.S_ShootProjectile, shootProjectilePayload);
   } catch (err) {
     handleError(socket, err);
   }

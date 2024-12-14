@@ -40,8 +40,8 @@ const hitPlayerHandler = ({ socket, payload }) => {
       dungeon.getAmountHpByKillUser(attackerId);
 
       // 여기서부터 시작
+    }else if(currentHp <= 0 )    
       deathPlayerNotification(socket, playerId);
-    }
   } catch (err) {
     handleError(socket, err);
   }

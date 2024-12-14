@@ -10,9 +10,8 @@ const allUsersUUID = [];
 const addUserSession = (socket) => {
   if (userSessions.has(socket.id)) {
     logger.error('이미 존재하는 유저 세션입니다.');
-    return null;
+    return userSessions.get(socket.id);
   }
-
   const user = new User(socket);
   userSessions.set(socket.id, user);
   allUsersUUID.push(socket.UUID);
@@ -35,14 +34,6 @@ const getAllUserUUID = () => {
   return allUsersUUID;
 };
 
-const getUserSessions = () => {
-  if (userSessions.size === 0) {
-    return null;
-  }
-
-  return userSessions;
-};
-
 const getUserById = (userId) => {
   return userSessions.get(userId);
 };
@@ -62,7 +53,6 @@ const updateUserTransformById = (userId, posX, posY, posZ, rot) => {
 export {
   addUserSession,
   removeUserSession,
-  getUserSessions,
   getUserById,
   getUserTransformById,
   updateUserTransformById,

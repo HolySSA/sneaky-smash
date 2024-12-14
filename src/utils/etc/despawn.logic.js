@@ -3,7 +3,6 @@ import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import { getAllUserUUIDByTown, removeUserForTown } from '../../sessions/town.session.js';
 import { removeUserSession } from '../../sessions/user.session.js';
-import logger from '../logger.js';
 import broadcastBySession from '../notification/broadcastBySession.js';
 import createNotificationPacket from '../notification/createNotification.js';
 import { removeUserQueue } from '../socket/messageQueue.js';

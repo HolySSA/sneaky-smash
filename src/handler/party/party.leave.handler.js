@@ -1,13 +1,6 @@
-import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getAllUserUUID, getUserById, getUserSessions } from '../../sessions/user.session.js';
-import {
-  getRedisParty,
-  getRedisUUIDbyMembers,
-  leaveRedisParty,
-  removeRedisParty,
-} from '../../sessions/redis/redis.party.js';
+import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import Result from '../result.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import logger from '../../utils/logger.js';
@@ -32,9 +25,9 @@ const partyLeaveHandler = async ({ socket, payload }) => {
     };
 
     const party = await getRedisParty(roomId);
-    
+
     if (!party) {
-      logger.error("파티가 존재하지 않습니다");
+      logger.error('파티가 존재하지 않습니다');
       return;
     }
 

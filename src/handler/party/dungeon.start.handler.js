@@ -78,7 +78,12 @@ import Result from '../result.js';
  *
  */
 const dungeonStartHandler = async ({ socket, payload }) => {
-  const transforms = [[2.5, 0.5, 112], [2.5, 0.5, -5.5], [42, 0.5, 52.5], [-38, 0.5, 52.5]];
+  const transforms = [
+    [2.5, 0.5, 112],
+    [2.5, 0.5, -5.5],
+    [42, 0.5, 52.5],
+    [-38, 0.5, 52.5],
+  ];
   try {
     const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기
 
@@ -94,36 +99,36 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     };
 
     // 파티원 모두의 정보
-    const playerInfo = await Promise.all(
-      party.members.map(async (playerId) => {
-        const user = getUserById(playerId);
-        const transformData = transforms.pop() || [0, 0, 0];
-        const transform = {
-          posX: transformData[0],
-          posY: transformData[1],
-          posZ: transformData[2],
-          rot: 0, // rotation 값은 나중에 받으면 수정
-        };
+    const playerInfo = party.members.map((playerId) => {
+      const user = getUserById(Number(playerId));
+      console.log(user);
+      console.log(`PlayerID => ${playerId}`);
+      const transformData = transforms.pop() || [0, 0, 0];
+      const transform = {
+        posX: transformData[0],
+        posY: transformData[1],
+        posZ: transformData[2],
+        rot: 0, // rotation 값은 나중에 받으면 수정
+      };
 
-        const statInfo = getStatsByUserClass(user.myClass);
+      const statInfo = getStatsByUserClass(user.myClass);
 
-        if (!statInfo) {
-          logger.error('스탯 정보가 존재하지 않습니다');
-          return;
-        }
+      if (!statInfo) {
+        logger.error('스탯 정보가 존재하지 않습니다');
+        return;
+      }
 
-        return {
-          playerId,
-          nickname: user.nickname,
-          class: user.myClass,
-          transform,
-          statInfo,
-        };
-      }),
-    );
+      return {
+        playerId,
+        nickname: user.nickname,
+        class: user.myClass,
+        transform,
+        statInfo,
+      };
+    });
 
     party.members.forEach(async (memberId) => {
-      const user = getUserById(memberId);
+      const user = getUserById(Number(memberId));
       await setSessionId(memberId, dungeonId);
 
       if (user) {
@@ -135,7 +140,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const enterDungeonPayload = {
           dungeonInfo,
           player: playerInfo,
-          infoText: ""
+          infoText: '',
         };
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);

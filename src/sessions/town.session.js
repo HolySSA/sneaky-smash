@@ -5,7 +5,8 @@ const allUsersUUID = [];
 
 const addUserForTown = (user) => {
   if (townSessions.has(user.id)) {
-    throw new Error('이미 존재하는 유저 세션입니다.');
+    logger.error('이미 존재하는 유저 세션입니다.');
+    return townSessions.get(user.id);
   }
   townSessions.set(user.id, user);
   allUsersUUID.push(user.socket.UUID);

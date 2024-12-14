@@ -28,7 +28,6 @@ export const findCharacterByUserId = async (userId) => {
 
   const [rows] = await dbPool.query(SQL_QUERIES.FIND_CHARACTER_BY_USERID, [userId]);
   result = rows.length > 0 ? toCamelCase(rows[0]) : null;
-  console.log('findCharacterByUserId', result);
   if (result != null) {
     setRedisUser(result);
   }

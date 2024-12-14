@@ -1,4 +1,3 @@
-import { getStatsByUserId } from '../../sessions/redis/redis.user.js';
 import MonsterLogic from './monsterLogic.class.js';
 import logger from '../../utils/logger.js';
 import { removeDungeonSession } from '../../sessions/dungeon.session.js';
@@ -28,7 +27,7 @@ class Dungeon {
     }
 
     this.usersUUID.push(user.socket.UUID);
-    const statsInfo = await getStatsByUserId(userId);
+    const statsInfo = getStatsByUserId(userId);
 
     const dungeonUser = {
       user: user,
@@ -177,6 +176,30 @@ class Dungeon {
 
     return user.statsInfo;
   }
+
+  getStatsByUserId = (userId) => {
+    const userInfo = getUserById(userId);
+    const classAssets = getGameAssets().classInfo; // 맵핑된 클래스 데이터 가져오기
+    const classInfos = classAssets[userInfo.myClass]; // ID로 직접 접근
+    
+    if (!classInfos) {
+      logger.error(`Class 정보를 찾을 수 없습니다. classId: ${userInfo.myClass}`);
+    }
+  
+    const expAssets = getGameAssets().expInfo; // 맵핑된 경험치 데이터 가져오기
+    const expInfos = expAssets[1]; // 레벨 1의 경험치 정보 접근
+    
+    if (!expInfos) {
+      logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
+    }
+  
+    return {
+      Level : 1,
+      stats: classInfos.stats,
+      exp: 0,
+      maxExp : expInfos.maxExp
+    };
+  };
 
   addExp(userId, getExp) {
     const user = this.getDungeonUser(userId);

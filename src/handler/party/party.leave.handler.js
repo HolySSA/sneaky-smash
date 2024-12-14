@@ -10,6 +10,7 @@ import {
 } from '../../sessions/redis/redis.party.js';
 import Result from '../result.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
+import logger from '../../utils/logger.js';
 
 // // **C_PartyLeave** - 파티에서 나가기 요청 메시지
 // message C_PartyLeave {
@@ -22,30 +23,25 @@ import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 // }
 
 const partyLeaveHandler = async ({ socket, payload }) => {
-  var leavePayload;
-  var users;
   try {
     const { roomId } = payload;
 
-    leavePayload = {
+    const leavePayload = {
       playerId: socket.id,
       roomId,
     };
 
     const party = await getRedisParty(roomId);
+    
     if (!party) {
-      leavePayload = {
-        playerId: -1,
-        roomId,
-      };
-      //   users = await getRedisUUIDbyMembers(party.members);
-    } else if (party.owner === socket.id.toString()) {
-      //   users = await getRedisUUIDbyMembers(party.members);
-      await removeRedisParty(roomId);
-    } else {
-      //const remainMembers = await leaveRedisParty(roomId, socket.id);
-      // users = await getRedisUUIDbyMembers(remainMembers.members);
+      logger.error("파티가 존재하지 않습니다");
+      return;
     }
+
+    if (party.owner === socket.id.toString()) {
+      await removeRedisParty(roomId);
+    }
+
     return new Result(leavePayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);

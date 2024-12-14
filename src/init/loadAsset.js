@@ -78,8 +78,6 @@ const transformGameAssets = (assets) => {
   return transformedAssets;
 };
 
-
-
 const loadGameAssets = async () => {
   try {
     const [

@@ -2,7 +2,6 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import {
   addRedisParty,
-  getRedisUUIDbyMembers,
   joinRedisParty,
 } from '../../sessions/redis/redis.party.js';
 import Result from '../result.js';
@@ -24,8 +23,6 @@ import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 // }
 
 const partyJoinHandler = async ({ socket, payload }) => {
-  var partyPayload;
-
   try {
     const { dungeonLevel, roomId, isOwner } = payload;
 
@@ -40,7 +37,7 @@ const partyJoinHandler = async ({ socket, payload }) => {
       return;
     }
 
-    partyPayload = {
+    const partyPayload = {
       playerId: socket.id,
       roomId,
       dungeonLevel,

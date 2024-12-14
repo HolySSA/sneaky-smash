@@ -1,10 +1,9 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
-import { findCharacterByUserId } from '../../db/model/characters.db.js';
-import { addDungeonSession } from '../../sessions/dungeon.session.js';
+import { addDungeonSession, getStatsByUserClass } from '../../sessions/dungeon.session.js';
 import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
-import { getStatsByUserClass, setSessionId } from '../../sessions/redis/redis.user.js';
+import { setSessionId } from '../../sessions/redis/redis.user.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
-import { getUserById, getUserSessions } from '../../sessions/user.session.js';
+import { getUserById } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import makeUUID from '../../utils/makeUUID.js';
 import createResponse from '../../utils/packet/createResponse.js';
@@ -93,14 +92,11 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       dungeonName: dungeon.name,
     };
 
-    const infoText = dungeon.name;
-
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
       party.members.map(async (memberId) => {
         const user = await getUserById(memberId);
-        console.log("유저의 클래스 : ",user.myClass);
-        const statInfo = await getStatsByUserClass(user.myClass);
+        const statInfo = getStatsByUserClass(user.myClass);
         const transformData = transforms.pop() || [0, 0, 0];
         const transform = {
           posX: transformData[0],

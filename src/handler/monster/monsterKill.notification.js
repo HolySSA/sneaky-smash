@@ -36,7 +36,7 @@ const { ITEM_DROP_RATE, SKILL_DROP_RATE, MONSTER_EXP } = configs;
 //   int32 expAmount = 2;
 //   }
 
-let itemInstanceId = 0;
+let itemInstanceId = 1;
 
 const monsterKillNotification = (socket, monster, dungeon, dungeonAllUsersUUID) => {
   const playerId = socket.id;

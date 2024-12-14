@@ -101,8 +101,7 @@ class PathServer {
     if (!this.isConnected) {
       throw new Error('Unity 서버에 연결되지 않았습니다.');
     }
-
-    console.log("startPoint : ", startPoint,"targetPoint : ",targetPoint);
+    
     startPoint.rot = 0;
 
     // 요청 패킷 생성
@@ -117,7 +116,6 @@ class PathServer {
         if (err) return reject(err);
 
         // 디코딩된 데이터를 그대로 반환
-        console.log("너의 값이 궁금하다 : ",data);
         resolve(data);
         
       });

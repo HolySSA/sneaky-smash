@@ -4,10 +4,10 @@
       "classId": 1001,
       "className": "섭르탄 - 창",
       "stats": {
-        "level": 1,
-        "maxHp": 300,
         "atk": 15,
         "def": 5,
+        "curHp": 300,
+        "maxHp": 300,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
@@ -17,10 +17,10 @@
       "classId": 1002,
       "className": "클르탄 - 검",
       "stats": {
-        "level": 1,
-        "maxHp": 290,
         "atk": 16,
         "def": 4,
+        "curHp": 290,
+        "maxHp": 290,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
@@ -30,10 +30,10 @@
       "classId": 1003,
       "className": "디르탄 - 석궁?",
       "stats": {
-        "level": 1,
-        "maxHp": 270,
         "atk": 1000,
         "def": 3,
+        "curHp": 270,
+        "maxHp": 270,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
@@ -43,10 +43,10 @@
       "classId": 1004,
       "className": "큐르탄 - 망치",
       "stats": {
-        "level": 1,
-        "maxHp": 320,
         "atk": 13,
         "def": 6,
+        "curHp": 320,
+        "maxHp": 320,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
@@ -56,10 +56,10 @@
       "classId": 1005,
       "className": "기르탄 - 마법",
       "stats": {
-        "level": 1,
-        "maxHp": 270,
         "atk": 19,
         "def": 2,
+        "curHp": 270,
+        "maxHp": 270,
         "moveSpeed": 1,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0

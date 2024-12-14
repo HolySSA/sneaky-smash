@@ -6,6 +6,7 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { getUserById } from '../../sessions/user.session.js';
 
 class Dungeon {
   constructor(dungeonInfo) {
@@ -27,7 +28,7 @@ class Dungeon {
     }
 
     this.usersUUID.push(user.socket.UUID);
-    const statsInfo = getStatsByUserId(userId);
+    const statsInfo = this.getStatsByUserId(userId);
 
     const dungeonUser = {
       user: user,

@@ -57,12 +57,13 @@ const removeDungeonSession = (dungeonId) => {
   return dungeonSessions.delete(dungeonId);
 };
 
-const getStatsByUserClass = async (userClass) => {
+const getStatsByUserClass = (userClass) => {
 const classAssets = getGameAssets().classInfo;
 const classInfos = classAssets[userClass];
 
 if (!classInfos) {
   logger.error(`Class 정보를 찾을 수 없습니다. classId: ${userClass}`);
+  return null;
 }
 
 const expAssets = getGameAssets().expInfo;
@@ -70,6 +71,7 @@ const expInfos = expAssets[1];
 
 if (!expInfos) {
   logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
+  return null;
 }
 
   return {

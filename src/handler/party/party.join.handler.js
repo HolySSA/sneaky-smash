@@ -25,7 +25,7 @@ import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 const partyJoinHandler = async ({ socket, payload }) => {
   try {
     const { dungeonLevel, roomId, isOwner } = payload;
-
+    
     let party = null;
     if (isOwner) {
       party = await addRedisParty(roomId, dungeonLevel, socket.id);

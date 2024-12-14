@@ -5,8 +5,10 @@ import { setSessionId } from '../../sessions/redis/redis.user.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import { getUserById } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
+import logger from '../../utils/logger.js';
 import makeUUID from '../../utils/makeUUID.js';
 import createResponse from '../../utils/packet/createResponse.js';
+import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import Result from '../result.js';
 
 // message S_EnterDungeon {
@@ -22,9 +24,9 @@ import Result from '../result.js';
 
 // message Stats {
 //   int32 atk = 1;
-//   int32 def = 2; 
+//   int32 def = 2;
 //   int32 curHp = 3;
-//   int32 maxHp = 4; 
+//   int32 maxHp = 4;
 //   int32 moveSpeed = 5;
 //   float criticalProbability = 6;
 //   float criticalDamageRate = 7;
@@ -37,7 +39,6 @@ import Result from '../result.js';
 //   float exp = 3;                   // 경험치
 //   float maxExp = 4;
 // }
-
 
 // // **TransformInfo** - 위치 및 회전 정보
 // message TransformInfo {
@@ -77,7 +78,7 @@ import Result from '../result.js';
  *
  */
 const dungeonStartHandler = async ({ socket, payload }) => {
-  const transforms = [[2.5, 0.5, 112], [(2.5, 0.5, -5.5)], [(42, 0.5, 52.5)], [(-38, 0.5, 52.5)]];
+  const transforms = [[2.5, 0.5, 112], [2.5, 0.5, -5.5], [42, 0.5, 52.5], [-38, 0.5, 52.5]];
   try {
     const { dungeonLevel, roomId } = payload; // 클라에서 레이턴시 추가하기
 
@@ -94,9 +95,8 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
     // 파티원 모두의 정보
     const playerInfo = await Promise.all(
-      party.members.map(async (memberId) => {
-        const user = await getUserById(memberId);
-        const statInfo = getStatsByUserClass(user.myClass);
+      party.members.map(async (playerId) => {
+        const user = await getUserById(playerId);
         const transformData = transforms.pop() || [0, 0, 0];
         const transform = {
           posX: transformData[0],
@@ -105,11 +105,26 @@ const dungeonStartHandler = async ({ socket, payload }) => {
           rot: 0, // rotation 값은 나중에 받으면 수정
         };
 
-        return {
-          playerId: memberId,
+        const statInfo = getStatsByUserClass(user.myClass);
+
+        if (!statInfo) {
+          logger.error('스탯 정보가 존재하지 않습니다');
+          return;
+        }
+
+        const payload = {
+          playerId,
           nickname: user.nickname,
           class: user.myClass,
-          transform: transform,
+          transform,
+          statInfo,
+        };
+
+        return {
+          playerId,
+          nickname: user.nickname,
+          class: user.myClass,
+          transform,
           statInfo,
         };
       }),
@@ -128,11 +143,13 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         const enterDungeonPayload = {
           dungeonInfo,
           player: playerInfo,
+          infoText: ""
         };
 
         const enterDungeonResponse = createResponse(PACKET_ID.S_EnterDungeon, enterDungeonPayload);
+
         // 던전 유저 진입
-        user.socket.write(enterDungeonResponse);
+        enqueueSend(user.socket.UUID, enterDungeonResponse);
       }
     });
 
@@ -141,16 +158,8 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       roomId,
     };
 
-    // const partyResponse = createResponse(PACKET_ID.S_PartyLeave, partyPayload);
-
-    // 파티 세션 삭제
     await removeRedisParty(roomId);
 
-    // // 모든 유저에게 파티 퇴장 패킷 전송
-    // const userSessions = getUserSessions();
-    // userSessions.forEach((session) => {
-    //   session.socket.write(partyResponse);
-    // });
     return new Result(partyPayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);

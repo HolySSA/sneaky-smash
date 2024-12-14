@@ -1,5 +1,6 @@
 import { getRedis } from '../../utils/redis/redisManager.js';
 import configs from '../../configs/configs.js';
+import logger from '../../utils/logger.js';
 const { ServerUUID } = configs;
 const PARTY_KEY = `${ServerUUID}:party`;
 const PARTY_INFO_KEY = `${PARTY_KEY}:info`;
@@ -13,12 +14,14 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
 
   const existingParty = await redis.exists(partyKey);
   if (existingParty) {
-    throw new Error('이미 존재하는 레디스 파티입니다.');
+    logger.error('이미 존재하는 레디스 파티입니다.');
+    return null;
   }
 
   const enteredPartyKey = `${ENTERED_PARTY_KEY}:${userId}`;
   if (await redis.exists(enteredPartyKey)) {
-    throw new Error('이미 파티에 가입되어 있습니다.');
+    logger.error('이미 파티에 가입되어 있습니다.');
+    return null;
   } else {
     await redis.set(enteredPartyKey, roomId);
     await redis.expire(enteredPartyKey, 3600);
@@ -30,7 +33,7 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
   await redis.sadd(PARTY_LIST_KEY, roomId);
   // 파티 던전 난이도
   await redis.hset(infoKey, {
-    dungeonLevel: dungeonLevel,
+    dungeonLevel,
     owner: userId,
   });
 
@@ -39,9 +42,9 @@ const addRedisParty = async (roomId, dungeonLevel, userId) => {
   await redis.expire(infoKey, 3600);
 
   const party = {
-    roomId: roomId,
+    roomId,
     members: [userId],
-    dungeonLevel: dungeonLevel,
+    dungeonLevel,
     owner: userId,
   };
 
@@ -55,7 +58,8 @@ const removeRedisParty = async (roomId) => {
 
   const existingParty = await redis.exists(partyKey);
   if (!existingParty) {
-    throw new Error('존재하지 않는 레디스 파티입니다.');
+    logger.error('존재하지 않는 레디스 파티입니다.');
+    return;
   }
   const partyMembers = await redis.smembers(partyKey);
   for (let i = 0; i < partyMembers.length; i++) {
@@ -76,17 +80,20 @@ const joinRedisParty = async (roomId, userId) => {
 
   const exists = await redis.exists(partyKey);
   if (!exists) {
-    throw new Error('존재하지 않는 파티입니다.');
+    logger.error('존재하지 않는 파티입니다.');
+    return null;
   }
 
   const addUser = await redis.sadd(partyKey, userId);
   if (!addUser) {
-    throw new Error('이미 파티에 존재합니다.');
+    logger.error('이미 파티에 존재합니다.');
+    return null;
   }
 
   const enteredPartyKey = `${ENTERED_PARTY_KEY}:${userId}`;
   if (await redis.exists(enteredPartyKey)) {
-    throw new Error('이미 파티에 가입되어 있습니다.');
+    logger.error('이미 파티에 가입되어 있습니다.');
+    return null;
   } else {
     await redis.set(enteredPartyKey, roomId);
     await redis.expire(enteredPartyKey, 3600);
@@ -112,7 +119,8 @@ const leaveRedisParty = async (roomId, userId) => {
 
   const removeUser = await redis.srem(partyKey, userId);
   if (removeUser === 0) {
-    throw new Error('파티에 존재하지 않는 유저입니다.');
+    logger.error('파티에 존재하지 않는 유저입니다.');
+    return null;
   }
 
   const [remainingMembers, info] = await Promise.all([
@@ -139,7 +147,8 @@ const getRedisParty = async (roomId) => {
 
   const exists = await redis.exists(partyKey);
   if (!exists) {
-    throw new Error('존재하지 않는 파티입니다.');
+    logger.error('존재하지 않는 파티입니다.');
+    return;
   }
 
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
@@ -148,7 +157,7 @@ const getRedisParty = async (roomId) => {
     roomId,
     members,
     dungeonLevel: info.dungeonLevel,
-    owner: info.owner.toString(),
+    owner: info.owner,
   };
 
   return party;
@@ -170,7 +179,7 @@ const getRedisPartyByUserId = async (userId) => {
         roomId,
         members,
         dungeonLevel: info.dungeonLevel,
-        owner: info.owner.toString(),
+        owner: info.owner,
       };
     }
   }

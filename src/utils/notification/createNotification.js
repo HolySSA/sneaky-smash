@@ -1,4 +1,4 @@
-import { reverseMapping } from '../../configs/constants/packetId.js';
+import { PACKET_ID, reverseMapping } from '../../configs/constants/packetId.js';
 import logger from '../logger.js';
 import { enqueueSend } from '../socket/messageQueue.js';
 import createResponse from '../packet/createResponse.js';
@@ -10,7 +10,7 @@ const createNotificationPacket = (packetId, data = null, targetUUIDs = []) => {
     );
     return;
   }
-
+  
   const buffer = createResponse(packetId, data);
   for (const uuid of targetUUIDs) {
     enqueueSend(uuid, buffer);

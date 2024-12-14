@@ -5,7 +5,8 @@ import logger from '../utils/logger.js';
 
 const addDungeonSession = (sessionId, dungeonLevel) => {
   if (dungeonSessions.has(sessionId)) {
-    throw new Error('세션 중복');
+    logger.error('세션 중복');
+    return null;
   }
 
   const dungeonCode = 1;
@@ -43,7 +44,8 @@ const getDungeonUsersUUID = (dungeonId) => {
   const session = getDungeonSession(dungeonId);
 
   if (!session.users || session.users.size === 0) {
-    throw new Error(`던전에 유저가 존재하지 않습니다. dungeonId: ${dungeonId}`);
+        logger.error(`던전에 유저가 존재하지 않습니다. dungeonId: ${dungeonId}`);
+        return null;
   }
 
   return Array.from(session.users.values()).map((user) => user.user.socket.UUID);
@@ -51,7 +53,8 @@ const getDungeonUsersUUID = (dungeonId) => {
 
 const removeDungeonSession = (dungeonId) => {
   if (!dungeonSessions.has(dungeonId)) {
-    throw new Error(`던전 세션이 존재하지 않습니다.`);
+    logger.error(`던전 세션이 존재하지 않습니다.`);
+    return;
   }
 
   return dungeonSessions.delete(dungeonId);

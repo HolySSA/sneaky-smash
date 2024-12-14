@@ -111,15 +111,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
           logger.error('스탯 정보가 존재하지 않습니다');
           return;
         }
-
-        const payload = {
-          playerId,
-          nickname: user.nickname,
-          class: user.myClass,
-          transform,
-          statInfo,
-        };
-
+        
         return {
           playerId,
           nickname: user.nickname,

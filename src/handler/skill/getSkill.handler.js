@@ -5,19 +5,29 @@ import { getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import logger from '../../utils/logger.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
+import { getUserById } from '../../sessions/user.session.js';
 
 // Notification
 const getSkillHandler = async ({ socket, payload }) => {
   const { skillId, itemInstanceId } = payload;
   const playerId = socket.id;
   try {
-    const redisUser = await findCharacterByUserId(playerId);
+    const user = getUserById(playerId);
+    if (!user) {
+      logger.error(`getSkillHandler. Could not found user : ${playerId}`);
+      return;
+    }
 
-    const dungeonUsersUUID = getDungeonUsersUUID(redisUser.sessionId);
+    if (!user.dungeonId) {
+      logger.error(`getSkillHandler. this player not in the dungeon : ${playerId}`);
+      return;
+    }
+
+    const dungeonUsersUUID = getDungeonUsersUUID(user.dungeonId);
 
     const skillAssets = getGameAssets().skillInfo; // 맵핑된 스킬 정보 가져오기
     const skillInfo = skillAssets[skillId]; // ID로 직접 접근
-    
+
     if (!skillInfo) {
       logger.error(`스킬 정보를 찾을 수 없습니다. skillId: ${skillId}`);
       return;
@@ -28,9 +38,7 @@ const getSkillHandler = async ({ socket, payload }) => {
       playerId,
       itemInstanceId,
     };
-
     createNotificationPacket(PACKET_ID.S_GetSkill, skillPayload, dungeonUsersUUID);
-
     logger.info(`getSkillHandler 성공: playerId=${playerId}, skillId=${skillId}`);
   } catch (error) {
     handleError(socket, error);

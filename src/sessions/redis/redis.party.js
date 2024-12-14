@@ -1,7 +1,5 @@
 import { getRedis } from '../../utils/redis/redisManager.js';
 import configs from '../../configs/configs.js';
-import { tryGetValue } from './helper.js';
-
 const { ServerUUID } = configs;
 const PARTY_KEY = `${ServerUUID}:party`;
 const PARTY_INFO_KEY = `${PARTY_KEY}:info`;
@@ -96,8 +94,8 @@ const joinRedisParty = async (roomId, userId) => {
 
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
   const updatedParty = {
-    roomId: roomId,
-    members: members.map((m) => m.toString()),
+    roomId,
+    members,
     dungeonLevel: info.dungeonLevel,
   };
 
@@ -128,8 +126,8 @@ const leaveRedisParty = async (roomId, userId) => {
   await redis.expire(infoKey, 3600);
 
   return {
-    roomId: roomId,
-    members: remainingMembers.map((m) => m.toString()),
+    roomId,
+    members: remainingMembers,
     dungeonLevel: info.dungeonLevel,
   };
 };
@@ -147,8 +145,8 @@ const getRedisParty = async (roomId) => {
   const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 
   const party = {
-    roomId: roomId,
-    members: members.map((m) => m.toString()),
+    roomId,
+    members,
     dungeonLevel: info.dungeonLevel,
     owner: info.owner.toString(),
   };
@@ -191,8 +189,8 @@ const getRedisParties = async () => {
       const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
 
       return {
-        roomId: roomId,
-        members: members.map((m) => m.toString()),
+        roomId,
+        members,
         dungeonLevel: info.dungeonLevel,
         owner: info.owner,
       };
@@ -213,15 +211,6 @@ const getRedisUUIDbyMembers = async (members) => {
   }
   return UUID;
 };
-
-/*
-export const setRedisUserUUID = async (socket) => {
-  const redis = await getRedis();
-  const userKey = `user:${socket.id}`;
-  await redis.hset(userKey, "UUID", socket.UUID);
-  await redis.expire(userKey, 3600);
-};
-*/
 
 export {
   addRedisParty,

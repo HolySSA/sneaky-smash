@@ -30,11 +30,11 @@ class Dungeon {
     }
 
     this.usersUUID.push(user.socket.UUID);
-    const statsInfo = this.getStatsByUserId(userId);
+    const statInfo = this.getStatsByUserId(userId);
 
     const dungeonUser = {
       user: user,
-      statsInfo,
+      statInfo,
       monsterKillCount: 0,
       userKillCount: 0,
     };
@@ -151,7 +151,7 @@ class Dungeon {
         transform: user.userInfo.transform, // 위치 및 회전 정보
         skillList: user.userInfo.skillList || [], // 스킬 리스트
         currentHp: user.currentHp, // 현재 체력
-        statsInfo: user.statsInfo,
+        statInfo: user.statInfo,
       });
     });
     return users;
@@ -159,7 +159,7 @@ class Dungeon {
 
   getUserStats(userId) {
     const user = this.getDungeonUser(userId);
-    return user.statsInfo;
+    return user.statInfo;
   }
 
   setUserStats(userId) {
@@ -167,20 +167,20 @@ class Dungeon {
 
     // 레벨 퍼당 스탯을 가져와서 @@@@@@@@@@@@@@ 밑에 스탯에 추가 해주면 됨.
 
-    user.statsInfo = {
+    user.statInfo = {
       stats: {
-        level: user.statsInfo.stats.level + 1,
-        maxHp: user.statsInfo.stats.maxHp + 20,
-        atk: user.statsInfo.stats.atk + 3,
-        def: user.statsInfo.stats.def + 1,
-        moveSpeed: user.statsInfo.stats.moveSpeed + 1,
-        criticalProbability: user.statsInfo.stats.criticalProbability,
-        criticalDamageRate: user.statsInfo.stats.criticalDamageRate,
+        level: user.statInfo.stats.level + 1,
+        maxHp: user.statInfo.stats.maxHp + 20,
+        atk: user.statInfo.stats.atk + 3,
+        def: user.statInfo.stats.def + 1,
+        moveSpeed: user.statInfo.stats.moveSpeed + 1,
+        criticalProbability: user.statInfo.stats.criticalProbability,
+        criticalDamageRate: user.statInfo.stats.criticalDamageRate,
       },
-      exp: user.statsInfo.exp,
+      exp: user.statInfo.exp,
     };
 
-    return user.statsInfo;
+    return user.statInfo;
   }
 
   getStatsByUserId = (userId) => {
@@ -211,29 +211,29 @@ class Dungeon {
     const user = this.getDungeonUser(userId);
 
     // 레벨당 필요 경험치 불러오기
-    let maxExp = user.statsInfo.maxExp;
+    let maxExp = user.statInfo.maxExp;
 
     if (maxExp === 0) {
       const expAssets = getGameAssets().expInfo;
-      maxExp = expAssets[user.statsInfo.level].maxExp; // ID로 직접 접근
+      maxExp = expAssets[user.statInfo.level].maxExp; // ID로 직접 접근
     }
 
-    user.statsInfo.exp += getExp;
-    logger.info(`플레이어 ${userId}의 경험치 get +${getExp} 현재경험치 ${user.statsInfo.exp}`);
+    user.statInfo.exp += getExp;
+    logger.info(`플레이어 ${userId}의 경험치 get +${getExp} 현재경험치 ${user.statInfo.exp}`);
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {
       playerId: userId,
-      expAmount: user.statsInfo.exp,
+      expAmount: user.statInfo.exp,
     });
 
     enqueueSend(user.user.UUID, expResponse);
 
-    if (user.statsInfo.exp >= maxExp) {
-      user.statsInfo.exp -= maxExp;
+    if (user.statInfo.exp >= maxExp) {
+      user.statInfo.exp -= maxExp;
       this.levelUpNotification(userId);
     }
 
-    return user.statsInfo.exp;
+    return user.statInfo.exp;
   }
 
   levelUpNotification(userId) {
@@ -263,7 +263,7 @@ class Dungeon {
     const user = this.users.get(userId);
 
     // 방어 로직 있으면 여기다 추가
-    user.statsInfo.stats.curHp -= damage;
+    user.statInfo.stats.curHp -= damage;
 
     createNotificationPacket(
       PACKET_ID.S_HitPlayer,
@@ -271,20 +271,20 @@ class Dungeon {
       this.getDungeonUsersUUID(),
     );
 
-    return user.statsInfo.stats.curHp;
+    return user.statInfo.stats.curHp;
   }
 
   getAmountHpByKillUser(userId) {
     const user = this.users.get(userId);
-    const userMaxHp = user.statsInfo.stats.maxHp;
+    const userMaxHp = user.statInfo.stats.maxHp;
 
     const healAmount = Math.floor(userMaxHp * 0.5);
 
-    user.statsInfo.stats.curHp = Math.min(user.statsInfo.stats.curHp + healAmount, userMaxHp);
+    user.statInfo.stats.curHp = Math.min(user.statInfo.stats.curHp + healAmount, userMaxHp);
 
     createNotificationPacket(
       PACKET_ID.S_UpdatePlayerHp,
-      { playerId: userId, hp: user.statsInfo.stats.curHp },
+      { playerId: userId, hp: user.statInfo.stats.curHp },
       this.getDungeonUsersUUID(),
     );
   }
@@ -293,7 +293,7 @@ class Dungeon {
     const user = this.users.get(userId);
 
     // 스탯 불러오기 수정
-    const maxHp = user.statsInfo.stats.maxHp;
+    const maxHp = user.statInfo.stats.maxHp;
     const newHp = user.currentHp + amount;
     user.currentHp = Math.max(0, Math.min(newHp, maxHp));
 
@@ -335,7 +335,10 @@ class Dungeon {
   increasePlayerCriticalProbability(userId, amount) {
     const user = this.users.get(userId);
 
-    user.criticalProbability = Math.min(amount + user.criticalProbability, user.criticalProbability);
+    user.criticalProbability = Math.min(
+      amount + user.criticalProbability,
+      user.criticalProbability,
+    );
 
     return user.criticalProbability;
   }

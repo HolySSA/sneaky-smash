@@ -73,8 +73,8 @@ import Result from '../result.js';
  *
  *  addDungeonUser에 하자가 심각히 있음.
  *  user를 value값으로 넣어주는데 별도의 객체로 만듦.
- *  userClass를 보면 statsInfo가 전혀없음.
- *  따라서 던전에 유저를 추가할떄 StatsInfo를 추가해주는데,
+ *  userClass를 보면 statInfo가 전혀없음.
+ *  따라서 던전에 유저를 추가할떄 statInfo를 추가해주는데,
  *  Stats와 Exp를 담고 있음.
  *
  *  Proto메세지를 보면 StatInfo가 있음. 이름 통일 필요

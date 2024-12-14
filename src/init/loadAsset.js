@@ -37,7 +37,7 @@ const transformToMap = (array, key, tableName) => {
     }
     map[id] = rest;
     mapLength++;
-    map["length"] = mapLength;
+    map['length'] = mapLength;
     return map;
   }, {});
 };
@@ -52,10 +52,10 @@ const transformNestedData = (array, key, subKey, subTransformKey, tableName) => 
     }
     map[id] = {
       ...rest,
-      [subKey]: transformToMap(item[subKey], subTransformKey, `${tableName} -> ${subKey}`)
+      [subKey]: transformToMap(item[subKey], subTransformKey, `${tableName} -> ${subKey}`),
     };
     mapLength++;
-    map["length"] = mapLength;
+    map['length'] = mapLength;
     return map;
   }, {});
 };
@@ -67,7 +67,13 @@ const transformGameAssets = (assets) => {
     monster: transformToMap(assets.monster.data, 'monsterId', 'monster'),
     equipment: transformToMap(assets.equipment.data, 'id', 'equipment'),
     classInfo: transformToMap(assets.classInfo.data, 'classId', 'classInfo'),
-    dungeonInfo: transformNestedData(assets.dungeonInfo.data, 'dungeonId', 'stages', 'stageId', 'dungeonInfo'),
+    dungeonInfo: transformNestedData(
+      assets.dungeonInfo.data,
+      'dungeonId',
+      'stages',
+      'stageId',
+      'dungeonInfo',
+    ),
     projectile: transformToMap(assets.projectile.data, 'projectileId', 'projectile'),
     skillInfo: transformToMap(assets.skillInfo.data, 'skillId', 'skillInfo'),
     levelperStats: transformToMap(assets.levelperStats.data, 'classId', 'levelperStats'),

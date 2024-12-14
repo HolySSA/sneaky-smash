@@ -39,7 +39,7 @@ class Dungeon {
       userKillCount: 0,
       monsterKillCount: 0,
       statInfo,
-      skillList: []
+      skillList: [],
     };
 
     this.users.set(userId, dungeonUser);
@@ -147,11 +147,10 @@ class Dungeon {
 
   levelUpUserStats(userId) {
     const user = this.users.get(userId);
-
-    const nextLevel = user.level + 1;
+    const nextLevel = user.statInfo.level + 1;
     const expAssets = getGameAssets().expInfo; // 맵핑된 경험치 데이터 가져오기
-    const expInfos = expAssets[nextLevel]; 
-
+    const expInfos = expAssets[nextLevel];
+    const newExp = user.statInfo.exp - user.statInfo.maxExp;
     user.statInfo = {
       level: nextLevel,
       stats: {
@@ -162,8 +161,8 @@ class Dungeon {
         criticalProbability: user.statInfo.stats.criticalProbability,
         criticalDamageRate: user.statInfo.stats.criticalDamageRate,
       },
-      exp: user.exp,
-      maxExp: expInfos
+      exp: newExp,
+      maxExp: expInfos.maxExp,
     };
 
     return user.statInfo;
@@ -175,7 +174,7 @@ class Dungeon {
     // 레벨당 필요 경험치 불러오기
     let maxExp = user.statInfo.maxExp;
 
-    if (maxExp === 0) {
+    if (!maxExp) {
       const expAssets = getGameAssets().expInfo;
       maxExp = expAssets[user.statInfo.level].maxExp; // ID로 직접 접근
     }
@@ -191,7 +190,6 @@ class Dungeon {
     enqueueSend(user.user.UUID, expResponse);
 
     if (user.statInfo.exp >= maxExp) {
-      user.statInfo.exp -= maxExp;
       this.levelUpNotification(userId);
     }
 

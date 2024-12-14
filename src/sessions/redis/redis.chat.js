@@ -12,7 +12,6 @@ export const subscribeChatChannels = async () => {
 
   redis.on('message', (channel, message) => {
     if (channel === TOWN_CHAT_CHANNEL_KEY) {
-      console.log(`${TOWN_CHAT_CHANNEL_KEY} => ${message}`);
       const AllUUID = getAllUserUUIDByTown();
       const info = message.split(',');
       createNotificationPacket(

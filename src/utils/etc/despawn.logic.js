@@ -15,35 +15,33 @@ import { removeUserQueue } from '../socket/messageQueue.js';
 const despawnLogic = async (socket) => {
   const userId = socket.id;
   removeUserQueue(socket);
-  removeUserSession(socket);
-  if (!socket.id) {
-    logger.warn(`despawnLogic이 호출되었으나 id값이 할당되지 않았습니다. [${socket.UUID}]`);
-    return;
-  }
-
-  const dungeon = getDungeonSession(socket.dungeonId);
-  if (dungeon) {
-    dungeon.remove(userId);
-  }
-  removeUserForTown(userId);
-  const payload = {
-    playerIds: [userId],
-  };
-
-  const AllUUID = getAllUserUUIDByTown();
-  const party = await getRedisPartyByUserId(userId);
-  if (party) {
-    if (party.members.length <= 1) {
-      await removeRedisParty(party.roomId);
+  if (userId) {
+    const dungeon = getDungeonSession(socket.dungeonId);
+    if (dungeon) {
+      dungeon.remove(userId);
     }
-    const leavePayload = {
-      playerId: socket.id,
-      roomId: party.roomId,
+    removeUserForTown(userId);
+    const payload = {
+      playerIds: [userId],
     };
-    createNotificationPacket(PACKET_ID.S_PartyLeave, leavePayload, AllUUID);
+
+    const AllUUID = getAllUserUUIDByTown();
+    const party = await getRedisPartyByUserId(userId);
+    if (party) {
+      if (party.members.length <= 1) {
+        await removeRedisParty(party.roomId);
+      }
+      const leavePayload = {
+        playerId: socket.id,
+        roomId: party.roomId,
+      };
+      createNotificationPacket(PACKET_ID.S_PartyLeave, leavePayload, AllUUID);
+    }
+
+    broadcastBySession(socket, PACKET_ID.S_Despawn, payload, true);
   }
 
-  broadcastBySession(socket, PACKET_ID.S_Despawn, payload, true);
+  removeUserSession(socket);
 };
 
 export default despawnLogic;

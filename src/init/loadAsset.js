@@ -24,6 +24,7 @@ const readFileAsync = (filename) => {
 };
 
 const transformToMap = (array, key, tableName) => {
+  let mapLength = 0;
   return array.reduce((map, item, index) => {
     const { [key]: id, ...rest } = item; // ID를 Key로 설정하고 제거
     if (id === undefined || id === null) {
@@ -35,11 +36,15 @@ const transformToMap = (array, key, tableName) => {
       return map;
     }
     map[id] = rest;
+    mapLength++;
+    map["length"] = mapLength;
     return map;
   }, {});
 };
 
 const transformNestedData = (array, key, subKey, subTransformKey, tableName) => {
+  let mapLength = 0;
+
   return array.reduce((map, item) => {
     const { [key]: id, ...rest } = item;
     if (!id || !rest) {
@@ -49,6 +54,8 @@ const transformNestedData = (array, key, subKey, subTransformKey, tableName) => 
       ...rest,
       [subKey]: transformToMap(item[subKey], subTransformKey, `${tableName} -> ${subKey}`)
     };
+    mapLength++;
+    map["length"] = mapLength;
     return map;
   }, {});
 };

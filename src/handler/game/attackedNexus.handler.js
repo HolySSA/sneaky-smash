@@ -13,7 +13,7 @@ import { findCharacterByUserId } from '../../db/model/characters.db.js';
 //     int32 damage = 2;    // 데미지
 //   }
 
-const attackedNexusHandler = async (socket, payload) => {
+const attackedNexusHandler = async ({socket, payload}) => {
   try {
     const { damage } = payload;
     const playerId = socket.id;

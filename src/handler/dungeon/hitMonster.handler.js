@@ -6,7 +6,7 @@ import createNotificationPacket from '../../utils/notification/createNotificatio
 import logger from '../../utils/logger.js';
 import { getUserById } from '../../sessions/user.session.js';
 
-const hitMonsterHandler = async ({ socket, payload }) => {
+const hitMonsterHandler = ({ socket, payload }) => {
   const { monsterId, damage } = payload;
   const playerId = socket.id;
   try {
@@ -42,7 +42,7 @@ const hitMonsterHandler = async ({ socket, payload }) => {
 
     // 몬스터의 죽음을 알리지 마라 이놈들아!
     if (currentHp <= 0) {
-      await monsterKillNotification(socket, monster, dungeon, dungeonAllUsersUUID);
+      monsterKillNotification(socket, monster, dungeon, dungeonAllUsersUUID);
     }
   } catch (err) {
     handleError(socket, err);

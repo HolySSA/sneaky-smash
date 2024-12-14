@@ -17,7 +17,7 @@ const attributeHandlers = {
     dungeon.increasePlayerCriticalDamageRate(socketId, value),
 };
 
-const useItemHandler = async (socket, payload) => {
+const useItemHandler = async ({socket, payload}) => {
   try {
     const { itemId, itemInstanceId } = payload;
 

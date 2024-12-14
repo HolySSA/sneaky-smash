@@ -218,20 +218,20 @@ class Dungeon {
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {
       playerId: userId,
-      expAmount: user.statInfo.exp,
+      expAmount: user.statsInfo.exp,
     });
 
     enqueueSend(user.user.UUID, expResponse);
 
     if (user.statsInfo.exp >= maxExp) {
       user.statsInfo.exp -= maxExp;
-      this.userLevelUpNoti(userId);
+      this.levelUpNotification(userId);
     }
 
     return user.statsInfo.exp;
   }
 
-  userLevelUpNoti(userId) {
+  levelUpNotification(userId) {
     createNotificationPacket(
       PACKET_ID.S_LevelUp,
       { playerId: userId, statInfo: this.setUserStats(userId) },
@@ -322,7 +322,7 @@ class Dungeon {
   increasePlayerMoveSpeed(userId, amount) {
     const user = this.users.get(userId);
 
-    user.d = Math.min(amount + user.moveSpeed, user.moveSpeed);
+    user.moveSpeed = Math.min(amount + user.moveSpeed, user.moveSpeed);
 
     return user.moveSpeed;
   }
@@ -330,14 +330,14 @@ class Dungeon {
   increasePlayerCriticalProbability(userId, amount) {
     const user = this.users.get(userId);
 
-    user.d = Math.min(amount + user.criticalProbability, user.criticalProbability);
+    user.criticalProbability = Math.min(amount + user.criticalProbability, user.criticalProbability);
 
     return user.criticalProbability;
   }
   increasePlayerCriticalDamageRate(userId, amount) {
     const user = this.users.get(userId);
 
-    user.d = Math.min(amount + user.criticalDamageRate, user.criticalDamageRate);
+    user.criticalDamageRate = Math.min(amount + user.criticalDamageRate, user.criticalDamageRate);
 
     return user.criticalDamageRate;
   }

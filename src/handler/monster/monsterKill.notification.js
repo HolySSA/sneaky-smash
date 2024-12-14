@@ -38,7 +38,7 @@ const { ITEM_DROP_RATE, SKILL_DROP_RATE, MONSTER_EXP } = configs;
 
 let itemInstanceId = 0;
 
-const monsterKillNotification = async (socket, monster, dungeon, dungeonAllUsersUUID) => {
+const monsterKillNotification = (socket, monster, dungeon, dungeonAllUsersUUID) => {
   const playerId = socket.id;
 
   const monsterId = monster.id;
@@ -56,11 +56,12 @@ const monsterKillNotification = async (socket, monster, dungeon, dungeonAllUsers
 
   if (drop < totalDropRate) {
     if (drop < ITEM_DROP_RATE) {
-      const item = itemAssets[Math.floor(Math.random() * itemAssets.length)];
-      itemId = item.itemId;
+      const itemPivotId = 500;  
+      itemId = Math.floor(Math.random() * itemAssets.length) + itemPivotId;      
+
     } else {
-      const skill = skillAssets[Math.floor(Math.random() * skillAssets.length)];
-      skillId = skill.skillId;
+      const skillPivotId = 100;      
+      skillId = Math.floor(Math.random() * skillAssets.length) + skillPivotId;
     }
   }
 

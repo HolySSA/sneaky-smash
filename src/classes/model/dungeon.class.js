@@ -7,6 +7,7 @@ import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { getUserById } from '../../sessions/user.session.js';
+import { setSessionId } from '../../sessions/redis/redis.user.js';
 
 class Dungeon {
   constructor(dungeonInfo) {
@@ -22,7 +23,8 @@ class Dungeon {
 
   async addDungeonUser(user) {
     const userId = user.socket.id;
-
+    user.dungeonId = this.dungeonId;
+    await setSessionId(userId, this.dungeonId);
     if (this.users.has(userId)) {
       throw new Error('이미 던전에 참여 중인 유저입니다.');
     }
@@ -78,18 +80,22 @@ class Dungeon {
     );
   }
 
-  removeDungeonUser(userId) {
-    if (this.users.has(userId)) {
-      const userUUID = this.users.get(userId).socket.UUID;
+  async removeDungeonUser(userId) {
+    const dungeonUser = this.users.get(userId);
+    if (dungeonUser) {
+      const user = dungeonUser.user;
+      const userUUID = user.socket.UUID;
+      user.dungeonId = '';
       const result = this.users.delete(userId);
-
+      await setSessionId(userId, '');
       const index = this.usersUUID.indexOf((uuid) => uuid === userUUID);
       if (index !== -1) {
         this.usersUUID.splice(index, 1);
       }
 
-      if (this.users.size === 0) {
+      if (this.users.size == 0) {
         this.monsterLogic.pathServer.onClose();
+        removeDungeonSession(this.dungeonId);
       }
 
       return result;
@@ -121,7 +127,7 @@ class Dungeon {
   }
 
   removeDungeonSession() {
-    removeDungeonSession(this.sessionId);
+    removeDungeonSession(this.dungeonId);
   }
 
   getDungeonUser(userId) {
@@ -182,23 +188,23 @@ class Dungeon {
     const userInfo = getUserById(userId);
     const classAssets = getGameAssets().classInfo; // 맵핑된 클래스 데이터 가져오기
     const classInfos = classAssets[userInfo.myClass]; // ID로 직접 접근
-    
+
     if (!classInfos) {
       logger.error(`Class 정보를 찾을 수 없습니다. classId: ${userInfo.myClass}`);
     }
-  
+
     const expAssets = getGameAssets().expInfo; // 맵핑된 경험치 데이터 가져오기
     const expInfos = expAssets[1]; // 레벨 1의 경험치 정보 접근
-    
+
     if (!expInfos) {
       logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
     }
-  
+
     return {
-      Level : 1,
+      Level: 1,
       stats: classInfos.stats,
       exp: 0,
-      maxExp : expInfos.maxExp
+      maxExp: expInfos.maxExp,
     };
   };
 

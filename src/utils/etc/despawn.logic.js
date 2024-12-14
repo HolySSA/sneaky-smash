@@ -2,7 +2,7 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import { getAllUserUUIDByTown, removeUserForTown } from '../../sessions/town.session.js';
-import { removeUserSession } from '../../sessions/user.session.js';
+import { getUserById, removeUserSession } from '../../sessions/user.session.js';
 import broadcastBySession from '../notification/broadcastBySession.js';
 import createNotificationPacket from '../notification/createNotification.js';
 import { removeUserQueue } from '../socket/messageQueue.js';
@@ -13,11 +13,14 @@ import { removeUserQueue } from '../socket/messageQueue.js';
 
 const despawnLogic = async (socket) => {
   const userId = socket.id;
+  console.log('🚀 ~ despawnLogic ~ userId:', userId);
   removeUserQueue(socket);
-  if (userId) {
-    const dungeon = getDungeonSession(socket.dungeonId);
+  const user = getUserById(userId);
+
+  if (user) {
+    const dungeon = getDungeonSession(user.dungeonId);
     if (dungeon) {
-      dungeon.remove(userId);
+      dungeon.removeDungeonUser(userId);
     }
     removeUserForTown(userId);
     const payload = {

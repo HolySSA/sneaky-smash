@@ -1,4 +1,4 @@
-import { PACKET_ID, reverseMapping } from '../../configs/constants/packetId.js';
+import { reverseMapping } from '../../configs/constants/packetId.js';
 import logger from '../logger.js';
 import { enqueueSend } from '../socket/messageQueue.js';
 import createResponse from '../packet/createResponse.js';

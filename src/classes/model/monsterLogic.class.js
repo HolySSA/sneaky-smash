@@ -22,32 +22,32 @@ class MonsterLogic {
         id: 1,
         maxCount: 5,
         transform: [
-          { posX: -5, posY: -4, posZ: 75 },
-          { posX: 5, posY: -4, posZ: 75 },
+          { posX: -5, posY: -4.6, posZ: 75 },
+          { posX: 5, posY: -4.6, posZ: 75 },
         ],
       },
       {
         id: 2,
         maxCount: 5,
         transform: [
-          { posX: 0, posY: -4, posZ: 55 },
-          { posX: 0, posY: -4, posZ: 45 },
+          { posX: 0, posY: -4.6, posZ: 55 },
+          { posX: 0, posY: -4.6, posZ: 45 },
         ],
       },
       {
         id: 3,
         maxCount: 5,
         transform: [
-          { posX: 10, posY: -4, posZ: 55 },
-          { posX: 10, posY: -4, posZ: 45 },
+          { posX: 10, posY: -4.6, posZ: 55 },
+          { posX: 10, posY: -4.6, posZ: 45 },
         ],
       },
       {
         id: 4,
         maxCount: 5,
         transform: [
-          { posX: 10, posY: -4, posZ: 30 },
-          { posX: 0, posY: -4, posZ: 30 },
+          { posX: 10, posY: -4.6, posZ: 30 },
+          { posX: 0, posY: -4.6, posZ: 30 },
         ],
       },
     ];
@@ -140,13 +140,23 @@ class MonsterLogic {
     return closestPlayer;
   }
 
-  getRandomPosition(zone) {
+  getRandomPosition(zone, radius) {
+    // 랜덤하게 선택된 transform의 중심 좌표 가져오기
     const randomIndex = Math.floor(Math.random() * zone.transform.length);
-    return zone.transform[randomIndex];
-  }
+    const { posX, posY, posZ } = zone.transform[randomIndex];
 
+    // 랜덤 각도 (0 ~ 2π 사이) 생성
+    const angle = Math.random() * 2 * Math.PI;
+
+    // 원형 범위 내 랜덤 좌표 계산 (x, z)
+    const randomX = posX + Math.cos(angle) * radius;
+    const randomZ = posZ + Math.sin(angle) * radius;
+
+    // 결과 반환 (y는 고정)
+    return { posX: randomX, posY, posZ: randomZ };
+  }
   spawnMonster(zone) {
-    const transform = this.getRandomPosition(zone);
+    const transform = this.getRandomPosition(zone, 5);
 
     const monsterAssets = getGameAssets().monster; // 몬스터 데이터 가져오기
     const monsterId = Math.floor(Math.random() * monsterAssets.length); // 랜덤 몬스터 아이디

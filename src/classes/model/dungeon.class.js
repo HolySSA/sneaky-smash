@@ -134,12 +134,7 @@ class Dungeon {
   }
 
   getDungeonUsersUUID() {
-    if (!this.users || this.users.size === 0) {
-      logger.info(`던전에 유저가 존재하지 않습니다. dungeonId: ${this.dungeonId}`);
-      return null;
-    }
-
-    return Array.from(this.users.values()).map((user) => user.user.socket.UUID);
+    return this.usersUUID;
   }
 
   // 인포만 매핑해서 받기

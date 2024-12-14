@@ -34,3 +34,15 @@ export const setSessionId = async (userId, sessionId) => {
   await redis.hset(userKey, 'sessionId', sessionId);
   await redis.expire(userKey, 3600);
 };
+
+export const setIsSignIn = async (userId, isSignIn) => {
+  const redis = await getRedis();
+  const userKey = `user:${userId}`;
+  await redis.hset(userKey, 'isSignIn', isSignIn);
+};
+
+export const getIsSignIn = async (userId) => {
+  const redis = await getRedis();
+  const userKey = `user:${userId}`;
+  return (await redis.hget(userKey, 'isSignIn')) == 'true';
+};

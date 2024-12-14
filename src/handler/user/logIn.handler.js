@@ -8,7 +8,7 @@ import configs from '../../configs/configs.js';
 import logger from '../../utils/logger.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
-import { setRedisUserUUID } from '../../sessions/redis/redis.user.js';
+import { getIsSignIn, setIsSignIn, setRedisUserUUID } from '../../sessions/redis/redis.user.js';
 
 const { PACKET_ID, JWT_SECRET, JWT_EXPIRES_IN, JWT_ALGORITHM, JWT_ISSUER, JWT_AUDIENCE } = configs;
 
@@ -37,23 +37,29 @@ const logInHandler = async ({ socket, payload }) => {
       message = '존재하지 않는 아이디입니다.';
     } else {
       // 비밀번호 비교
+
       const isPasswordValid = await bcrypt.compare(password, existUser.password);
       if (!isPasswordValid) {
         success = false;
         message = '비밀번호가 일치하지 않습니다.';
       } else {
-        // 로그인 검증 통과 - socket.id 할당
-        socket.id = existUser.id;
-        message = '로그인에 성공하였습니다.';
-        token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
-          expiresIn: JWT_EXPIRES_IN,
-          algorithm: JWT_ALGORITHM,
-          issuer: JWT_ISSUER,
-          audience: JWT_AUDIENCE,
-        });
-        token = `Bearer ${token}`;
-
-        addUserSession(socket);
+        if (await getIsSignIn(existUser.id)) {
+          success = false;
+          message = '이미 로그인된 계정입니다.';
+        } else {
+          // 로그인 검증 통과 - socket.id 할당
+          socket.id = existUser.id;
+          message = '로그인에 성공하였습니다.';
+          token = jwt.sign({ id: existUser.id }, JWT_SECRET, {
+            expiresIn: JWT_EXPIRES_IN,
+            algorithm: JWT_ALGORITHM,
+            issuer: JWT_ISSUER,
+            audience: JWT_AUDIENCE,
+          });
+          token = `Bearer ${token}`;
+          await setIsSignIn(socket.id, true);
+          addUserSession(socket);
+        }
       }
     }
   } catch (error) {

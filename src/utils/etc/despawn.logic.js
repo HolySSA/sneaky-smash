@@ -1,6 +1,7 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/redis.party.js';
+import { setIsSignIn } from '../../sessions/redis/redis.user.js';
 import { getAllUserUUIDByTown, removeUserForTown } from '../../sessions/town.session.js';
 import { getUserById, removeUserSession } from '../../sessions/user.session.js';
 import broadcastBySession from '../notification/broadcastBySession.js';
@@ -18,6 +19,7 @@ const despawnLogic = async (socket) => {
   const user = getUserById(userId);
 
   if (user) {
+    await setIsSignIn(userId, false);
     const dungeon = getDungeonSession(user.dungeonId);
     if (dungeon) {
       dungeon.removeDungeonUser(userId);

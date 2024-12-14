@@ -27,16 +27,16 @@ const useSkillHandler = async ({ socket, payload }) => {
 
     // 스킬 인포 정보 가져오기
     const skillAssets = getGameAssets().skillInfo; // 맵핑된 스킬 데이터 가져오기
-    const skillInfo = skillAssets[skillId]; // ID로 직접 접근
+    const skillData = skillAssets[skillId];  // ID로 직접 접근
 
-    if (!skillInfo) {
+    if (!skillData) {
       logger.error(`Skill 정보를 찾을 수 없습니다. skillId: ${skillId}`);
       return;
     }
 
     const skillPayload = {
       playerId,
-      skillInfo,
+      skillInfo : {...skillData, skillId },
       dir,
       transform,
     };

@@ -1,6 +1,7 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import {
   addDungeonSession,
+  getDungeonSession,
   getStatsByUserClass,
   removeDungeonSession,
 } from '../../sessions/dungeon.session.js';
@@ -157,7 +158,10 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     return new Result(partyPayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);
-    removeDungeonSession(dungeonId);
+    const dungeon = getDungeonSession(dungeonId);
+    if (dungeon) {
+      dungeon.Dispose();
+    }
   }
 };
 

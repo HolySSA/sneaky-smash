@@ -94,8 +94,7 @@ class Dungeon {
       }
 
       if (this.users.size == 0) {
-        this.monsterLogic.Dispose();
-        removeDungeonSession(this.dungeonId);
+        this.Dispose();
       }
 
       return result;
@@ -351,6 +350,10 @@ class Dungeon {
   nexusDamaged(damage) {
     this.nexusCurrentHp -= damage;
     return this.nexusCurrentHp;
+  }
+  Dispose() {
+    this.monsterLogic.Dispose();
+    removeDungeonSession(this.dungeonId);
   }
 }
 

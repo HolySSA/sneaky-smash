@@ -52,11 +52,11 @@ const getDungeonUsersUUID = (dungeonId) => {
 };
 
 const removeDungeonSession = (dungeonId) => {
-  if (!dungeonSessions.has(dungeonId)) {
+  const dungeon = dungeonSessions.get(dungeonId);
+  if (!dungeon) {
     logger.error(`던전 세션이 존재하지 않습니다.`);
     return;
   }
-
   return dungeonSessions.delete(dungeonId);
 };
 

@@ -140,11 +140,10 @@ class MonsterLogic {
     return closestPlayer;
   }
 
-  getRandomMonster()
-  {
+  getRandomMonster() {
     const monsterAssets = getGameAssets().monster; // 몬스터 데이터 가져오기
     const monsterId = Math.floor(Math.random() * monsterAssets.length); // 랜덤 몬스터 아이디
-    return monsterAssets[monsterId];    
+    return monsterAssets[monsterId];
   }
 
   getRandomPosition(zone, radius) {
@@ -164,7 +163,7 @@ class MonsterLogic {
   }
   spawnMonster(zone) {
     const monsterInfo = this.getRandomMonster(); // 몬스터 정보
-    const transform = this.getRandomPosition(zone, 5);
+    const transform = this.getRandomPosition(zone, 1.5);
 
     const monsterUniqueId = this.monsterIndex++;
 

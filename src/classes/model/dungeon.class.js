@@ -19,6 +19,8 @@ class Dungeon {
 
     this.nexusCurrentHp = 100;
     this.nexusMaxHp = 100;
+
+    this.nexus = null;
   }
 
   async addDungeonUser(user, statInfo) {

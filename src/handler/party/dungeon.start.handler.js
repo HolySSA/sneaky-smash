@@ -127,12 +127,6 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       await dungeon.addDungeonUser(user, statInfo);
     }
 
-    // 넥서스 스폰 보내는 위치
-    if (!dungeon.spawnNexusNotification()) {
-      logger.warn('Failed to spawn Nexus in the dungeon.');
-      return;
-    }
-
     // 파티원 모두의 정보
     const enterDungeonPayload = {
       dungeonInfo,
@@ -148,7 +142,14 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
     await removeRedisParty(roomId);
 
-    return new Result(partyPayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
+    createNotificationPacket(PACKET_ID.S_PartyLeave, partyPayload, getAllUserUUIDByTown());
+
+    
+    // 넥서스 스폰 보내는 위치
+    if (!dungeon.spawnNexusNotification()) {
+      logger.warn('Failed to spawn Nexus in the dungeon.');
+      return;
+    }
   } catch (e) {
     handleError(socket, e);
     const dungeon = getDungeonSession(dungeonId);

@@ -77,7 +77,8 @@ class MonsterLogic {
     const currentMonster = this.monsterLists.find((monster) => monster.id === id);
 
     if (!currentMonster) {
-      throw new Error(`${id} 몬스터가 존재하지 않습니다.`);
+      logger.error("몬스터가 존재하지 않습니다");
+      return null;
     }
 
     return currentMonster;
@@ -90,10 +91,9 @@ class MonsterLogic {
         posX: monster.transform.posX,
         posY: monster.transform.posY,
         posZ: monster.transform.posZ,
-        rot: 0, //monster.transform.rot, // 추가: 회전값 포함
+        rot: 0,
       },
     };
-    //console.log("몬스터 무브 페이로드 : ",payload);
     createNotificationPacket(PACKET_ID.S_MonsterMove, payload, this.dungeonInstance.usersUUID);
   }
 

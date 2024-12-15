@@ -23,7 +23,7 @@ class Nexus {
   #getRandomSpawnNexus() {
     if (!NEXUS_SPAWN_TRANSFORMS || NEXUS_SPAWN_TRANSFORMS.length === 0) {
       logger.error('No spawn positions available');
-      return;
+      return null;
     }
 
     return NEXUS_SPAWN_TRANSFORMS[Math.floor(Math.random() * NEXUS_SPAWN_TRANSFORMS.length)];

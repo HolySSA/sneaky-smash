@@ -200,15 +200,17 @@ class Dungeon {
     const {
       atk = 0,
       def = 0,
+      maxHp = 0,
       moveSpeed = 0,
       criticalProbability = 0,
       criticalDamageRate = 0,
     } = stats;
-    const statInfo = this.getUserStats(userId);
+    const statInfo = this.getUserStats(userId);    
 
     statInfo.stats = {
       atk: statInfo.stats.atk + atk,
       def: statInfo.stats.def + def,
+      maxHp: statInfo.stats.maxHp + maxHp,
       moveSpeed: statInfo.stats.moveSpeed + moveSpeed,
       criticalProbability: statInfo.stats.criticalProbability + criticalProbability,
       criticalDamageRate: statInfo.stats.criticalDamageRate + criticalDamageRate,

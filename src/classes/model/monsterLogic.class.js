@@ -122,8 +122,10 @@ class MonsterLogic {
     let closestDistance = Infinity;
     let closestPlayer = null;
 
-    this.dungeonInstance.users.forEach((value) => {
-      //console.log("던전 인스턴스의 유저 트랜스폼 : ",value.user.transform);
+    for (const value of this.dungeonInstance.users.values()) {
+      if(value.currentHp <= 0)
+        continue;
+
       const { posX, posY, posZ, rot } = value.user.transform;
       const distance = Math.sqrt(
         (posX - monster.transform.posX) ** 2 +
@@ -135,7 +137,7 @@ class MonsterLogic {
         closestDistance = distance;
         closestPlayer = value;
       }
-    });
+    };
 
     return closestPlayer;
   }
@@ -228,7 +230,7 @@ class MonsterLogic {
             true, // 어그로해제됐나?
           );
           if (isPlayerStillDetected) {
-            monster.attack(this.dungeonInstance.users);
+            monster.attack(this.dungeonInstance);
 
             // 공격중이 아닐 때만 이동
             if (!monster.stopMove) {

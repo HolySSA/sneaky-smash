@@ -148,7 +148,7 @@ class Dungeon {
   }
 
   getSpawnPosition() {
-    return [...this.spawnPosition];
+    return [...this.spawnTransforms];
   }
 
   getUserStats(userId) {
@@ -363,7 +363,7 @@ class Dungeon {
     const getSpawnPos =
       this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
 
-    const reviveResponse = createResponse(PACKET_ID.S_RevivePlayer, {
+    const reviveResponse = {
       playerId: userId,
       transform: {
         posX: getSpawnPos[0],
@@ -372,13 +372,15 @@ class Dungeon {
         rot: 0,
       },
       statInfo: user.statInfo,
-    });
+    };
 
     createNotificationPacket(
-      PACKET_ID.S_UpdatePlayerHp,
+      PACKET_ID.S_RevivePlayer,
       reviveResponse,
       this.getDungeonUsersUUID(),
     );
+
+    user.currentHp = user.statInfo.stats.maxHp;
 
     logger.info(`userId: ${userId} 리스폰!`);
   };
@@ -389,7 +391,7 @@ class Dungeon {
       return;
     }
 
-    let remainingTime = respawnTime; // 초기 리스폰 시간 설정
+    let remainingTime = respawnTime * 1000; // 초기 리스폰 시간 설정
     const defaultIntervalTime = 1000; //기본값 1초
     let intervalDuration = defaultIntervalTime;
 

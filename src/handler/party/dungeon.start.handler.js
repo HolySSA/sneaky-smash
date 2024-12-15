@@ -87,6 +87,11 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
     let transforms = dungeon.getSpawnPosition();
 
+    for (let i = transforms.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [transforms[i], transforms[randomIndex]] = [transforms[randomIndex], transforms[i]];
+    }
+
     const dungeonInfo = {
       dungeonCode: dungeon.dungeonId,
       dungeonName: dungeon.name,
@@ -104,8 +109,6 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         posZ: transformData[2],
         rot: 0, // rotation 값은 나중에 받으면 수정
       };
-
-      console.log("🚀 ~ dungeonStartHandler ~ transform:", transform);
 
       const statInfo = getStatsByUserClass(user.myClass);
 

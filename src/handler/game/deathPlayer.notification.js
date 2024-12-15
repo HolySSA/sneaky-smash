@@ -8,8 +8,10 @@ import logger from '../../utils/logger.js';
 //     float spawnTime = 2;
 //     }
 
-const deathPlayerNotification = (playerId, userLevel, dungeon) => {
+const deathPlayerNotification = (playerId, dungeon) => {
+    const userLevel = dungeon.getUserStats(playerId).level;
     const spawnTimeAssets = getGameAssets().spawnTimeInfo;
+    
     let spawnTime = spawnTimeAssets[userLevel].spawnTime;
 
     if(!spawnTime)

@@ -1,6 +1,7 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import logger from '../../utils/logger.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 class Monster {
   #cannotReachCount = 0;
   constructor(id, monster, transform, zoneId) {
@@ -78,7 +79,7 @@ class Monster {
     return distance <= (releaseCheck ? this.releaseRange : this.detectRange);
   }
 
-  attack(users) {
+  attack(dungeonInstance) {
     if (!this.target && this.isDead) return;
 
     const currentTime = Date.now();
@@ -93,6 +94,11 @@ class Monster {
     if (!this.target) {
       return;
     }
+    if(this.target.user.currentHp <= 0){
+      this.target = null;
+      return;
+    }
+
     const distanceToTarget = Math.sqrt(
       (this.target.user.transform.posX - this.transform.posX) ** 2 +
         (this.target.user.transform.posY - this.transform.posY) ** 2 +
@@ -108,10 +114,8 @@ class Monster {
         monsterId: this.id,
       };
 
-      const response = createResponse(PACKET_ID.S_MonsterAttack, attackPayload);
-      users.forEach((value) => {
-        value.user.socket.write(response);
-      });
+      createNotificationPacket(PACKET_ID.S_MonsterAttack, attackPayload, dungeonInstance.usersUUID);
+
       // 공격 시간 갱신
       this.lastAttackTime = currentTime;
     } else {

@@ -8,7 +8,7 @@ import logger from '../../utils/logger.js';
 //     float spawnTime = 2;
 //     }
 
-const deathPlayerNotification = (playerId, userLevel, dungeonUsersUUID) => {
+const deathPlayerNotification = (playerId, userLevel, dungeon) => {
     const spawnTimeAssets = getGameAssets().spawnTimeInfo;
     let spawnTime = spawnTimeAssets[userLevel].spawnTime;
 
@@ -18,7 +18,9 @@ const deathPlayerNotification = (playerId, userLevel, dungeonUsersUUID) => {
       spawnTime = spawnTimeAssets[spawnTimeAssets.length].spawnTime;
     }
 
-    createNotificationPacket(PACKET_ID.S_DeathPlayer, { playerId, spawnTime }, dungeonUsersUUID);
+    createNotificationPacket(PACKET_ID.S_DeathPlayer, { playerId, spawnTime }, dungeon.getDungeonUsersUUID());
+    
+    dungeon.startRespawnTimer(playerId, spawnTime);
 };
 
 export default deathPlayerNotification;

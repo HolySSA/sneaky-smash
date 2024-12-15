@@ -48,6 +48,17 @@ class Dungeon {
     return user;
   }
 
+  attackedNexus(damage) {
+    if (this.nexus) {
+      const isGameOver = this.nexus.hitNexus(damage, this.usersUUID);
+      if (isGameOver) {
+        // TODO: 게임 오버 로직
+      }
+      return true;
+    }
+    return false;
+  }
+
   spawnNexusNotification() {
     this.nexus = new Nexus();
 
@@ -56,14 +67,11 @@ class Dungeon {
         `Nexus spawned in dungeon: ${this.dungeonId}, Position: ${JSON.stringify(this.nexus.position)}`,
       );
 
-      createNotificationPacket(
-        PACKET_ID.S_NexusSpawn,
-        { nexusId: this.nexus.nexusId, transform: this.nexus.position },
-        this.usersUUID,
-      );
-    }
+      this.nexus.spawnNexusNotification(this.usersUUID);
 
-    logger.error('Nexus cannot spawn in dungeon.');
+      return true;
+    }
+    return false;
   }
 
   increaseMonsterKillCount(userId) {

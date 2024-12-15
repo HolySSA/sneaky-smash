@@ -1,6 +1,8 @@
 import configs from '../../configs/configs.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import generateNexusId from '../../utils/generateNexusId.js';
 import logger from '../../utils/logger.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 const { NEXUS_SPAWN_TRANSFORMS } = configs;
 
@@ -26,25 +28,34 @@ class Nexus {
     return NEXUS_SPAWN_TRANSFORMS[Math.floor(Math.random() * NEXUS_SPAWN_TRANSFORMS.length)];
   }
 
-  spawn() {
-    this.position = this.#getRandomSpawnNexus();
+  spawn(usersUUID) {
+    const newPosition = this.#getRandomSpawnNexus();
 
-    if (!this.position) {
+    if (!newPosition) {
       logger.error(`#getRandomSpawnNexus returned an invalid position.`);
+      return false;
     }
 
+    this.position = newPosition; // 새 위치 설정
     logger.info(`Nexus spawned at position: ${JSON.stringify(this.position)}`);
 
-    return this.position;
+    this.spawnNexusNotification(usersUUID);
+    return true;
   }
 
-  hitNexus(damage) {
+  hitNexus(damage, usersUUID) {
+    if (this.isDead) {
+      logger.warn('Nexus is already destroyed. No further damage applied.');
+      return this.isDead;
+    }
+
     this.nexusHp = Math.max(this.nexusHp - damage, 0);
 
     if (this.nexusHp <= 0) {
       this.isDead = true;
       logger.info('Nexus is destroyed.');
-      return this.nexusHp;
+      this.updateNexusHpNotification(usersUUID);
+      return this.isDead;
     }
 
     const nextThreshold = this.lastHpThreshold - NEXUS_HP_THRESHOLD; // 다음 임계값 계산
@@ -52,11 +63,25 @@ class Nexus {
     if (this.nexusHp <= nextThreshold) {
       logger.info(`Nexus Hp dropped below ${nextThreshold}. Changing position...`);
 
-      this.spawn();
-      this.lastHpThreshold = nextThreshold; // 마지막 임계값 갱신
+      if (this.spawn(usersUUID)) {
+        this.lastHpThreshold = nextThreshold;
+      }
     }
 
-    return this.nexusHp;
+    this.updateNexusHpNotification(usersUUID);
+    return this.isDead;
+  }
+
+  spawnNexusNotification(usersUUID) {
+    createNotificationPacket(
+      PACKET_ID.S_NexusSpawn,
+      { nexusId: this.nexusId, transform: this.position },
+      usersUUID,
+    );
+  }
+
+  updateNexusHpNotification(usersUUID) {
+    createNotificationPacket(PACKET_ID.S_UpdateNexusHp, { hp: this.nexusHp }, usersUUID);
   }
 }
 

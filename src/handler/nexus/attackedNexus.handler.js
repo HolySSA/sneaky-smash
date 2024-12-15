@@ -1,7 +1,9 @@
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getUserById } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
 import logger from '../../utils/logger.js';
+import Result from '../result.js';
 
 const attackedNexusHandler = async ({ socket, payload }) => {
   const { damage } = payload;
@@ -23,6 +25,12 @@ const attackedNexusHandler = async ({ socket, payload }) => {
 
     const dungeonId = user.dungeonId;
     const dungeon = getDungeonSession(dungeonId);
+    if (dungeon.attackedNexus(damage)) {
+      logger.error(`attackedNexus: nexus can not exist in ${dungeonId}`);
+      return;
+    }
+
+    return new Result({ playerId, damage }, PACKET_ID.S_AttackedNexus, dungeon.usersUUID);
   } catch (error) {
     handleError(socket, error);
   }

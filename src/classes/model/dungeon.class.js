@@ -156,8 +156,14 @@ class Dungeon {
     return user.statInfo;
   }
 
-  updateUserStats(userId, stats){
-    const { atk = 0, def = 0, moveSpeed = 0, criticalProbability = 0, criticalDamageRate = 0} = stats;
+  updateUserStats(userId, stats) {
+    const {
+      atk = 0,
+      def = 0,
+      moveSpeed = 0,
+      criticalProbability = 0,
+      criticalDamageRate = 0,
+    } = stats;
     const statInfo = this.getUserStats(userId);
 
     statInfo.stats = {
@@ -171,7 +177,7 @@ class Dungeon {
     return statInfo.stats;
   }
 
-  levelUpUserStats(user, nextLevel, maxExp) {   
+  levelUpUserStats(user, nextLevel, maxExp) {
     const { stats: currentStats, exp: currentExp, maxExp: currentMaxExp } = user.statInfo;
 
     const newExp = currentExp - currentMaxExp;
@@ -215,7 +221,7 @@ class Dungeon {
       playerId: userId,
       expAmount: user.statInfo.exp,
     });
-    
+
     enqueueSend(user.user.socket.UUID, expResponse);
 
     if (user.statInfo.exp >= maxExp) {
@@ -229,7 +235,7 @@ class Dungeon {
   levelUpNotification(userId, statInfo) {
     createNotificationPacket(
       PACKET_ID.S_LevelUp,
-      { playerId: userId, statInfo},
+      { playerId: userId, statInfo },
       this.getDungeonUsersUUID(),
     );
   }
@@ -240,7 +246,7 @@ class Dungeon {
 
     createNotificationPacket(
       PACKET_ID.S_HitPlayer,
-      { playerId: userId, damage : resultDamage },
+      { playerId: userId, damage: resultDamage },
       this.getDungeonUsersUUID(),
     );
 
@@ -301,7 +307,10 @@ class Dungeon {
   increasePlayerMaxHp(userId, amount) {
     const user = this.users.get(userId);
 
-    user.statInfo.stats.maxHp = Math.min(amount + user.statInfo.stats.maxHp, user.statInfo.stats.maxHp);
+    user.statInfo.stats.maxHp = Math.min(
+      amount + user.statInfo.stats.maxHp,
+      user.statInfo.stats.maxHp,
+    );
 
     return user.statInfo.stats.maxHp;
   }
@@ -309,7 +318,10 @@ class Dungeon {
   increasePlayerMoveSpeed(userId, amount) {
     const user = this.users.get(userId);
 
-    user.statInfo.stats.moveSpeed = Math.min(amount + user.statInfo.stats.moveSpeed, user.statInfo.stats.moveSpeed);
+    user.statInfo.stats.moveSpeed = Math.min(
+      amount + user.statInfo.stats.moveSpeed,
+      user.statInfo.stats.moveSpeed,
+    );
 
     return user.statInfo.stats.moveSpeed;
   }
@@ -328,36 +340,40 @@ class Dungeon {
   increasePlayerCriticalDamageRate(userId, amount) {
     const user = this.users.get(userId);
 
-    user.statInfo.stats.criticalDamageRate = Math.min(amount + user.statInfo.stats.criticalDamageRate, user.statInfo.stats.criticalDamageRate);
+    user.statInfo.stats.criticalDamageRate = Math.min(
+      amount + user.statInfo.stats.criticalDamageRate,
+      user.statInfo.stats.criticalDamageRate,
+    );
 
     return user.statInfo.stats.criticalDamageRate;
   }
 
   nexusDamaged(damage) {
     this.nexusCurrentHp -= damage;
-    return this.nexusCurrentHp;  
+    return this.nexusCurrentHp;
   }
 
   // int32 playerId = 1;
   // TransformInfo transform = 2;
-  // StatInfo statInfo = 3;     
+  // StatInfo statInfo = 3;
 
   onRespawn = (userId) => {
     const user = this.users.get(userId);
 
-    const getSpawnPos = this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
-    
+    const getSpawnPos =
+      this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
+
     const reviveResponse = createResponse(PACKET_ID.S_RevivePlayer, {
       playerId: userId,
       transform: {
         posX: getSpawnPos[0],
         posY: getSpawnPos[1],
         posZ: getSpawnPos[2],
-        rot: 0
+        rot: 0,
       },
-      statInfo: user.statInfo
+      statInfo: user.statInfo,
     });
-    
+
     createNotificationPacket(
       PACKET_ID.S_UpdatePlayerHp,
       reviveResponse,
@@ -369,22 +385,31 @@ class Dungeon {
 
   startRespawnTimer(userId, respawnTime) {
     if (this.respawnTimers.has(userId)) {
-      logger.info(`respawnTimers에 userId: ${userId} 가 이미 존재합니다`)
+      logger.info(`respawnTimers에 userId: ${userId} 가 이미 존재합니다`);
       return;
     }
 
     let remainingTime = respawnTime; // 초기 리스폰 시간 설정
+    const defaultIntervalTime = 1000; //기본값 1초
+    let intervalDuration = defaultIntervalTime;
 
+    let lastTime = Date.now();
     const interval = setInterval(() => {
-      remainingTime -= 1000; // 1초씩 감소
-      logger.info(`userId : ${userId} 리스폰 시간 ${remainingTime / 1000} 초`);
-
+      const currentTime = Date.now();
+      const timeDiff = currentTime - lastTime;
+      lastTime = currentTime;
+      remainingTime -= timeDiff; // 흐른 시간 만큼 감소
+      logger.info(`userId : ${userId} 리스폰 시간 ${remainingTime}ms`);
       if (remainingTime <= 0) {
         clearInterval(interval); // 타이머 종료
         this.respawnTimers.delete(userId); // 관리 목록에서 제거
         this.onRespawn(userId); // 내부 리스폰 처리
       }
-    }, 1000); // 1초 간격으로 실행
+
+      if (remainingTime < defaultIntervalTime) {
+        intervalDuration = remainingTime;
+      }
+    }, intervalDuration); // 1초 간격으로 실행
 
     this.respawnTimers.set(userId, interval); // 타이머 등록
   }
@@ -392,7 +417,7 @@ class Dungeon {
   clearAllTimers() {
     this.respawnTimers.forEach((interval) => clearInterval(interval));
     this.respawnTimers.clear();
-    logger.info("모든 리스폰 타이머 클리어!");
+    logger.info('모든 리스폰 타이머 클리어!');
   }
 
   Dispose() {

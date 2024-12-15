@@ -20,7 +20,7 @@ import getSkillHandler from './skill/getSkill.handler.js';
 import shootProjectileHandler from './skill/shootProjectile.handler.js';
 import useSkillHandler from './skill/useSkill.handler.js';
 // game
-import attackedNexusHandler from './game/attackedNexus.handler.js';
+import attackedNexusHandler from './nexus/attackedNexus.handler.js';
 // party
 import partyLeaveHandler from './party/party.leave.handler.js';
 import partyHandler from './party/party.handler.js';

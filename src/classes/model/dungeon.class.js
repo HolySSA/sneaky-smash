@@ -142,21 +142,39 @@ class Dungeon {
     return user.statInfo;
   }
 
+  updateUserStats(userId, stats){
+    const { atk = 0, def = 0, moveSpeed = 0, criticalProbability = 0, criticalDamageRate = 0} = stats;
+    const statInfo = this.getUserStats(userId);
+
+    statInfo.stats = {
+      atk: statInfo.stats.atk + atk,
+      def: statInfo.stats.def + def,
+      moveSpeed: statInfo.stats.moveSpeed + moveSpeed,
+      criticalProbability: statInfo.stats.criticalProbability + criticalProbability,
+      criticalDamageRate: statInfo.stats.criticalDamageRate + criticalDamageRate,
+    };
+
+    return statInfo.stats;
+  }
+
   levelUpUserStats(userId) {
+    const { stats: currentStats, exp: currentExp, maxExp: currentMaxExp, level : currentLevel } = user.statInfo;
+    
     const user = this.users.get(userId);
-    const nextLevel = user.statInfo.level + 1;
+    const nextLevel = currentLevel + 1;
     const expAssets = getGameAssets().expInfo; // 맵핑된 경험치 데이터 가져오기
     const expInfos = expAssets[nextLevel];
-    const newExp = user.statInfo.exp - user.statInfo.maxExp;
+
+    const newExp = currentExp - currentMaxExp;
     user.statInfo = {
       level: nextLevel,
       stats: {
-        maxHp: user.statInfo.stats.maxHp + 20,
-        atk: user.statInfo.stats.atk + 3,
-        def: user.statInfo.stats.def + 1,
-        moveSpeed: user.statInfo.stats.moveSpeed + 1,
-        criticalProbability: user.statInfo.stats.criticalProbability,
-        criticalDamageRate: user.statInfo.stats.criticalDamageRate,
+        maxHp: currentStats.maxHp + 20,
+        atk: currentStats.atk + 3,
+        def: currentStats.def + 1,
+        moveSpeed: currentStats.moveSpeed + 1,
+        criticalProbability: currentStats.criticalProbability,
+        criticalDamageRate: currentStats.criticalDamageRate,
       },
       exp: newExp,
       maxExp: expInfos.maxExp,
@@ -205,31 +223,17 @@ class Dungeon {
     );
   }
 
-  getUserHp(userId) {
-    const stats = this.getUserStats(userId);
-    return stats.hp;
-  }
-
-  getCurrentStage() {
-    return this.stages[this.currentStage];
-  }
-
-  nextStage() {
-    if (this.currentStage < this.stages.length - 1) {
-      this.currentStage++;
-    }
-  }
-
   damagedUser(userId, damage) {
     const user = this.users.get(userId);
+    const resultDamage = Math.max(1, damage - user.statInfo.stats.def); // 방어력이 공격력보다 커도 최소뎀
 
     createNotificationPacket(
       PACKET_ID.S_HitPlayer,
-      { playerId: userId, damage },
+      { playerId: userId, damage : resultDamage },
       this.getDungeonUsersUUID(),
     );
 
-    return user.currentHp;
+    return resultDamage;
   }
 
   getAmountHpByKillUser(userId) {
@@ -270,51 +274,52 @@ class Dungeon {
   increasePlayerAtk(userId, amount) {
     const user = this.users.get(userId);
 
-    user.atk = Math.min(amount + user.atk, user.atk);
+    user.statInfo.stats.atk = Math.min(amount + user.statInfo.stats.atk, user.statInfo.stats.atk);
 
-    return user.atk;
+    return user.statInfo.stats.atk;
   }
 
   increasePlayerDef(userId, amount) {
     const user = this.users.get(userId);
 
-    user.def = Math.min(amount + user.def, user.def);
+    user.statInfo.stats.def = Math.min(amount + user.statInfo.stats.def, user.statInfo.stats.def);
 
-    return user.def;
+    return user.statInfo.stats.def;
   }
 
   increasePlayerMaxHp(userId, amount) {
     const user = this.users.get(userId);
 
-    user.maxHp = Math.min(amount + user.maxHp, user.maxHp);
+    user.statInfo.stats.maxHp = Math.min(amount + user.statInfo.stats.maxHp, user.statInfo.stats.maxHp);
 
-    return user.maxHp;
+    return user.statInfo.stats.maxHp;
   }
 
   increasePlayerMoveSpeed(userId, amount) {
     const user = this.users.get(userId);
 
-    user.moveSpeed = Math.min(amount + user.moveSpeed, user.moveSpeed);
+    user.statInfo.stats.moveSpeed = Math.min(amount + user.statInfo.stats.moveSpeed, user.statInfo.stats.moveSpeed);
 
-    return user.moveSpeed;
+    return user.statInfo.stats.moveSpeed;
   }
 
   increasePlayerCriticalProbability(userId, amount) {
     const user = this.users.get(userId);
 
-    user.criticalProbability = Math.min(
-      amount + user.criticalProbability,
-      user.criticalProbability,
+    user.statInfo.stats.criticalProbability = Math.min(
+      amount + user.statInfo.stats.criticalProbability,
+      user.statInfo.stats.criticalProbability,
     );
 
     return user.criticalProbability;
   }
+
   increasePlayerCriticalDamageRate(userId, amount) {
     const user = this.users.get(userId);
 
-    user.criticalDamageRate = Math.min(amount + user.criticalDamageRate, user.criticalDamageRate);
+    user.statInfo.stats.criticalDamageRate = Math.min(amount + user.statInfo.stats.criticalDamageRate, user.statInfo.stats.criticalDamageRate);
 
-    return user.criticalDamageRate;
+    return user.statInfo.stats.criticalDamageRate;
   }
 
   nexusDamaged(damage) {

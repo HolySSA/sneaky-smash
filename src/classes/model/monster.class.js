@@ -137,16 +137,9 @@ class Monster {
     if (!this.target) {
       this.target = targetYou; // 공격자가 타겟으로 설정됨
       this.targetOn = true; // 타겟 활성화
-      logger.info(`${this.name}이(가) ${targetYou}.user.nickname}을(를) 타겟으로 설정했습니다.`);
     }
 
     return this.curHp;
-  }
-  moveToTarget() {
-    if (this.target) {
-      // 타겟의 위치로 이동
-      this.stopMove = false;
-    }
   }
 }
 

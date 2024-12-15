@@ -7,6 +7,7 @@ import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { setSessionId } from '../../sessions/redis/redis.user.js';
+import Nexus from './nexus.class.js';
 
 class Dungeon {
   constructor(dungeonInfo) {
@@ -19,6 +20,7 @@ class Dungeon {
     this.nexusCurrentHp = 100;
     this.nexusMaxHp = 100;
 
+    this.nexus = null;
     this.respawnTimers = new Map();
 
     this.spawnTransforms = [
@@ -52,6 +54,42 @@ class Dungeon {
     this.users.set(userId, dungeonUser);
 
     return user;
+  }
+
+  attackedNexus(damage, playerId) {
+    if (this.nexus) {
+      const isGameOver = this.nexus.hitNexus(damage, playerId, this.usersUUID);
+      if (isGameOver) {
+        logger.info(`Nexus destroyed in dungeon ${this.dungeonId}.`);
+        return true; // 게임 종료
+      }
+    }
+    return false;
+  }
+
+  handleGameEnd() {
+    const playerId = this.nexus.lastAttackerId;
+    logger.info(`Game ended in dungeonId ${this.dungeonId}. Winner is player: ${playerId}`);
+
+    createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.userUUID);
+
+    // 던전 세션 제거
+    this.Dispose();
+  }
+
+  spawnNexusNotification() {
+    this.nexus = new Nexus();
+
+    if (this.nexus) {
+      logger.info(
+        `Nexus spawned in dungeon: ${this.dungeonId}, Position: ${JSON.stringify(this.nexus.position)}`,
+      );
+
+      this.nexus.spawnNexusNotification(this.usersUUID);
+
+      return true;
+    }
+    return false;
   }
 
   increaseMonsterKillCount(userId) {
@@ -235,6 +273,7 @@ class Dungeon {
   levelUpNotification(userId, statInfo) {
     createNotificationPacket(
       PACKET_ID.S_LevelUp,
+
       { playerId: userId, statInfo },
       this.getDungeonUsersUUID(),
     );

@@ -157,13 +157,8 @@ class Dungeon {
     return statInfo.stats;
   }
 
-  levelUpUserStats(userId) {
-    const { stats: currentStats, exp: currentExp, maxExp: currentMaxExp, level : currentLevel } = user.statInfo;
-    
-    const user = this.users.get(userId);
-    const nextLevel = currentLevel + 1;
-    const expAssets = getGameAssets().expInfo; // 맵핑된 경험치 데이터 가져오기
-    const expInfos = expAssets[nextLevel];
+  levelUpUserStats(user, nextLevel, maxExp) {   
+    const { stats: currentStats, exp: currentExp, maxExp: currentMaxExp } = user.statInfo;
 
     const newExp = currentExp - currentMaxExp;
     user.statInfo = {
@@ -177,7 +172,7 @@ class Dungeon {
         criticalDamageRate: currentStats.criticalDamageRate,
       },
       exp: newExp,
-      maxExp: expInfos.maxExp,
+      maxExp,
     };
 
     return user.statInfo;
@@ -185,40 +180,45 @@ class Dungeon {
 
   addExp(userId, getExp) {
     const user = this.getDungeonUser(userId);
-
     // 레벨당 필요 경험치 불러오기
     let maxExp = user.statInfo.maxExp;
+    const currentLevel = user.statInfo.level;
+    const nextLevel = currentLevel + 1;
     const expAssets = getGameAssets().expInfo;
+
     if (!maxExp) {
-      maxExp = expAssets[user.statInfo.level].maxExp; // ID로 직접 접근
+      maxExp = expAssets[currentLevel].maxExp; // ID로 직접 접근
     }
 
     //에셋 정보가 없으면 테이블 문제 or 최대 레벨 도달
-    if (expAssets[user.statInfo.level + 1]) {
+    if (!expAssets[currentLevel + 1]) {
+      logger.info("expAssets 가 존재하지 않습니다");
       return;
     }
 
     user.statInfo.exp += getExp;
+
     //logger.info(`플레이어 ${userId}의 경험치 get +${getExp} 현재경험치 ${user.statInfo.exp}`);
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {
       playerId: userId,
       expAmount: user.statInfo.exp,
     });
-
-    enqueueSend(user.user.UUID, expResponse);
+    
+    enqueueSend(user.user.socket.UUID, expResponse);
 
     if (user.statInfo.exp >= maxExp) {
-      this.levelUpNotification(userId);
+      const statInfo = this.levelUpUserStats(user, nextLevel, expAssets[nextLevel].maxExp);
+      this.levelUpNotification(userId, statInfo);
     }
 
     return user.statInfo.exp;
   }
 
-  levelUpNotification(userId) {
+  levelUpNotification(userId, statInfo) {
     createNotificationPacket(
       PACKET_ID.S_LevelUp,
-      { playerId: userId, statInfo: this.levelUpUserStats(userId) },
+      { playerId: userId, statInfo},
       this.getDungeonUsersUUID(),
     );
   }

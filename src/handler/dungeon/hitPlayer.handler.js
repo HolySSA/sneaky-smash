@@ -3,7 +3,8 @@ import handleError from '../../utils/error/errorHandler.js';
 import deathPlayerNotification from '../game/deathPlayer.notification.js';
 import { getUserById } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
-import { userSessions } from '../../sessions/sessions.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 
 // message C_HitPlayer {
 //   int32 playerId = 1;  // 피격자 ID
@@ -33,15 +34,16 @@ const hitPlayerHandler = ({ socket, payload }) => {
     const dungeon = getDungeonSession(dungeonId);
 
     // 플레이어가 플레이어를 잡으면 피회복을 하는 로직
-    dungeon.damagedUser(playerId, damage);
-    const currentHp = dungeon.updatePlayerHp(playerId, -damage);
+    const resultDamage =  dungeon.damagedUser(playerId, damage);
+    const currentHp = dungeon.updatePlayerHp(playerId, -resultDamage);
 
-    if (currentHp <= 0 && attackerId != playerId) {
+    if (currentHp <= 0 && attackerId != playerId){
       dungeon.getAmountHpByKillUser(attackerId);
+    }
+    else if(currentHp <= 0 ){
+      deathPlayerNotification(playerId, dungeon);
+    }
 
-      // 여기서부터 시작
-    }else if(currentHp <= 0 )    
-      deathPlayerNotification(socket, playerId);
   } catch (err) {
     handleError(socket, err);
   }

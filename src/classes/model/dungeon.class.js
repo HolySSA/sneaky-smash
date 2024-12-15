@@ -6,7 +6,6 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
-import { getUserById } from '../../sessions/user.session.js';
 import { setSessionId } from '../../sessions/redis/redis.user.js';
 import Nexus from './nexus.class.js';
 
@@ -22,6 +21,14 @@ class Dungeon {
     this.nexusMaxHp = 100;
 
     this.nexus = null;
+    this.respawnTimers = new Map();
+
+    this.spawnTransforms = [
+      [2.5, 0.5, 112],
+      [2.5, 0.5, -5.5],
+      [42, 0.5, 52.5],
+      [-38, 0.5, 52.5],
+    ];
   }
 
   async addDungeonUser(user, statInfo) {
@@ -29,7 +36,8 @@ class Dungeon {
     user.dungeonId = this.dungeonId;
     await setSessionId(userId, this.dungeonId);
     if (this.users.has(userId)) {
-      throw new Error('이미 던전에 참여 중인 유저입니다.');
+      logger.info('이미 던전에 참여 중인 유저입니다.');
+      return null;
     }
 
     this.usersUUID.push(user.socket.UUID);
@@ -177,29 +185,52 @@ class Dungeon {
     return this.usersUUID;
   }
 
+  getSpawnPosition() {
+    return [...this.spawnTransforms];
+  }
+
   getUserStats(userId) {
     const user = this.getDungeonUser(userId);
     return user.statInfo;
   }
 
-  levelUpUserStats(userId) {
-    const user = this.users.get(userId);
-    const nextLevel = user.statInfo.level + 1;
-    const expAssets = getGameAssets().expInfo; // 맵핑된 경험치 데이터 가져오기
-    const expInfos = expAssets[nextLevel];
-    const newExp = user.statInfo.exp - user.statInfo.maxExp;
+  updateUserStats(userId, stats) {
+    const {
+      atk = 0,
+      def = 0,
+      moveSpeed = 0,
+      criticalProbability = 0,
+      criticalDamageRate = 0,
+    } = stats;
+    const statInfo = this.getUserStats(userId);
+
+    statInfo.stats = {
+      atk: statInfo.stats.atk + atk,
+      def: statInfo.stats.def + def,
+      moveSpeed: statInfo.stats.moveSpeed + moveSpeed,
+      criticalProbability: statInfo.stats.criticalProbability + criticalProbability,
+      criticalDamageRate: statInfo.stats.criticalDamageRate + criticalDamageRate,
+    };
+
+    return statInfo.stats;
+  }
+
+  levelUpUserStats(user, nextLevel, maxExp) {
+    const { stats: currentStats, exp: currentExp, maxExp: currentMaxExp } = user.statInfo;
+
+    const newExp = currentExp - currentMaxExp;
     user.statInfo = {
       level: nextLevel,
       stats: {
-        maxHp: user.statInfo.stats.maxHp + 20,
-        atk: user.statInfo.stats.atk + 3,
-        def: user.statInfo.stats.def + 1,
-        moveSpeed: user.statInfo.stats.moveSpeed + 1,
-        criticalProbability: user.statInfo.stats.criticalProbability,
-        criticalDamageRate: user.statInfo.stats.criticalDamageRate,
+        maxHp: currentStats.maxHp + 20,
+        atk: currentStats.atk + 3,
+        def: currentStats.def + 1,
+        moveSpeed: currentStats.moveSpeed + 1,
+        criticalProbability: currentStats.criticalProbability,
+        criticalDamageRate: currentStats.criticalDamageRate,
       },
       exp: newExp,
-      maxExp: expInfos.maxExp,
+      maxExp,
     };
 
     return user.statInfo;
@@ -207,69 +238,58 @@ class Dungeon {
 
   addExp(userId, getExp) {
     const user = this.getDungeonUser(userId);
-
     // 레벨당 필요 경험치 불러오기
     let maxExp = user.statInfo.maxExp;
+    const currentLevel = user.statInfo.level;
+    const nextLevel = currentLevel + 1;
     const expAssets = getGameAssets().expInfo;
+
     if (!maxExp) {
-      maxExp = expAssets[user.statInfo.level].maxExp; // ID로 직접 접근
+      maxExp = expAssets[currentLevel].maxExp; // ID로 직접 접근
     }
 
     //에셋 정보가 없으면 테이블 문제 or 최대 레벨 도달
-    if (expAssets[user.statInfo.level + 1]) {
+    if (!expAssets[nextLevel]) {
       return;
     }
 
     user.statInfo.exp += getExp;
-    //logger.info(`플레이어 ${userId}의 경험치 get +${getExp} 현재경험치 ${user.statInfo.exp}`);
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {
       playerId: userId,
       expAmount: user.statInfo.exp,
     });
 
-    enqueueSend(user.user.UUID, expResponse);
+    enqueueSend(user.user.socket.UUID, expResponse);
 
     if (user.statInfo.exp >= maxExp) {
-      this.levelUpNotification(userId);
+      const statInfo = this.levelUpUserStats(user, nextLevel, expAssets[nextLevel].maxExp);
+      this.levelUpNotification(userId, statInfo);
     }
 
     return user.statInfo.exp;
   }
 
-  levelUpNotification(userId) {
+  levelUpNotification(userId, statInfo) {
     createNotificationPacket(
       PACKET_ID.S_LevelUp,
-      { playerId: userId, statInfo: this.levelUpUserStats(userId) },
-      this.usersUUID,
+
+      { playerId: userId, statInfo },
+      this.getDungeonUsersUUID(),
     );
-  }
-
-  getUserHp(userId) {
-    const stats = this.getUserStats(userId);
-    return stats.hp;
-  }
-
-  getCurrentStage() {
-    return this.stages[this.currentStage];
-  }
-
-  nextStage() {
-    if (this.currentStage < this.stages.length - 1) {
-      this.currentStage++;
-    }
   }
 
   damagedUser(userId, damage) {
     const user = this.users.get(userId);
+    const resultDamage = Math.max(1, damage - user.statInfo.stats.def); // 방어력이 공격력보다 커도 최소뎀
 
     createNotificationPacket(
       PACKET_ID.S_HitPlayer,
-      { playerId: userId, damage },
+      { playerId: userId, damage: resultDamage },
       this.getDungeonUsersUUID(),
     );
 
-    return user.currentHp;
+    return resultDamage;
   }
 
   getAmountHpByKillUser(userId) {
@@ -310,59 +330,140 @@ class Dungeon {
   increasePlayerAtk(userId, amount) {
     const user = this.users.get(userId);
 
-    user.atk = Math.min(amount + user.atk, user.atk);
+    user.statInfo.stats.atk = Math.min(amount + user.statInfo.stats.atk, user.statInfo.stats.atk);
 
-    return user.atk;
+    return user.statInfo.stats.atk;
   }
 
   increasePlayerDef(userId, amount) {
     const user = this.users.get(userId);
 
-    user.def = Math.min(amount + user.def, user.def);
+    user.statInfo.stats.def = Math.min(amount + user.statInfo.stats.def, user.statInfo.stats.def);
 
-    return user.def;
+    return user.statInfo.stats.def;
   }
 
   increasePlayerMaxHp(userId, amount) {
     const user = this.users.get(userId);
 
-    user.maxHp = Math.min(amount + user.maxHp, user.maxHp);
+    user.statInfo.stats.maxHp = Math.min(
+      amount + user.statInfo.stats.maxHp,
+      user.statInfo.stats.maxHp,
+    );
 
-    return user.maxHp;
+    return user.statInfo.stats.maxHp;
   }
 
   increasePlayerMoveSpeed(userId, amount) {
     const user = this.users.get(userId);
 
-    user.moveSpeed = Math.min(amount + user.moveSpeed, user.moveSpeed);
+    user.statInfo.stats.moveSpeed = Math.min(
+      amount + user.statInfo.stats.moveSpeed,
+      user.statInfo.stats.moveSpeed,
+    );
 
-    return user.moveSpeed;
+    return user.statInfo.stats.moveSpeed;
   }
 
   increasePlayerCriticalProbability(userId, amount) {
     const user = this.users.get(userId);
 
-    user.criticalProbability = Math.min(
-      amount + user.criticalProbability,
-      user.criticalProbability,
+    user.statInfo.stats.criticalProbability = Math.min(
+      amount + user.statInfo.stats.criticalProbability,
+      user.statInfo.stats.criticalProbability,
     );
 
     return user.criticalProbability;
   }
+
   increasePlayerCriticalDamageRate(userId, amount) {
     const user = this.users.get(userId);
 
-    user.criticalDamageRate = Math.min(amount + user.criticalDamageRate, user.criticalDamageRate);
+    user.statInfo.stats.criticalDamageRate = Math.min(
+      amount + user.statInfo.stats.criticalDamageRate,
+      user.statInfo.stats.criticalDamageRate,
+    );
 
-    return user.criticalDamageRate;
+    return user.statInfo.stats.criticalDamageRate;
   }
 
   nexusDamaged(damage) {
     this.nexusCurrentHp -= damage;
     return this.nexusCurrentHp;
   }
+
+  // int32 playerId = 1;
+  // TransformInfo transform = 2;
+  // StatInfo statInfo = 3;
+
+  onRespawn = (userId) => {
+    const user = this.users.get(userId);
+
+    const getSpawnPos =
+      this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
+
+    const reviveResponse = {
+      playerId: userId,
+      transform: {
+        posX: getSpawnPos[0],
+        posY: getSpawnPos[1],
+        posZ: getSpawnPos[2],
+        rot: 0,
+      },
+      statInfo: user.statInfo,
+    };
+
+    createNotificationPacket(
+      PACKET_ID.S_RevivePlayer,
+      reviveResponse,
+      this.getDungeonUsersUUID(),
+    );
+
+    user.currentHp = user.statInfo.stats.maxHp;
+
+    logger.info(`userId: ${userId} 리스폰!`);
+  };
+
+  startRespawnTimer(userId, respawnTime) {
+    if (this.respawnTimers.has(userId)) {
+      logger.info(`respawnTimers에 userId: ${userId} 가 이미 존재합니다`);
+      return;
+    }
+
+    let remainingTime = respawnTime * 1000; // 초기 리스폰 시간 설정
+    const defaultIntervalTime = 1000; //기본값 1초
+    let intervalDuration = defaultIntervalTime;
+
+    let lastTime = Date.now();
+    const interval = setInterval(() => {
+      const currentTime = Date.now();
+      const timeDiff = currentTime - lastTime;
+      lastTime = currentTime;
+      remainingTime -= timeDiff; // 흐른 시간 만큼 감소
+      logger.info(`userId : ${userId} 리스폰 시간 ${remainingTime}ms`);
+      if (remainingTime <= 0) {
+        clearInterval(interval); // 타이머 종료
+        this.respawnTimers.delete(userId); // 관리 목록에서 제거
+        this.onRespawn(userId); // 내부 리스폰 처리
+      }
+
+      if (remainingTime < defaultIntervalTime) {
+        intervalDuration = remainingTime;
+      }
+    }, intervalDuration); // 1초 간격으로 실행
+
+    this.respawnTimers.set(userId, interval); // 타이머 등록
+  }
+
+  clearAllTimers() {
+    this.respawnTimers.forEach((interval) => clearInterval(interval));
+    this.respawnTimers.clear();
+    logger.info('모든 리스폰 타이머 클리어!');
+  }
+
   Dispose() {
     this.monsterLogic.Dispose();
+    this.clearAllTimers();
     removeDungeonSession(this.dungeonId);
   }
 }

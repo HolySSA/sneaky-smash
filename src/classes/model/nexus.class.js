@@ -17,6 +17,7 @@ class Nexus {
     this.lastHpThreshold = NEXUS_HP; // 마지막으로 체력 감소 임계값을 기록
     this.position = NEXUS_SPAWN_TRANSFORMS[0];
     this.isDead = false;
+    this.lastAttackerId = null;
   }
 
   #getRandomSpawnNexus() {
@@ -36,20 +37,21 @@ class Nexus {
       return false;
     }
 
-    this.position = newPosition; // 새 위치 설정
+    this.position = newPosition;
     logger.info(`Nexus spawned at position: ${JSON.stringify(this.position)}`);
 
     this.spawnNexusNotification(usersUUID);
     return true;
   }
 
-  hitNexus(damage, usersUUID) {
+  hitNexus(damage, playerId, usersUUID) {
     if (this.isDead) {
       logger.warn('Nexus is already destroyed. No further damage applied.');
       return this.isDead;
     }
 
     this.nexusHp = Math.max(this.nexusHp - damage, 0);
+    this.lastAttackerId = playerId;
 
     if (this.nexusHp <= 0) {
       this.isDead = true;

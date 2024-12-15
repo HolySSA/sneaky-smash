@@ -48,15 +48,25 @@ class Dungeon {
     return user;
   }
 
-  attackedNexus(damage) {
+  attackedNexus(damage, playerId) {
     if (this.nexus) {
-      const isGameOver = this.nexus.hitNexus(damage, this.usersUUID);
+      const isGameOver = this.nexus.hitNexus(damage, playerId, this.usersUUID);
       if (isGameOver) {
-        // TODO: 게임 오버 로직
+        logger.info(`Nexus destroyed in dungeon ${this.dungeonId}.`);
+        return true; // 게임 종료
       }
-      return true;
     }
     return false;
+  }
+
+  handleGameEnd() {
+    const playerId = this.nexus.lastAttackerId;
+    logger.info(`Game ended in dungeonId ${this.dungeonId}. Winner is player: ${playerId}`);
+
+    createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.userUUID);
+
+    // 던전 세션 제거
+    this.Dispose();
   }
 
   spawnNexusNotification() {

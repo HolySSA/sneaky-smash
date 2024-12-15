@@ -87,6 +87,8 @@ class Dungeon {
 
       this.nexus.spawnNexusNotification(this.usersUUID);
 
+      this.nexus.updateNexusHpNotification(this.usersUUID);
+
       return true;
     }
     return false;
@@ -413,11 +415,7 @@ class Dungeon {
       statInfo: user.statInfo,
     };
 
-    createNotificationPacket(
-      PACKET_ID.S_RevivePlayer,
-      reviveResponse,
-      this.getDungeonUsersUUID(),
-    );
+    createNotificationPacket(PACKET_ID.S_RevivePlayer, reviveResponse, this.getDungeonUsersUUID());
 
     user.currentHp = user.statInfo.stats.maxHp;
 

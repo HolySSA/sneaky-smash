@@ -8,6 +8,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { getUserById } from '../../sessions/user.session.js';
 import { setSessionId } from '../../sessions/redis/redis.user.js';
+import Nexus from './nexus.class.js';
 
 class Dungeon {
   constructor(dungeonInfo) {
@@ -45,6 +46,24 @@ class Dungeon {
     this.users.set(userId, dungeonUser);
 
     return user;
+  }
+
+  spawnNexusNotification() {
+    this.nexus = new Nexus();
+
+    if (this.nexus) {
+      logger.info(
+        `Nexus spawned in dungeon: ${this.dungeonId}, Position: ${JSON.stringify(this.nexus.position)}`,
+      );
+
+      createNotificationPacket(
+        PACKET_ID.S_NexusSpawn,
+        { nexusId: this.nexus.nexusId, transform: this.nexus.position },
+        this.usersUUID,
+      );
+    }
+
+    logger.error('Nexus cannot spawn in dungeon.');
   }
 
   increaseMonsterKillCount(userId) {
@@ -204,7 +223,7 @@ class Dungeon {
     createNotificationPacket(
       PACKET_ID.S_LevelUp,
       { playerId: userId, statInfo: this.levelUpUserStats(userId) },
-      this.getDungeonUsersUUID(),
+      this.usersUUID,
     );
   }
 

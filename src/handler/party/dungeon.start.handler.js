@@ -121,7 +121,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         rot: 0, // rotation 값은 나중에 받으면 수정
       };
 
-      const statInfo = getStatsByUserClass(user.myClass);     
+      const statInfo = getStatsByUserClass(user.myClass);
 
       if (!statInfo) {
         logger.error('스탯 정보가 존재하지 않습니다');
@@ -137,6 +137,9 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       });
       await dungeon.addDungeonUser(user, statInfo);
     }
+
+    // 넥서스 스폰 보내는 위치
+    dungeon.spawnNexusNotification();
 
     // 파티원 모두의 정보
     const enterDungeonPayload = {

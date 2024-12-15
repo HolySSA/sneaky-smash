@@ -1,4 +1,5 @@
 import configs from '../../configs/configs.js';
+import generateNexusId from '../../utils/generateNexusId.js';
 import logger from '../../utils/logger.js';
 
 const { NEXUS_SPAWN_TRANSFORMS } = configs;
@@ -8,7 +9,7 @@ const NEXUS_HP_THRESHOLD = NEXUS_HP * 0.25;
 
 class Nexus {
   constructor() {
-    this.nexusId;
+    this.nexusId = generateNexusId();
     this.nexusHp = NEXUS_HP;
     this.initialHp = NEXUS_HP;
     this.lastHpThreshold = NEXUS_HP; // 마지막으로 체력 감소 임계값을 기록

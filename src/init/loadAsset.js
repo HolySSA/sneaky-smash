@@ -35,12 +35,14 @@ const transformToMap = (array, key, tableName) => {
       logger.warn(`${tableName} 데이터에서 값이 비어 있습니다.`, { index, id, item });
       return map;
     }
-    map[id] = rest;
+    // ID를 밸류에도 추가
+    map[id] = { id, ...rest };
     mapLength++;
     map['length'] = mapLength;
     return map;
   }, {});
 };
+
 
 const transformNestedData = (array, key, subKey, subTransformKey, tableName) => {
   let mapLength = 0;
@@ -49,8 +51,10 @@ const transformNestedData = (array, key, subKey, subTransformKey, tableName) => 
     const { [key]: id, ...rest } = item;
     if (!id || !rest) {
       logger.warn(`${tableName}에서 키 또는 값이 누락되었습니다.`, { id, rest });
+      return map;
     }
     map[id] = {
+      id, // ID를 밸류에 포함
       ...rest,
       [subKey]: transformToMap(item[subKey], subTransformKey, `${tableName} -> ${subKey}`),
     };
@@ -59,6 +63,7 @@ const transformNestedData = (array, key, subKey, subTransformKey, tableName) => 
     return map;
   }, {});
 };
+
 
 const transformGameAssets = (assets) => {
   const transformedAssets = {

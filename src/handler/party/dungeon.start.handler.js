@@ -67,29 +67,7 @@ import Result from '../result.js';
 // 	int32 roomId = 2; // 방번호
 // }
 
-//TODO :2명이상이면 출발할 수 있음
-/**
- *  TODO
- *
- *  addDungeonUser에 하자가 심각히 있음.
- *  user를 value값으로 넣어주는데 별도의 객체로 만듦.
- *  userClass를 보면 statInfo가 전혀없음.
- *  따라서 던전에 유저를 추가할떄 statInfo를 추가해주는데,
- *  Stats와 Exp를 담고 있음.
- *
- *  Proto메세지를 보면 StatInfo가 있음. 이름 통일 필요
- *
- *  그리고 레디스에서 유저 스탯을 가져오는데, 애초에 여기서 가져올 이유도 없는 것 같음.
- *  정상화 필요
- *
- */
-const dungeonStartHandler = async ({ socket, payload }) => {
-  const transforms = [
-    [2.5, 0.5, 112],
-    [2.5, 0.5, -5.5],
-    [42, 0.5, 52.5],
-    [-38, 0.5, 52.5],
-  ];
+const dungeonStartHandler = async ({ socket, payload }) => { 
   const dungeonId = makeUUID();
 
   let dungeon = null;
@@ -100,8 +78,19 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     const party = await getRedisParty(roomId);
 
     // 던전 세션 생성 - dungeonLevel = dungeonId = dungeonCode ???
+    // if (party.members.length < 2) {
+    //   logger.warn(`2명 미만일 땐 시작할 수 없습니다. : ${JSON.stringify(party)}`);
+    //   return;
+    // }
 
     dungeon = addDungeonSession(dungeonId, dungeonLevel);
+
+    let transforms = dungeon.getSpawnPosition();
+
+    for (let i = transforms.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [transforms[i], transforms[randomIndex]] = [transforms[randomIndex], transforms[i]];
+    }
 
     const dungeonInfo = {
       dungeonCode: dungeon.dungeonId,

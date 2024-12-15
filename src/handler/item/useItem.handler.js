@@ -1,9 +1,7 @@
-import createResponse from '../../utils/packet/createResponse.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import { findCharacterByUserId } from '../../db/model/characters.db.js';
 import { getUserById } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
@@ -49,11 +47,14 @@ const useItemHandler = async ({ socket, payload }) => {
         itemInfo[key] = attributeHandlers[key](dungeon, socket.id, value); // 해당 속성 처리
       }
     });
+    
+    const stats = dungeon.updateUserStats(playerId, itemInfo);
+
     const useItemPayload = {
       playerId: socket.id,
       itemInfo: {
         itemId,
-        stats: itemInfo,
+        stats,
       },
       itemInstanceId,
     };

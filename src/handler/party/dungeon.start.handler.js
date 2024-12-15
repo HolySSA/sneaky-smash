@@ -67,22 +67,6 @@ import Result from '../result.js';
 // 	int32 roomId = 2; // 방번호
 // }
 
-//TODO :2명이상이면 출발할 수 있음
-/**
- *  TODO
- *
- *  addDungeonUser에 하자가 심각히 있음.
- *  user를 value값으로 넣어주는데 별도의 객체로 만듦.
- *  userClass를 보면 statInfo가 전혀없음.
- *  따라서 던전에 유저를 추가할떄 statInfo를 추가해주는데,
- *  Stats와 Exp를 담고 있음.
- *
- *  Proto메세지를 보면 StatInfo가 있음. 이름 통일 필요
- *
- *  그리고 레디스에서 유저 스탯을 가져오는데, 애초에 여기서 가져올 이유도 없는 것 같음.
- *  정상화 필요
- *
- */
 const dungeonStartHandler = async ({ socket, payload }) => {
   const transforms = [
     [2.5, 0.5, 112],
@@ -100,7 +84,11 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     const party = await getRedisParty(roomId);
 
     // 던전 세션 생성 - dungeonLevel = dungeonId = dungeonCode ???
-
+    //TODO : 2명 미만일 때 시작 못하게 하는데 지금은 테스트 중이니 배포때 풀도록 하십시오
+    // if (party.members.length < 2) {
+    //   logger.warn(`2명 미만일 땐 시작할 수 없습니다. : ${JSON.stringify(party)}`);
+    //   return;
+    // }
     dungeon = addDungeonSession(dungeonId, dungeonLevel);
 
     const dungeonInfo = {
@@ -121,7 +109,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         rot: 0, // rotation 값은 나중에 받으면 수정
       };
 
-      const statInfo = getStatsByUserClass(user.myClass);     
+      const statInfo = getStatsByUserClass(user.myClass);
 
       if (!statInfo) {
         logger.error('스탯 정보가 존재하지 않습니다');

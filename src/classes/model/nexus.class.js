@@ -34,14 +34,14 @@ class Nexus {
 
     if (!newPosition) {
       logger.error(`#getRandomSpawnNexus returned an invalid position.`);
-      return false;
+      return null;
     }
 
     this.position = newPosition;
     logger.info(`Nexus spawned at position: ${JSON.stringify(this.position)}`);
 
     this.spawnNexusNotification(usersUUID);
-    return true;
+    return newPosition;
   }
 
   hitNexus(damage, playerId, usersUUID) {

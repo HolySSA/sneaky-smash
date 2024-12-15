@@ -191,14 +191,11 @@ class Dungeon {
     }
 
     //에셋 정보가 없으면 테이블 문제 or 최대 레벨 도달
-    if (!expAssets[currentLevel + 1]) {
-      logger.info("expAssets 가 존재하지 않습니다");
+    if (!expAssets[nextLevel]) {
       return;
     }
 
     user.statInfo.exp += getExp;
-
-    //logger.info(`플레이어 ${userId}의 경험치 get +${getExp} 현재경험치 ${user.statInfo.exp}`);
 
     const expResponse = createResponse(PACKET_ID.S_GetExp, {
       playerId: userId,

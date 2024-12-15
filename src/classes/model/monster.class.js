@@ -5,6 +5,7 @@ class Monster {
   #cannotReachCount = 0;
   constructor(id, monster, transform, zoneId) {
     this.id = id;
+    this.modelId = monster.id;
     this.name = monster.name;
     this.maxHp = monster.maxHp;
     this.curHp = this.maxHp;

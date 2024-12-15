@@ -140,6 +140,13 @@ class MonsterLogic {
     return closestPlayer;
   }
 
+  getRandomMonster()
+  {
+    const monsterAssets = getGameAssets().monster; // 몬스터 데이터 가져오기
+    const monsterId = Math.floor(Math.random() * monsterAssets.length); // 랜덤 몬스터 아이디
+    return monsterAssets[monsterId];    
+  }
+
   getRandomPosition(zone, radius) {
     // 랜덤하게 선택된 transform의 중심 좌표 가져오기
     const randomIndex = Math.floor(Math.random() * zone.transform.length);
@@ -156,11 +163,8 @@ class MonsterLogic {
     return { posX: randomX, posY, posZ: randomZ };
   }
   spawnMonster(zone) {
+    const monsterInfo = this.getRandomMonster(); // 몬스터 정보
     const transform = this.getRandomPosition(zone, 5);
-
-    const monsterAssets = getGameAssets().monster; // 몬스터 데이터 가져오기
-    const monsterId = Math.floor(Math.random() * monsterAssets.length); // 랜덤 몬스터 아이디
-    const monsterInfo = monsterAssets[monsterId]; // 몬스터 정보
 
     const monsterUniqueId = this.monsterIndex++;
 
@@ -170,7 +174,7 @@ class MonsterLogic {
     const payload = {
       monsters: {
         monsterId: monsterUniqueId,
-        monsterModel: monsterId,
+        monsterModel: monster.id,
         monsterName: monster.name,
         monsterHp: monster.maxHp,
       },

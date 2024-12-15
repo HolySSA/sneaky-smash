@@ -6,7 +6,6 @@ import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
 import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
-import { getUserById } from '../../sessions/user.session.js';
 import { setSessionId } from '../../sessions/redis/redis.user.js';
 
 class Dungeon {

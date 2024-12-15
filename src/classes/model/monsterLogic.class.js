@@ -174,7 +174,7 @@ class MonsterLogic {
     const payload = {
       monsters: {
         monsterId: monsterUniqueId,
-        monsterModel: monster.id,
+        monsterModel: monster.modelId,
         monsterName: monster.name,
         monsterHp: monster.maxHp,
       },

@@ -18,6 +18,15 @@ class Dungeon {
 
     this.nexusCurrentHp = 100;
     this.nexusMaxHp = 100;
+
+    this.respawnTimers = new Map();
+
+    this.spawnTransforms = [
+      [2.5, 0.5, 112],
+      [2.5, 0.5, -5.5],
+      [42, 0.5, 52.5],
+      [-38, 0.5, 52.5],
+    ];
   }
 
   async addDungeonUser(user, statInfo) {
@@ -25,7 +34,8 @@ class Dungeon {
     user.dungeonId = this.dungeonId;
     await setSessionId(userId, this.dungeonId);
     if (this.users.has(userId)) {
-      throw new Error('이미 던전에 참여 중인 유저입니다.');
+      logger.info('이미 던전에 참여 중인 유저입니다.');
+      return null;
     }
 
     this.usersUUID.push(user.socket.UUID);
@@ -135,6 +145,10 @@ class Dungeon {
 
   getDungeonUsersUUID() {
     return this.usersUUID;
+  }
+
+  getSpawnPosition() {
+    return [...this.spawnPosition];
   }
 
   getUserStats(userId) {
@@ -321,10 +335,69 @@ class Dungeon {
 
   nexusDamaged(damage) {
     this.nexusCurrentHp -= damage;
-    return this.nexusCurrentHp;
+    return this.nexusCurrentHp;  
   }
+
+  // int32 playerId = 1;
+  // TransformInfo transform = 2;
+  // StatInfo statInfo = 3;     
+
+  onRespawn = (userId) => {
+    const user = this.users.get(userId);
+
+    const getSpawnPos = this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
+    
+    const reviveResponse = createResponse(PACKET_ID.S_RevivePlayer, {
+      playerId: userId,
+      transform: {
+        posX: getSpawnPos[0],
+        posY: getSpawnPos[1],
+        posZ: getSpawnPos[2],
+        rot: 0
+      },
+      statInfo: user.statInfo
+    });
+    
+    createNotificationPacket(
+      PACKET_ID.S_UpdatePlayerHp,
+      reviveResponse,
+      this.getDungeonUsersUUID(),
+    );
+
+    logger.info(`userId: ${userId} 리스폰!`);
+  };
+
+  startRespawnTimer(userId, respawnTime) {
+    if (this.respawnTimers.has(userId)) {
+      logger.info(`respawnTimers에 userId: ${userId} 가 이미 존재합니다`)
+      return;
+    }
+
+    let remainingTime = respawnTime; // 초기 리스폰 시간 설정
+
+    const interval = setInterval(() => {
+      remainingTime -= 1000; // 1초씩 감소
+      logger.info(`userId : ${userId} 리스폰 시간 ${remainingTime / 1000} 초`);
+
+      if (remainingTime <= 0) {
+        clearInterval(interval); // 타이머 종료
+        this.respawnTimers.delete(userId); // 관리 목록에서 제거
+        this.onRespawn(userId); // 내부 리스폰 처리
+      }
+    }, 1000); // 1초 간격으로 실행
+
+    this.respawnTimers.set(userId, interval); // 타이머 등록
+  }
+
+  clearAllTimers() {
+    this.respawnTimers.forEach((interval) => clearInterval(interval));
+    this.respawnTimers.clear();
+    logger.info("모든 리스폰 타이머 클리어!");
+  }
+
   Dispose() {
     this.monsterLogic.Dispose();
+    this.clearAllTimers();
     removeDungeonSession(this.dungeonId);
   }
 }

@@ -3,7 +3,8 @@ import handleError from '../../utils/error/errorHandler.js';
 import deathPlayerNotification from '../game/deathPlayer.notification.js';
 import { getUserById } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
-import { userSessions } from '../../sessions/sessions.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 
 // message C_HitPlayer {
 //   int32 playerId = 1;  // 피격자 ID
@@ -40,8 +41,9 @@ const hitPlayerHandler = ({ socket, payload }) => {
       dungeon.getAmountHpByKillUser(attackerId);
 
       // 여기서부터 시작
-    }else if(currentHp <= 0 )    
-      deathPlayerNotification(socket, playerId);
+    }else if(currentHp <= 0 )
+      deathPlayerNotification(playerId, user.getUserStats(playerId).level, dungeon.getDungeonUsersUUID());
+      
   } catch (err) {
     handleError(socket, err);
   }

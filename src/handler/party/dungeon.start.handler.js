@@ -67,13 +67,7 @@ import Result from '../result.js';
 // 	int32 roomId = 2; // 방번호
 // }
 
-const dungeonStartHandler = async ({ socket, payload }) => {
-  const transforms = [
-    [2.5, 0.5, 112],
-    [2.5, 0.5, -5.5],
-    [42, 0.5, 52.5],
-    [-38, 0.5, 52.5],
-  ];
+const dungeonStartHandler = async ({ socket, payload }) => { 
   const dungeonId = makeUUID();
 
   let dungeon = null;
@@ -84,12 +78,14 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     const party = await getRedisParty(roomId);
 
     // 던전 세션 생성 - dungeonLevel = dungeonId = dungeonCode ???
-    //TODO : 2명 미만일 때 시작 못하게 하는데 지금은 테스트 중이니 배포때 풀도록 하십시오
     // if (party.members.length < 2) {
     //   logger.warn(`2명 미만일 땐 시작할 수 없습니다. : ${JSON.stringify(party)}`);
     //   return;
     // }
+
     dungeon = addDungeonSession(dungeonId, dungeonLevel);
+
+    let transforms = dungeon.getSpawnPosition();
 
     const dungeonInfo = {
       dungeonCode: dungeon.dungeonId,
@@ -108,6 +104,8 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         posZ: transformData[2],
         rot: 0, // rotation 값은 나중에 받으면 수정
       };
+
+      console.log("🚀 ~ dungeonStartHandler ~ transform:", transform);
 
       const statInfo = getStatsByUserClass(user.myClass);
 

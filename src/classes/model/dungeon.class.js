@@ -29,6 +29,8 @@ class Dungeon {
       [42, 0.5, 52.5],
       [-38, 0.5, 52.5],
     ];
+
+    this.startTime = Date.now(); // 던전 시작 시간 초기화
   }
 
   async addDungeonUser(user, statInfo) {

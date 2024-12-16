@@ -5,11 +5,7 @@ const ACCOUNT_KEY = 'account';
 export const getAccountByRedis = async (account) => {
   const redis = await getRedis();
   const key = `${ACCOUNT_KEY}:${account}`;
-  const result = tryGetValue(await redis.hgetall(key));
-  if (result != null) {
-    await redis.expire(key, 3600);
-  }
-  return result;
+  return tryGetValue(await redis.hgetall(key));
 };
 
 export const setTokenByRedis = async (account, token) => {

@@ -1,4 +1,6 @@
-import { PACKET_ID, reverseMapping } from '../configs/constants/packetId.js';
+import { PACKET_ID } from '../configs/constants/packetId.js';
+import CustomError from '../utils/error/customError.js';
+import ErrorCodes from '../utils/error/errorCodes.js';
 // town
 import enterHandler from './town/enter.handler.js';
 import movePlayerHandler from './town/move.player.handler.js';
@@ -26,7 +28,6 @@ import dungeonStartHandler from './party/dungeon.start.handler.js';
 import partyJoinHandler from './party/party.join.handler.js';
 //healthCheck
 import pongHandler from './healthCheck/pong.handler.js';
-import logger from '../utils/logger.js';
 
 const handlers = {
   // town
@@ -99,8 +100,10 @@ const handlers = {
 
 export const getHandlerByPacketId = (packetId) => {
   if (!handlers[packetId]) {
-    logger.error(`핸들러를 찾을 수 없습니다: ${reverseMapping[packetId]}[${packetId}]`);
-    return;
+    throw new CustomError(
+      ErrorCodes.UNKNOWN_HANDLER_ID,
+      `핸들러를 찾을 수 없습니다: ID ${packetId}`,
+    );
   }
 
   return handlers[packetId].handler;
@@ -108,8 +111,10 @@ export const getHandlerByPacketId = (packetId) => {
 
 export const getProtoTypeNameByPacketType = (packetType) => {
   if (!handlers[packetType]) {
-    logger.error(`핸들러를 찾을 수 없습니다: ${packetType}`);
-    return;
+    throw new CustomError(
+      ErrorCodes.UNKNOWN_HANDLER_ID,
+      `핸들러를 찾을 수 없습니다: ID ${packetType}`,
+    );
   }
 
   return handlers[packetType].protoType;

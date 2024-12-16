@@ -77,11 +77,25 @@ class MonsterLogic {
     const currentMonster = this.monsterLists.find((monster) => monster.id === id);
 
     if (!currentMonster) {
-      logger.error("몬스터가 존재하지 않습니다");
+      logger.error('몬스터가 존재하지 않습니다');
       return null;
     }
 
     return currentMonster;
+  }
+
+  /**
+   *  몬스터 사망시 호출하는 함수
+   * @param {Number} monsterId
+   * @returns
+   */
+  destroyMonsterById(monsterId) {
+    const index = this.monsterLists.findIndex((monster) => monster.id == monsterId);
+    if (index === -1) {
+      logger.error(`destroyMonsterById. could not found monster : ${monsterId}`);
+      return null;
+    }
+    this.monsterLists.splice(index, 1);
   }
 
   sendMonsterMove(monster) {
@@ -123,8 +137,7 @@ class MonsterLogic {
     let closestPlayer = null;
 
     for (const value of this.dungeonInstance.users.values()) {
-      if(value.currentHp <= 0)
-        continue;
+      if (value.currentHp <= 0) continue;
 
       const { posX, posY, posZ, rot } = value.user.transform;
       const distance = Math.sqrt(
@@ -137,7 +150,7 @@ class MonsterLogic {
         closestDistance = distance;
         closestPlayer = value;
       }
-    };
+    }
 
     return closestPlayer;
   }

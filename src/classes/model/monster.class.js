@@ -1,5 +1,4 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
-import createResponse from '../../utils/packet/createResponse.js';
 import logger from '../../utils/logger.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 class Monster {
@@ -32,11 +31,10 @@ class Monster {
     this.stopMove = false; // 공격할 때 이동을 멈춰라 그것이 예.의니까...
     this.targetOn = false; //SIW
     this.target = null; // 현재 타겟
-    this.isDead = false;
   }
 
   move(pathPoint, monsterLogicInterval) {
-    if (!pathPoint && this.isDead) return;
+    if (!pathPoint) return;
 
     if (pathPoint.rot) {
       this.#cannotReachCount += monsterLogicInterval;
@@ -45,16 +43,17 @@ class Monster {
         this.transform = structuredClone(this.target.user.transform);
       }
     }
+
     const directionX = pathPoint.posX - this.transform.posX;
     const directionY = pathPoint.posY - this.transform.posY;
     const directionZ = pathPoint.posZ - this.transform.posZ;
 
-    const length = Math.sqrt(directionX ** 2 + directionY ** 2 + directionZ ** 2);
+    // Math.hypot으로 거리 계산
+    const length = Math.hypot(directionX, directionY, directionZ);
     const moveFactor = monsterLogicInterval * 0.001 * this.moveSpeed;
+
     if (length > 0) {
       this.transform.posX += (directionX / length) * moveFactor;
-      // this.transform.posY +=
-      //   (directionY / length) * this.moveSpeed * (monsterLogicInterval * 0.001);
       this.transform.posY = pathPoint.posY;
       this.transform.posZ += (directionZ / length) * moveFactor;
     }
@@ -66,10 +65,11 @@ class Monster {
 
   //거리계산
   calculateDistance(targetTransform) {
-    const dx = this.transform.posX - targetTransform.posX;
-    const dy = this.transform.posY - targetTransform.posY;
-    const dz = this.transform.posZ - targetTransform.posZ;
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    return Math.hypot(
+      this.transform.posX - targetTransform.posX,
+      this.transform.posY - targetTransform.posY,
+      this.transform.posZ - targetTransform.posZ,
+    );
   }
 
   //플레이어 감지
@@ -80,7 +80,7 @@ class Monster {
   }
 
   attack(dungeonInstance) {
-    if (!this.target && this.isDead) return;
+    if (!this.target) return;
 
     const currentTime = Date.now();
     const timeSinceLastAttack = currentTime - this.lastAttackTime;
@@ -94,7 +94,7 @@ class Monster {
     if (!this.target) {
       return;
     }
-    if(this.target.user.currentHp <= 0){
+    if (this.target.user.currentHp <= 0) {
       this.target = null;
       return;
     }
@@ -123,18 +123,7 @@ class Monster {
     }
   }
 
-  death() {
-    this.curHp <= 0;
-    this.isDead = true;
-    const dropRate = Math.random();
-    if (dropRate < 0.2) {
-      return Math.floor(Math.random() * 20) + 100;
-    }
-    return 0;
-  }
-
   hit(damage, targetYou) {
-    if (this.isDead) return;
     this.curHp -= Math.max(0, damage - this.def); // 방어력이 공격력보다 커도 최소뎀
 
     // 공격자를 타겟으로 설정

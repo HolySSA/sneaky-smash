@@ -20,7 +20,7 @@ class MonsterLogic {
     this.spawnZones = [
       {
         id: 1,
-        maxCount: 5,
+        maxMonsterCount: 5,
         transform: [
           { posX: -5, posY: -4.6, posZ: 75 },
           { posX: 5, posY: -4.6, posZ: 75 },
@@ -28,7 +28,7 @@ class MonsterLogic {
       },
       {
         id: 2,
-        maxCount: 5,
+        maxMonsterCount: 5,
         transform: [
           { posX: 0, posY: -4.6, posZ: 55 },
           { posX: 0, posY: -4.6, posZ: 45 },
@@ -36,7 +36,7 @@ class MonsterLogic {
       },
       {
         id: 3,
-        maxCount: 5,
+        maxMonsterCount: 5,
         transform: [
           { posX: 10, posY: -4.6, posZ: 55 },
           { posX: 10, posY: -4.6, posZ: 45 },
@@ -44,7 +44,7 @@ class MonsterLogic {
       },
       {
         id: 4,
-        maxCount: 5,
+        maxMonsterCount: 5,
         transform: [
           { posX: 10, posY: -4.6, posZ: 30 },
           { posX: 0, posY: -4.6, posZ: 30 },
@@ -183,7 +183,7 @@ class MonsterLogic {
     const monsterUniqueId = this.monsterIndex++;
 
     const elapsedTime = (Date.now() - this.dungeonInstance.startTime) / 1000; // 시작 이후 경과
-    const multiplier = 1 + Math.floor(elapsedTime / 30) * 0.5; // 30초마다 50% 증가
+    const multiplier = 1 + Math.floor(elapsedTime / 30) * 0.2; // 30초마다 50% 증가
 
     // 증가된 스탯 적용
     const boostedMonsterInfo = {
@@ -295,27 +295,21 @@ class MonsterLogic {
   }
 
   startMonsterSpawn() {
-    // 게임 시작 시 모든 스폰 존에 몬스터 즉시 스폰
-    this.spawnZones.forEach((zone) => {
-      const currentCount = this.monsterLists.filter((monster) => monster.zoneId === zone.id).length;
-      if (currentCount < zone.maxCount) {
-        for (let i = currentCount; i < zone.maxCount; i++) {
-          this.spawnMonster(zone);
-        }
-      }
-    });
-
     // 30초마다 몬스터 스폰
     this.monsterSpawnInterval = setInterval(() => {
-      this.spawnZones.forEach((zone) => {
-        const currentCount = this.monsterLists.filter(
-          (monster) => monster.zoneId === zone.id,
-        ).length;
-        if (currentCount < zone.maxCount) {
-          this.spawnMonster(zone);
-        }
-      });
+      this.spawnMonsterZone();
     }, this.spawnInterval);
+  }
+
+  spawnMonsterZone() {
+    this.spawnZones.forEach((zone) => {
+      const currentMonsterCount = this.monsterLists.filter(
+        (monster) => monster.zoneId === zone.id,
+      ).length;
+      if (currentMonsterCount < zone.maxMonsterCount) {
+        this.spawnMonster(zone);
+      }
+    });
   }
 
   Dispose() {

@@ -49,7 +49,7 @@ class Dungeon {
         return this._currentHp;
       },
       set currentHp(value) {
-        this._currentHp = Math.max(0, value, statInfo.stats.maxHp);
+        this._currentHp = Math.max(0, Math.min(value, statInfo.stats.maxHp));
       },
       userKillCount: 0,
       monsterKillCount: 0,
@@ -346,13 +346,13 @@ class Dungeon {
 
   updatePlayerHp(userId, amount) {
     const user = this.users.get(userId);
-
+    
     // 스탯 불러오기 수정
     const maxHp = user.statInfo.stats.maxHp;
     const currentHp = user.currentHp;
     const newHp = currentHp + amount;
     user.currentHp = Math.max(0, Math.min(newHp, maxHp));
-
+    
     if (user.currentHp != currentHp) {
       createNotificationPacket(
         PACKET_ID.S_UpdatePlayerHp,

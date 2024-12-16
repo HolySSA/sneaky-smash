@@ -318,7 +318,7 @@ class Dungeon {
 
   damagedUser(userId, damage) {
     const user = this.users.get(userId);
-    const resultDamage = Math.max(1, damage * (100 - user.statInfo.stats.def) * 0.01); // 방어력이 공격력보다 커도 최소뎀
+    const resultDamage = Math.max(1, Math.floor(damage * (100 - user.statInfo.stats.def) * 0.01)); // 방어력이 공격력보다 커도 최소뎀
 
     createNotificationPacket(
       PACKET_ID.S_HitPlayer,

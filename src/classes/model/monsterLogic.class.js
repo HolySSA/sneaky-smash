@@ -16,7 +16,7 @@ class MonsterLogic {
     this.monsterIndex = 1;
 
     this.monsterLogicInterval = 100;
-    this.spawnInterval = 1000 * 10; // 10초
+    this.spawnInterval = 1000 * 30; // 10초
     this.spawnZones = [
       {
         id: 1,
@@ -182,7 +182,22 @@ class MonsterLogic {
 
     const monsterUniqueId = this.monsterIndex++;
 
-    const monster = new Monster(monsterUniqueId, monsterInfo, transform, zone.id);
+    const elapsedTime = (Date.now() - this.dungeonInstance.startTime) / 1000; // 시작 이후 경과
+    const multiplier = 1 + Math.floor(elapsedTime / 30) * 0.5; // 30초마다 50% 증가
+
+    // 증가된 스탯 적용
+    const boostedMonsterInfo = {
+      ...monsterInfo,
+      maxHp: Math.floor(monsterInfo.maxHp * multiplier),
+      atk: Math.floor(monsterInfo.atk * multiplier),
+      def: Math.floor(monsterInfo.def * multiplier),
+      criticalProbability: monsterInfo.criticalProbability * multiplier,
+      criticalDamageRate: monsterInfo.criticalDamageRate * multiplier,
+      moveSpeed: monsterInfo.moveSpeed, // 이동 속도는 고정
+      attackSpeed: monsterInfo.attackSpeed, // 공격 속도는 고정
+    };
+
+    const monster = new Monster(monsterUniqueId, boostedMonsterInfo, transform, zone.id);
     this.monsterLists.push(monster);
 
     const payload = {

@@ -10,6 +10,7 @@ import { setSessionId } from '../../sessions/redis/redis.user.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import { getUserById } from '../../sessions/user.session.js';
 import handleError from '../../utils/error/errorHandler.js';
+import despawnLogic from '../../utils/etc/despawn.logic.js';
 import logger from '../../utils/logger.js';
 import makeUUID from '../../utils/makeUUID.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
@@ -149,7 +150,10 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     if (!dungeon.spawnNexusNotification()) {
       logger.warn('Failed to spawn Nexus in the dungeon.');
       return;
-    }
+    }    
+
+    await despawnLogic(socket, true);
+    
   } catch (e) {
     handleError(socket, e);
     const dungeon = getDungeonSession(dungeonId);

@@ -100,6 +100,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
     const playerInfo = [];
     const partyUUID = [];
+
     for (let playerId of party.members) {
       const user = getUserById(Number(playerId));
       partyUUID.push(user.socket.UUID);
@@ -125,8 +126,11 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         transform,
         statInfo,
       });
+
       await dungeon.addDungeonUser(user, statInfo);
     }
+
+    dungeon.monsterLogic.spawnMonsterZone();
 
     // 파티원 모두의 정보
     const enterDungeonPayload = {

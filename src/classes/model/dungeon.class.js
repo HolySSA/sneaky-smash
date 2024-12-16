@@ -22,7 +22,7 @@ class Dungeon {
 
     this.nexus = null;
     this.respawnTimers = new Map();
-
+    this.droppedItems = {};
     this.spawnTransforms = [
       [2.5, 0.5, 112],
       [2.5, 0.5, -5.5],
@@ -98,6 +98,28 @@ class Dungeon {
       return true;
     }
     return false;
+  }
+
+  createItem(playerId, itemId, itemInstanceId) {
+    if (!this.users.has(playerId)) {
+      return;
+    }
+
+    const items = getGameAssets().item;
+    const item = items[itemId];
+    if (!item) {
+      return;
+    }
+
+    this.droppedItems[itemInstanceId] = { playerId, itemId };
+  }
+
+  getItem(itemInstanceId) {
+    return this.droppedItems[itemInstanceId];
+  }
+
+  removeItem(itemInstanceId) {
+    delete this.droppedItems[itemInstanceId];
   }
 
   increaseMonsterKillCount(userId) {

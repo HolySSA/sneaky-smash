@@ -55,9 +55,11 @@ const monsterKillNotification = (socket, monster, dungeon, dungeonAllUsersUUID) 
   const drop = Math.random();
 
   if (drop < totalDropRate) {
+    itemInstanceId++;
     if (drop < ITEM_DROP_RATE) {
       const itemPivotId = 500;
       itemId = Math.floor(Math.random() * itemAssets.length) + itemPivotId;
+      dungeon.createItem(playerId, itemId, itemInstanceId);
     } else {
       const skillPivotId = 100;
       skillId = Math.floor(Math.random() * skillAssets.length) + skillPivotId;

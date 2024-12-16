@@ -68,7 +68,7 @@ import Result from '../result.js';
 // 	int32 roomId = 2; // 방번호
 // }
 
-const dungeonStartHandler = async ({ socket, payload }) => { 
+const dungeonStartHandler = async ({ socket, payload }) => {
   const dungeonId = makeUUID();
 
   let dungeon = null;
@@ -98,9 +98,13 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       dungeonName: dungeon.name,
     };
 
+    const townUsers = getAllUserUUIDByTown();
+
     const playerInfo = [];
     const partyUUID = [];
+    const despawnPayload = { playerIds: [] };
     for (let playerId of party.members) {
+      despawnPayload.playerIds.push(playerId);
       const user = getUserById(Number(playerId));
       partyUUID.push(user.socket.UUID);
       const transformData = transforms.pop() || [0, 0, 0];
@@ -128,6 +132,8 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       await dungeon.addDungeonUser(user, statInfo);
     }
 
+    createNotificationPacket(PACKET_ID.S_Despawn, despawnPayload, townUsers);
+
     // 파티원 모두의 정보
     const enterDungeonPayload = {
       dungeonInfo,
@@ -145,13 +151,11 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
     createNotificationPacket(PACKET_ID.S_PartyLeave, partyPayload, getAllUserUUIDByTown());
 
-    
     // 넥서스 스폰 보내는 위치
     if (!dungeon.spawnNexusNotification()) {
       logger.warn('Failed to spawn Nexus in the dungeon.');
       return;
-    }    
-
+    }
   } catch (e) {
     handleError(socket, e);
     const dungeon = getDungeonSession(dungeonId);

@@ -322,6 +322,7 @@ class MonsterLogic {
     this.pathServer.onClose();
     this.stopGameLoop();
     this.stopMonsterSpawn();
+    this.dungeonInstance = null;
     logger.info(`MonsterLogic disposed`);
   }
 }

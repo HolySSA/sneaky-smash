@@ -495,6 +495,7 @@ class Dungeon {
 
   Dispose() {
     this.monsterLogic.Dispose();
+    this.monsterLogic = null;
     this.clearAllTimers();
     removeDungeonSession(this.dungeonId);
   }

@@ -152,8 +152,6 @@ const dungeonStartHandler = async ({ socket, payload }) => {
       return;
     }    
 
-    await despawnLogic(socket, true);
-    
   } catch (e) {
     handleError(socket, e);
     const dungeon = getDungeonSession(dungeonId);

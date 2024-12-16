@@ -12,7 +12,7 @@ import { removeUserQueue } from '../socket/messageQueue.js';
 //     repeated int32 playerIds = 1;    // 디스폰되는 플레이어 ID 리스트
 // }
 
-const despawnLogic = async (socket, isDungeon) => {
+const despawnLogic = async (socket) => {
   const userId = socket.id;
   removeUserQueue(socket);
   const user = getUserById(userId);
@@ -44,7 +44,6 @@ const despawnLogic = async (socket, isDungeon) => {
     broadcastBySession(socket, PACKET_ID.S_Despawn, payload, true);
   }
 
-  if(!isDungeon)
     removeUserSession(socket);
 };
 

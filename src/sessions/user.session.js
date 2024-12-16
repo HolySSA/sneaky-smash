@@ -1,51 +1,60 @@
+/** 접속된 모든 유저 정보가 보관되고있는 곳. 여기를 통해서 다른 세션에'도' 복사된체로 보관되는 것이므로 일단 로그인 성공시
+ * 이곳에 먼저 등록되어야한다.
+ */
+import User from '../classes/model/user.class.js';
+import logger from '../utils/logger.js';
 import { userSessions } from './sessions.js';
 
-const addUserSession = (socket, user) => {
-  if (userSessions.has(socket.id)) {
-    throw new Error('세션 중복');
-  }
+const allUsersUUID = [];
 
-  userSessions.set(socket.id, { socket, transform: user.transform, inventory: [] });
+const addUserSession = (socket) => {
+  if (userSessions.has(socket.id)) {
+    logger.error('이미 존재하는 유저 세션입니다.');
+    return userSessions.get(socket.id);
+  }
+  const user = new User(socket);
+  userSessions.set(socket.id, user);
+  allUsersUUID.push(socket.UUID);
   return user;
 };
 
-const removeUserSession = async (socket) => {
-  if (userSessions.has(socket.id)) {
+const removeUserSession = (socket) => {
+  const user = userSessions.get(socket.id);
+  if (user) {
+    user.dispose();
     userSessions.delete(socket.id);
+    const index = allUsersUUID.indexOf(socket.UUID);
+    if (index !== -1) {
+      allUsersUUID.splice(index, 1);
+    }
   }
 };
 
-const getUserSessions = () => {
-  return userSessions;
+const getAllUserUUID = () => {
+  return allUsersUUID;
 };
 
-const getUserSessionById = (id) => {
-  const userId = id.toString();
-  return userSessions.get(userId) || null;
+const getUserById = (userId) => {
+  return userSessions.get(userId);
 };
 
-const getUserTransformById = (id) => {
-  const userId = id.toString();
-  if (userSessions.has(userId)) return userSessions.get(userId).transform;
-
-  return { posX: -5, posY: 0.5, posZ: 135, rot: 0 };
+const getUserTransformById = (userId) => {
+  return userSessions.get(userId).transform;
 };
 
-const updateUserTransformById = (id, posX, posY, posZ, rot) => {
-  const newTransform = { posX, posY, posZ, rot };
+const updateUserTransformById = (userId, posX, posY, posZ, rot) => {
+  const user = userSessions.get(userId);
+  user.updateUserTransform(posX, posY, posZ, rot);
 
-  const userId = id.toString();
-  const session = userSessions.get(userId);
-  if (session) session.transform = newTransform;
-
-  return newTransform;
+  const transform = { posX, posY, posZ, rot };
+  return transform;
 };
 
 export {
   addUserSession,
   removeUserSession,
-  getUserSessions,
-  getUserSessionById,
+  getUserById,
   getUserTransformById,
   updateUserTransformById,
+  getAllUserUUID,
 };

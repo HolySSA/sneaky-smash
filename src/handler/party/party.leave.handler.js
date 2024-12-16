@@ -1,12 +1,9 @@
-import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getUserSessionById, getUserSessions } from '../../sessions/user.session.js';
-import {
-  getRedisParty,
-  leaveRedisParty,
-  removeRedisParty,
-} from '../../sessions/redis/redis.party.js';
+import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.party.js';
+import Result from '../result.js';
+import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
+import logger from '../../utils/logger.js';
 
 // // **C_PartyLeave** - 파티에서 나가기 요청 메시지
 // message C_PartyLeave {
@@ -18,60 +15,27 @@ import {
 // 	int32 roomId = 2;
 // }
 
-const partyLeaveHandler = async (socket, payload) => {
+const partyLeaveHandler = async ({ socket, payload }) => {
   try {
     const { roomId } = payload;
 
     const leavePayload = {
-      playerId: parseInt(socket.id),
+      playerId: socket.id,
       roomId,
     };
 
     const party = await getRedisParty(roomId);
-    if (!party) {
-      const errorPayload = {
-        playerId: -1,
-        roomId,
-      };
 
-      const errorResponse = createResponse(PACKET_ID.S_PartyLeave, errorPayload);
-      socket.write(errorResponse);
+    if (!party) {
+      logger.error('파티가 존재하지 않습니다');
       return;
     }
 
-    if (party.owner === socket.id) {
+    if (party.owner === socket.id.toString()) {
       await removeRedisParty(roomId);
-
-      const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
-
-      party.members.forEach((memberId) => {
-        const user = getUserSessionById(memberId);
-        user?.socket.write(response);
-      });
-
-      /*
-      const users = getUserSessions();
-      users.forEach((user) => {
-        user.socket.write(response);
-      });
-      */
-    } else {
-      const remainMembers = await leaveRedisParty(roomId, socket.id);
-
-      const response = createResponse(PACKET_ID.S_PartyLeave, leavePayload);
-
-      remainMembers.members.forEach((memberId) => {
-        const user = getUserSessionById(memberId);
-        user?.socket.write(response);
-      });
-
-      /*
-      party.members.forEach((memberId) => {
-        const user = getUserSessionById(parseInt(memberId));
-        user?.socket.write(response);
-      });
-      */
     }
+
+    return new Result(leavePayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);
   }

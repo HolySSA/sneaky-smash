@@ -1,18 +1,100 @@
 import net from 'net';
+import { createInterface } from 'readline';
 import initServer from './init/index.js';
 import onConnection from './events/onConnection.js';
-import config from './config/config.js';
+import configs, { addConfig } from './configs/configs.js';
+import logger from './utils/logger.js';
+import { getRedis } from './utils/redis/redisManager.js';
+import AsyncExitHook from 'async-exit-hook';
+import { registServerAndGetIndex, unregistServer } from './sessions/redis/redis.server.js';
 
-const server = net.createServer(onConnection);
+const { SERVER_BIND, SERVER_PORT, ServerUUID } = configs;
+
+const clients = [];
+const server = net.createServer((socket) => {
+  clients.push(socket);
+  onConnection(socket);
+});
+let isShuttingDown = false;
 
 initServer()
   .then(() => {
-    server.listen(config.server.port, config.server.host, () => {
-      console.log(`서버가 ${config.server.host}:${config.server.port}에서 실행 중입니다.`);
-      console.log(server.address());
+    server.listen(SERVER_PORT, SERVER_BIND, async () => {
+      const bindInfo = server.address();
+      const serverIndex = await registServerAndGetIndex();
+      addConfig('ServerIndex', serverIndex);
+      logger.info(
+        `Server[${serverIndex}] ${ServerUUID} is on ${bindInfo.address}:${bindInfo.port}`,
+      );
     });
   })
   .catch((err) => {
-    console.error(err);
+    logger.error(err);
     process.exit(1); // 오류 발생 시 프로세스 종료
   });
+
+const shutDownServer = async () => {
+  if (isShuttingDown) {
+    return;
+  }
+  isShuttingDown = true;
+  try {
+    await new Promise((resolve) => {
+      for (const socket of clients) {
+        socket.destroy();
+      }
+
+      server.close(() => {
+        logger.info('TCP 서버 종료.');
+        resolve();
+      });
+    });
+    await unregistServer();
+    await deleteKeysByPattern();
+  } catch (error) {
+    logger.error(error);
+  } finally {
+    logger.info('서버 종료 완료');
+    process.exit(0);
+  }
+};
+
+const deleteKeysByPattern = async () => {
+  const redis = await getRedis();
+  let cursor = '0';
+  const keysToDelete = [];
+  const pattern = `${ServerUUID}:*`;
+  do {
+    const [nextCursor, keys] = await redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+    cursor = nextCursor;
+    if (keys.length > 0) {
+      keysToDelete.push(...keys);
+    }
+  } while (cursor !== '0');
+
+  if (keysToDelete.length > 0) {
+    await redis.unlink(...keysToDelete);
+  }
+};
+
+AsyncExitHook(async (done) => {
+  try {
+    await shutDownServer();
+  } catch (error) {
+    logger.error(error);
+  } finally {
+    done();
+  }
+});
+
+// Windows SIGINT (Ctrl+C) 처리
+if (process.platform === 'win32') {
+  const rl = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.on('SIGINT', () => {
+    process.emit('SIGINT');
+  });
+}

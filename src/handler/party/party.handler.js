@@ -1,7 +1,7 @@
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import { getRedisParties } from '../../sessions/redis/redis.party.js';
 import handleError from '../../utils/error/errorHandler.js';
-import createResponse from '../../utils/response/createResponse.js';
+import Result from '../result.js';
 
 // // 파티 창 입장
 // message C_Party {
@@ -14,20 +14,24 @@ import createResponse from '../../utils/response/createResponse.js';
 // 	int32 dungeonLevel = 3; // 던전 난이도
 // }
 
-const partyHandler = async (socket, payload) => {
+const partyHandler = async ({ socket, payload }) => {
   try {
     const parties = await getRedisParties();
+    if (!parties) {
+      return;
+    }
+    var partyInfo = [];
 
     parties.forEach((party) => {
       const partyPayload = {
-        playerId: party.members.map((m) => parseInt(m)),
+        playerId: party.members,
         roomId: party.roomId,
         dungeonLevel: party.dungeonLevel,
       };
-
-      const response = createResponse(PACKET_ID.S_Party, partyPayload);
-      socket.write(response);
+      partyInfo.push(partyPayload);
     });
+
+    return new Result({ partyInfo }, PACKET_ID.S_Party);
   } catch (e) {
     handleError(socket, e);
   }

@@ -1,5 +1,5 @@
 {
-  "dungeons": [
+  "data": [
     {
       "dungeonId": 1,
       "name": "잊혀진 동굴",
@@ -7,36 +7,36 @@
         {
           "stageId": 1,
           "monsters": [
-            { "monster_id": 101, "count": 5 },
-            { "monster_id": 102, "count": 3 }
+            { "monsterId": 0, "count": 5 },
+            { "monsterId": 1, "count": 3 }
           ]
         },
         {
           "stageId": 2,
           "monsters": [
-            { "monster_id": 103, "count": 4 },
-            { "monster_id": 104, "count": 2 }
+            { "monsterId": 2, "count": 4 },
+            { "monsterId": 3, "count": 2 }
           ]
         },
         {
           "stageId": 3,
           "monsters": [
-            { "monster_id": 105, "count": 3 },
-            { "monster_id": 106, "count": 3 }
+            { "monsterId": 4, "count": 3 },
+            { "monsterId": 5, "count": 3 }
           ]
         },
         {
           "stageId": 4,
           "monsters": [
-            { "monster_id": 107, "count": 7 },
-            { "monster_id": 108, "count": 3 }
+            { "monsterId": 6, "count": 7 },
+            { "monsterId": 7, "count": 3 }
           ]
         },
         {
           "stageId": 5,
           "monsters": [
-            { "monster_id": 109, "count": 5 },
-            { "monster_id": 110, "count": 5 }
+            { "monsterId": 8, "count": 5 },
+            { "monsterId": 9, "count": 5 }
           ]
         }
       ]
@@ -46,30 +46,30 @@
       "name": "저주받은 숲",
       "stages": [
         {
-          "stageId": 1,
-          "monsters": [{ "monster_id": 201, "count": 6 }]
+          "stageId": 6,
+          "monsters": [{ "monsterId": 0, "count": 6 }]
         },
         {
-          "stageId": 2,
+          "stageId": 7,
           "monsters": [
-            { "monster_id": 202, "count": 3 },
-            { "monster_id": 203, "count": 5 }
+            { "monsterId": 1, "count": 3 },
+            { "monsterId": 2, "count": 5 }
           ]
         },
         {
-          "stageId": 3,
-          "monsters": [{ "monster_id": 204, "count": 3 }]
+          "stageId": 8,
+          "monsters": [{ "monsterId": 3, "count": 3 }]
         },
         {
-          "stageId": 4,
+          "stageId": 9,
           "monsters": [
-            { "monster_id": 202, "count": 3 },
-            { "monster_id": 204, "count": 2 }
+            { "monsterId": 4, "count": 3 },
+            { "monsterId": 5, "count": 2 }
           ]
         },
         {
-          "stageId": 5,
-          "monsters": [{ "monster_id": 205, "count": 5 }]
+          "stageId": 10,
+          "monsters": [{ "monsterId": 6, "count": 5 }]
         }
       ]
     }

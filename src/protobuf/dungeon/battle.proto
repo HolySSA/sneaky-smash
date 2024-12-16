@@ -1,37 +1,100 @@
 syntax = "proto3";
 
-// 던전에서 나가기 요청 (C_LeaveDungeon)
 message C_LeaveDungeon {
-  // 요청 필드는 없음. 단순히 던전 나가기 요청 메시지.
+  // 던전에서 나가기 요청
 }
-// 던전에서 나가는 응답 (S_LeaveDungeon)
+
 message S_LeaveDungeon {
-  int32 playerId = 1;          // 던전에서 나간 플레이어 ID
+  int32 playerId = 1; // 유저가 나갔는지 던전에서 나가는 메시지
 }
-// 플레이어 체력 업데이트 (S_UpdatePlayerHp)
+
 message S_UpdatePlayerHp {
-  float hp = 1;                // 플레이어의 체력
+  int32 playerId = 1; // 플레이어 식별 ID
+  int32 hp = 2;       // 플레이어의 체력
 }
-// 플레이어 마나 업데이트 (S_UpdatePlayerMp)
-message S_UpdatePlayerMp {
-  float mp = 1;                // 플레이어의 마나
-}
-// 몬스터 체력 업데이트 (S_UpdateMonsterHp)
+
 message S_UpdateMonsterHp {
-  float hp = 1;                // 몬스터의 체력
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 hp = 2;        // 몬스터의 체력
 }
-// 몬스터 액션 요청 (C_MonsterAction)
-message C_MonsterAction {
-  int32 actionMonsterIdx = 1;  // 액션을 취하는 몬스터 인덱스
-  ActionSet actionSet = 2;     // 몬스터의 액션 설정
+
+message S_UpdateNexusHp {
+  int32 hp = 1;        // 넥서스의 체력
 }
-// 몬스터 액션 응답 (S_MonsterAction)
-message S_MonsterAction {
-  int32 actionMonsterIdx = 1;  // 액션을 취하는 몬스터 인덱스
-  ActionSet actionSet = 2;     // 몬스터의 액션 설정
+
+message S_LevelUp {
+  int32 playerId = 1;  // 레벨업하는 유저ID
+  StatInfo statInfo = 2; // 레벨
 }
-// 액션셋
+
+message C_AttackedNexus {
+  int32 damage = 1;    // 데미지
+}
+
+message S_AttackedNexus {
+  int32 playerId = 1;  // 공격 유저ID
+  int32 damage = 2;    // 데미지
+}
+
+message S_NexusSpawn {
+  int32 nexusId = 1; //확장성 & 넥서스 특정하기
+  TransformInfo transform = 2;
+}
+
+// HP 변화 등 status 변할 때 알림
+message S_PlayerStatus {
+  int32 playerId = 1;   // 플레이어 ID
+  PlayerStatus status = 2; // 플레이어 상태
+}
+
+message C_HitPlayer {
+  int32 playerId = 1;  // 피격자 ID
+  int32 damage = 2;    // 데미지
+}
+
+// 플레이어 공격 알림
+message S_HitPlayer {
+  int32 playerId = 1;  // 피격자 ID
+  int32 damage = 2;    // 데미지
+}
+
+message C_HitMonster {
+  int32 monsterId = 1;  // 몬스터 ID
+  int32 damage = 2;    // 데미지
+}
+
+// 몬스터 공격 알림
+message S_HitMonster {
+  int32 monsterId = 1;  // 몬스터 ID
+  int32 damage = 2;    // 데미지
+}
+
 message ActionSet {
-  int32 animCode = 1;
-  int32 effectCode = 2;
+  int32 animCode = 1;   // 애니메이션 코드
+  int32 effectCode = 2; // 효과 코드
+}
+
+message S_DeathPlayer {
+  int32 playerId = 1;
+  float spawnTime = 2;
+}
+
+message S_RevivePlayer {
+  int32 playerId = 1;
+  TransformInfo transform = 2;
+  StatInfo statInfo = 3;     
+}
+
+message S_GetExp {
+  int32 playerId = 1;
+  int32 expAmount = 2;
+}
+
+message S_PlayerKillCount {
+  int32 playerId = 1;
+  int32 playerKillCount = 2;
+}
+
+message S_GameEnd {
+  int32 playerId = 1;
 }

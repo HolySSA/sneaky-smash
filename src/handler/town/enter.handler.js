@@ -1,24 +1,18 @@
 import handleError from '../../utils/error/errorHandler.js';
 import { createCharacter, findCharacterByUserId } from '../../db/model/characters.db.js';
-import { addRedisUser } from '../../sessions/redis/redis.user.js';
-import User from '../../classes/model/user.class.js';
-import { addUserSession } from '../../sessions/user.session.js';
 import enterLogic from '../../utils/etc/enter.logic.js';
 
-const enterHandler = async (socket, payload) => {
+const enterHandler = async ({ socket, payload }) => {
   try {
-    const user = new User(socket.id, payload.class, payload.nickname);
+    const nickname = payload.nickname;
+    const userClass = payload.class;
 
-    await addRedisUser(user);
-    addUserSession(socket, user);
-
-    const character = await findCharacterByUserId(parseInt(socket.id));
-    if (!character) {
+    const character = await findCharacterByUserId(socket.id);
+    if (character == null) {
       // sql에서 gold default 선언해서 만들면 gold 입력 빼도 됨
-      await createCharacter(user.id, user.nickname, user.myClass, 0);
+      await createCharacter(socket.id, nickname, userClass, 0);
     }
-
-    await enterLogic(socket, user);
+    await enterLogic(socket, { id: socket.id, nickname, myClass: userClass });
   } catch (e) {
     handleError(socket, e);
   }

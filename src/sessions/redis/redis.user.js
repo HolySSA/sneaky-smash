@@ -1,68 +1,47 @@
-import redis from '../../utils/redis/redisManager.js';
+import { getRedis } from '../../utils/redis/redisManager.js';
+import { tryGetValue } from './helper.js';
 
-const addRedisUser = async (user) => {
-  const userKey = `user:${user.id}`;
-  const redisUser = await redis.hset(userKey, {
-    id: user.id.toString(),
-    nickname: user.nickname,
-    myClass: user.myClass.toString(),
-    locationType: user.locationType,
-  });
-
-  return redisUser;
+export const setRedisUser = async (characterDB) => {
+  const redis = await getRedis();
+  const userKey = `user:${characterDB.userId}`;
+  await redis.hset(userKey, characterDB);
+  await redis.expire(userKey, 3600);
 };
 
-const removeRedisUser = async (socket) => {
+export const setRedisUserUUID = async (socket) => {
+  const redis = await getRedis();
   const userKey = `user:${socket.id}`;
-  const user = await redis.hgetall(userKey);
-
-  if (Object.keys(user).length === 0) {
-    return null;
-  }
-
-  await redis.del(userKey);
-  return user;
+  await redis.expire(userKey, 3600);
 };
 
-const getRedisUsers = async () => {
-  // keys - 데이터 많으면 불안전. 대신 scan 사용으로 변경.
-  const userKeys = await redis.keys('user:*');
-
-  if (!userKeys.length) {
-    return null;
-  }
-
-  // pipeline - 명령 묶어서 실행(최적화)
-  const pipeline = redis.pipeline();
-  userKeys.forEach((key) => pipeline.hgetall(key));
-
-  const results = await pipeline.exec();
-
-  return results.map(([err, data]) => {
-    if (err || !data) return null;
-    return {
-      id: data.id,
-      nickname: data.nickname,
-      myClass: parseInt(data.myClass),
-      locationType: data.locationType,
-    };
-  });
+export const removeRedisUser = async (socket) => {
+  const redis = await getRedis();
+  const userKey = `user:${socket.id}`;
+  return await redis.unlink(userKey);
 };
 
-const getRedisUserById = async (id) => {
+export const getRedisUserById = async (id) => {
+  const redis = await getRedis();
   const userKey = `user:${id}`;
   const user = await redis.hgetall(userKey);
-
-  if (!user || Object.keys(user).length === 0) {
-    return null;
-  }
-
-  return {
-    id: user.id,
-    nickname: user.nickname,
-    myClass: parseInt(user.myClass),
-    locationType: user.locationType,
-  };
+  return tryGetValue(user);
 };
 
-export { addRedisUser, removeRedisUser, getRedisUsers, getRedisUserById };
+export const setSessionId = async (userId, sessionId) => {
+  const redis = await getRedis();
+  const userKey = `user:${userId}`;
+  await redis.hset(userKey, 'sessionId', sessionId);
+  await redis.expire(userKey, 3600);
+};
+
+export const setIsSignIn = async (userId, isSignIn) => {
+  const redis = await getRedis();
+  const userKey = `user:${userId}`;
+  await redis.hset(userKey, 'isSignIn', isSignIn);
+};
+
+export const getIsSignIn = async (userId) => {
+  const redis = await getRedis();
+  const userKey = `user:${userId}`;
+  return (await redis.hget(userKey, 'isSignIn')) == 'true';
+};

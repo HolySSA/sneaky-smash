@@ -1,57 +1,76 @@
+import fs from 'fs';
 import path from 'path';
-import protobuf from 'protobufjs';
 import { fileURLToPath } from 'url';
-import { reverseMapping } from '../constants/packetId.js';
-import getAllProtoFiles from './protofiles.js';
+import protobuf from 'protobufjs';
+import logger from '../utils/logger.js';
 
+// 현재 파일의 절대 경로 추출
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const protoDir = path.join(__dirname, '../protobuf'); // .proto 파일이 저장된 디렉토리
-const protoMessages = {}; // 패킷 ID -> Protobuf 타입 매핑을 저장
+// 프로토파일이 있는 디렉토리 경로 설정
+const protoDir = path.join(__dirname, '../protobuf');
 
-const getProtoMessages = () => {
-  return { ...protoMessages };
+// 주어진 디렉토리 내 모든 proto 파일을 재귀적으로 찾는 함수
+const getAllProtoFiles = (dir, fileList = []) => {
+  const files = fs.readdirSync(dir);
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
+    if (fs.statSync(filePath).isDirectory()) {
+      getAllProtoFiles(filePath, fileList);
+    } else if (path.extname(file) === '.proto') {
+      fileList.push(filePath);
+    }
+  });
+  return fileList;
 };
 
-// 모든 Protobuf 타입을 미리 로드하고, 패킷 ID와 매핑
-const loadProtos = async () => {
+// 로드된 프로토 메시지들을 저장할 객체
+const protoMessages = {};
+
+// 모든 .proto 파일을 로드하여 프로토 메시지를 초기화합니다.
+export const loadProtos = async () => {
   try {
+    // 모든 proto 파일 경로를 가져옴
     const protoFiles = getAllProtoFiles(protoDir);
 
-    if (protoFiles.length === 0) {
-      throw new Error('디렉토리 또는 하위 디렉토리에 .proto 파일이 없습니다.');
-    }
+    const root = new protobuf.Root();
 
-    const root = new protobuf.Root(); // Protobuf 루트 객체
-
-    /*
-    for (const filePath of protoFiles) {
-      await root.load(filePath); // 각 .proto 파일 로드
-    }
-    */
-    // 비동기 병렬 처리로 속도 개선
     await Promise.all(protoFiles.map((file) => root.load(file)));
 
-    console.log('Protobuf 파일이 성공적으로 로드되었습니다.');
+    root.resolveAll();
 
-    // reverseMapping을 기반으로 패킷 ID와 Protobuf 타입 매핑
-    for (const [packetId, typeName] of Object.entries(reverseMapping)) {
-      const type = root.lookupType(typeName);
+    // 각 파일의 메시지를 기반으로 protoMessages 객체 구성
+    const loadedRoot = root.nested;
 
-      if (type && type instanceof protobuf.Type) {
-        protoMessages[packetId] = type; // Protobuf 타입을 protoMessages에 저장
-      } else {
-        console.warn(`"${typeName}" 타입이 로드된 Protobuf 파일에서 찾을 수 없습니다.`);
-      }
+    let loadedCount = 0;
+    if (loadedRoot) {
+      Object.entries(loadedRoot).forEach(([namespaceName, namespace]) => {
+        if (namespace instanceof protobuf.Type) {
+          // 패키지가 없는 경우 메시지를 직접 불러옵니다.
+          protoMessages[namespaceName] = root.lookupType(namespaceName);
+          loadedCount++;
+        } else if (namespace.nested) {
+          // 패키지가 있는 경우 기존 방식으로 메시지를 불러옵니다.
+          Object.entries(namespace.nested).forEach(([typeName, type]) => {
+            if (type instanceof protobuf.Type) {
+              const fullName = `${namespaceName}.${typeName}`;
+              protoMessages[fullName] = root.lookupType(fullName);
+              loadedCount++;
+            }
+          });
+        }
+      });
     }
 
-    // console.log('protoMessages:', protoMessages);
-  } catch (err) {
-    console.error('Protobuf 파일 로드 중 오류:', err.message);
-    throw err;
+    logger.info(`Protobuf initialized : ${loadedCount}`);
+  } catch (error) {
+    logger.error('Protobuf 파일 로드 중 오류가 발생했습니다:', error);
+    throw error;
   }
 };
 
-// 함수 내보내기
-export { loadProtos, getProtoMessages };
+// 로드된 프로토 메시지들의 얕은 복사본을 반환합니다.
+export const getProtoMessages = () => {
+  return { ...protoMessages };
+};

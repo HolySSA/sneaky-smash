@@ -1,9 +1,15 @@
 import dbPool from '../database.js';
 import SQL_QUERIES from '../query/characters.query.js';
 import toCamelCase from '../../utils/transformCase.js';
+import {
+  getRedisUserById,
+  removeRedisUser,
+  setRedisUser,
+} from '../../sessions/redis/redis.user.js';
 
 // 캐릭터 생성
 export const createCharacter = async (userId, nickname, myClass, gold = 0) => {
+  removeRedisUser(userId);
   const [result] = await dbPool.query(SQL_QUERIES.CREATE_CHARACTER, [
     userId,
     nickname,
@@ -15,29 +21,35 @@ export const createCharacter = async (userId, nickname, myClass, gold = 0) => {
 
 // 사용자 ID로 캐릭터 찾기
 export const findCharacterByUserId = async (userId) => {
+  let result = await getRedisUserById(userId);
+
+  if (result && result.id != undefined) {
+    return result;
+  }
+
   const [rows] = await dbPool.query(SQL_QUERIES.FIND_CHARACTER_BY_USERID, [userId]);
-  return rows.length > 0 ? toCamelCase(rows[0]) : null;
+  result = rows.length > 0 ? toCamelCase(rows[0]) : null;
+  if (result) {
+    await setRedisUser(result);
+  }
+  return result;
 };
-
-// 모든 캐릭터 조회
-export const findAllCharacters = async () => {
-  const [rows] = await dbPool.query(SQL_QUERIES.FIND_ALL_CHARACTERS);
-  return rows.map(toCamelCase);
-};
-
 // 캐릭터 수정
 export const updateCharacter = async (userId, nickname, myClass, gold) => {
+  removeRedisUser(userId);
   const [result] = await dbPool.query(SQL_QUERIES.UPDATE_CHARACTER, [
     nickname,
     myClass,
     gold,
     userId,
   ]);
+
   return { affectedRows: result.affectedRows };
 };
 
 // 캐릭터 삭제
 export const deleteCharacter = async (userId) => {
+  removeRedisUser(userId);
   const [result] = await dbPool.query(SQL_QUERIES.DELETE_CHARACTER, [userId]);
   return { affectedRows: result.affectedRows };
 };

@@ -1,5 +1,4 @@
 {
-    "name": "equipment",
     "data": [
      
       { "id": 200, "name": "할아버지의 오래된 가죽 모자", "Gold": 150, "ATK": 3, "DEF": 3, "MaxHp": 10, "CriticalDamageRate": 0.05, "CriticalProbability": 0.02, "MoveSpeed": 0, "AttackSpeed": 0.02, "Description": "기본적인 방어력과 소소한 체력을 제공하는 옛날 스타일의 모자" },

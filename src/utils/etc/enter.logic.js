@@ -1,8 +1,6 @@
-import { PACKET_ID } from '../../constants/packetId.js';
-import { getRedisUsers } from '../../sessions/redis/redis.user.js';
-import { getUserSessions, getUserTransformById } from '../../sessions/user.session.js';
-import createNotificationPacket from '../notification/createNotification.js';
-import createResponse from '../response/createResponse.js';
+import { setRedisUserUUID } from '../../sessions/redis/redis.user.js';
+import { getUserById } from '../../sessions/user.session.js';
+import spawnPlayerTown from './enterTown.js';
 
 // message S_Enter {
 //     PlayerInfo player = 1;      // 플레이어 정보 (추후 정의 예정)
@@ -11,42 +9,24 @@ import createResponse from '../response/createResponse.js';
 //     repeated PlayerInfo players = 1; // 스폰되는 플레이어 리스트 (추후 정의 예정)
 // }
 
-const enterLogic = async (socket, user) => {
+/**
+ * 타운에 입장하는 함수
+ */
+const enterLogic = async (socket, character) => {
+  const user = getUserById(socket.id);
   const playerPayload = {
-    playerId: user.id,
-    nickname: user.nickname,
-    class: user.myClass,
-    transform: getUserTransformById(user.id),
+    player: {
+      playerId: socket.id,
+      nickname: character.nickname,
+      class: character.myClass,
+      transform: user.transform,
+    },
   };
-
-  const response = createResponse(PACKET_ID.S_Enter, { player: playerPayload });
-  socket.write(response);
-
-  const users = await getRedisUsers();
-  const userSessions = getUserSessions();
-
-  // 모든 유저들에게 현재 접속 중인 유저 정보 전송
-  for (const [key, value] of userSessions) {
-    const otherUserPayload = {
-      players: [
-        ...users
-          .filter((player) => player.id !== key)
-          .map((player) => ({
-            playerId: parseInt(player.id),
-            nickname: player.nickname,
-            class: parseInt(player.myClass),
-            transform: getUserTransformById(player.id),
-          })),
-      ],
-    };
-
-    if (otherUserPayload.players.length === 0) {
-      continue;
-    }
-
-    const otherUsernotification = createNotificationPacket(PACKET_ID.S_Spawn, otherUserPayload);
-    value.socket.write(otherUsernotification);
-  }
+  await setRedisUserUUID(socket); // 소켓으로 레디스에서 해당 유저의 UUID 설정
+  user.nickname = character.nickname;
+  user.myClass = character.myClass;
+ 
+  spawnPlayerTown(socket, user, playerPayload);
 };
 
 export default enterLogic;

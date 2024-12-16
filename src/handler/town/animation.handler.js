@@ -1,31 +1,21 @@
-import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getUserSessions } from '../../sessions/user.session.js';
+import { getAllUserUUID, getUserById } from '../../sessions/user.session.js';
+import logger from '../../utils/logger.js';
+import Result from '../result.js';
+import { getDungeonSession } from '../../sessions/dungeon.session.js';
+import { getAllUserByTown } from '../../sessions/town.session.js';
+import broadcastBySession from '../../utils/notification/broadcastBySession.js';
 
-const animationHandler = async (socket, payload) => {
-  try {
-    const { animCode } = payload;
+const animationHandler = async ({ socket, payload }) => {
+  var animationPayload;
+  const { animCode } = payload;
 
-    const animationPayload = {
-      playerId: socket.id,
-      animCode,
-    };
-
-    const animationResponsePayload = createResponse(PACKET_ID.S_Animation, animationPayload);
-
-    const allUsers = getUserSessions();
-    if (!allUsers || allUsers.length === 0) {
-      console.error('저장된 유저세션이 없습니다.');
-      return;
-    }
-
-    allUsers.forEach((value) => {
-      value.socket.write(animationResponsePayload);
-    });
-  } catch (e) {
-    handleError(socket, e);
-  }
+  animationPayload = {
+    playerId: socket.id,
+    animCode,
+  };
+  broadcastBySession(socket, PACKET_ID.S_Animation, animationPayload);
 };
 
 export default animationHandler;

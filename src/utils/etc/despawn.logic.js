@@ -1,33 +1,50 @@
-import { PACKET_ID } from '../../constants/packetId.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
+import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/redis.party.js';
-import { removeRedisUser } from '../../sessions/redis/redis.user.js';
-import { getUserSessions, removeUserSession } from '../../sessions/user.session.js';
+import { setIsSignIn } from '../../sessions/redis/redis.user.js';
+import { getAllUserUUIDByTown, removeUserForTown } from '../../sessions/town.session.js';
+import { getUserById, removeUserSession } from '../../sessions/user.session.js';
+import broadcastBySession from '../notification/broadcastBySession.js';
 import createNotificationPacket from '../notification/createNotification.js';
+import { removeUserQueue } from '../socket/messageQueue.js';
 
 // message S_Despawn {
 //     repeated int32 playerIds = 1;    // 디스폰되는 플레이어 ID 리스트
 // }
 
 const despawnLogic = async (socket) => {
-  const payload = {
-    playerIds: [parseInt(socket.id)],
-  };
+  const userId = socket.id;
+  removeUserQueue(socket);
+  const user = getUserById(userId);
 
-  await removeRedisUser(socket);
+  if (user) {
+    await setIsSignIn(userId, false);
+    const dungeon = getDungeonSession(user.dungeonId);
+    if (dungeon) {
+      dungeon.removeDungeonUser(userId);
+    }
+    removeUserForTown(userId);
+    const payload = {
+      playerIds: [userId],
+    };
 
-  const party = await getRedisPartyByUserId(socket.id);
-  if (party) {
-    await removeRedisParty(party.roomId);
+    const AllUUID = getAllUserUUIDByTown();
+    const party = await getRedisPartyByUserId(userId);
+    if (party) {
+      if (party.members.length <= 1) {
+        await removeRedisParty(party.roomId);
+      }
+      const leavePayload = {
+        playerId: socket.id,
+        roomId: party.roomId,
+      };
+      createNotificationPacket(PACKET_ID.S_PartyLeave, leavePayload, AllUUID);
+    }
+
+    broadcastBySession(socket, PACKET_ID.S_Despawn, payload, true);
   }
 
-  removeUserSession(socket);
-
-  const response = createNotificationPacket(PACKET_ID.S_Despawn, payload);
-
-  const sessions = getUserSessions();
-  for (const [key, value] of sessions) {
-    value.socket.write(response);
-  }
+    removeUserSession(socket);
 };
 
 export default despawnLogic;

@@ -1,28 +1,31 @@
 syntax = "proto3";
 
+import "../dungeon/monster.proto";
+
+message Stats {
+  int32 atk = 1;
+  int32 def = 2; 
+  int32 maxHp = 3; 
+  int32 moveSpeed = 4;
+  float criticalProbability = 5;
+  float criticalDamageRate = 6;
+}
+
 // **PlayerStatus** - 플레이어 상태
 message PlayerStatus {
   int32 playerClass = 1;      // 플레이어 클래스
   int32 playerLevel = 2;      // 플레이어 레벨
   string playerName = 3;      // 플레이어 이름
-  float playerFullHp = 4;     // 플레이어 최대 체력
-  float playerFullMp = 5;     // 플레이어 최대 마나
-  float playerCurHp = 6;      // 플레이어 현재 체력
-  float playerCurMp = 7;      // 플레이어 현재 마나
+  int32 playerFullHp = 4;     // 플레이어 최대 체력
+  int32 playerCurHp = 5;      // 플레이어 현재 체력
 }
 
 // **StatInfo** - 플레이어의 상세 스탯 정보
 message StatInfo {
   int32 level = 1;                 // 플레이어 레벨
-  float hp = 2;                    // 현재 체력
-  float maxHp = 3;                 // 최대 체력
-  float mp = 4;                    // 현재 마나
-  float maxMp = 5;                 // 최대 마나
-  float atk = 6;                   // 공격력
-  float def = 7;                   // 방어력
-  float speed = 8;                 // 속도
-  float criticalProbability = 9;   // 크리티컬 확률
-  float criticalDamageRate = 10;   // 크리티컬 데미지 비율
+  Stats stats = 2;
+  float exp = 3;                   // 경험치
+  float maxExp = 4;
 }
 
 // **TransformInfo** - 위치 및 회전 정보

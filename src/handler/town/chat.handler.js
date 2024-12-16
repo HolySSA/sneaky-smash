@@ -1,29 +1,35 @@
-import createResponse from '../../utils/response/createResponse.js';
-import { PACKET_ID } from '../../constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
-import { getUserSessions } from '../../sessions/user.session.js';
+import { getUserById } from '../../sessions/user.session.js';
+import { pubChat } from '../../sessions/redis/redis.chat.js';
+import { getUserSessionByIdFromTown } from '../../sessions/town.session.js';
+import { findDungeonByUserId, getDungeonSession } from '../../sessions/dungeon.session.js';
+import logger from '../../utils/logger.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { PACKET_ID } from '../../configs/constants/packetId.js';
+import configs from '../../configs/configs.js';
 
-const chatHandler = async (socket, payload) => {
+const chatHandler = async ({ socket, payload }) => {
   try {
     const { chatMsg } = payload;
-
-    const chatPayload = {
-      playerId: socket.id,
-      chatMsg,
-    };
-
-    const chatResponsePayload = createResponse(PACKET_ID.S_Chat, chatPayload);
-
-    const allUsers = getUserSessions();
-    if (!allUsers || allUsers.length === 0) {
-      console.error('유저세션이 없습니다.');
-      return;
+    const isTownUser = getUserSessionByIdFromTown(socket.id);
+    const nickname = getUserById(socket.id).nickname;
+    if (isTownUser) {
+      await pubChat(socket.id, nickname, chatMsg);
+    } else {
+      const user = getUserById(socket.id);
+      const dungeon = getDungeonSession(user.dungeonId);
+      if (dungeon) {
+        createNotificationPacket(
+          PACKET_ID.S_Chat,
+          { playerId: socket.id, nickname, chatMsg, serverIndex: configs.ServerIndex },
+          dungeon.usersUUID,
+        );
+      } else {
+        logger.error(
+          `chatHandler. ${socket.id}에서 던전에 없는데 던전 채팅 보냄 : ${user.dungeonId}`,
+        );
+      }
     }
-
-    // 같은 로케이션의 유저들에게 패킷 전송
-    allUsers.forEach((value) => {
-      value.socket.write(chatResponsePayload);
-    });
   } catch (e) {
     handleError(socket, e);
   }

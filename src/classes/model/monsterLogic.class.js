@@ -16,7 +16,7 @@ class MonsterLogic {
     this.monsterIndex = 1;
 
     this.monsterLogicInterval = 100;
-    this.spawnInterval = 1000 * 30; // 10초
+    this.spawnInterval = 1000 * 30; // 30초
     this.spawnZones = [
       {
         id: 1,
@@ -295,6 +295,17 @@ class MonsterLogic {
   }
 
   startMonsterSpawn() {
+    // 게임 시작 시 모든 스폰 존에 몬스터 즉시 스폰
+    this.spawnZones.forEach((zone) => {
+      const currentCount = this.monsterLists.filter((monster) => monster.zoneId === zone.id).length;
+      if (currentCount < zone.maxCount) {
+        for (let i = currentCount; i < zone.maxCount; i++) {
+          this.spawnMonster(zone);
+        }
+      }
+    });
+
+    // 30초마다 몬스터 스폰
     this.monsterSpawnInterval = setInterval(() => {
       this.spawnZones.forEach((zone) => {
         const currentCount = this.monsterLists.filter(

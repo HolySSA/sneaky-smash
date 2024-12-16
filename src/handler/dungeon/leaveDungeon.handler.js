@@ -3,9 +3,13 @@ import handleError from '../../utils/error/errorHandler.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { getUserById } from '../../sessions/user.session.js';
-import { addUserForTown, getAllUserByTown } from '../../sessions/town.session.js';
+import { addUserForTown } from '../../sessions/town.session.js';
 import logger from '../../utils/logger.js';
 
+import spawnPlayerTown from '../../utils/etc/enterTown.js';
+import configs from '../../configs/configs.js';
+
+const { TOWN_SPAWN_TRANSFORMS } = configs;
 // message C_LeaveDungeon {
 //   // 던전에서 나가기 요청
 // }
@@ -34,22 +38,20 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
     // 타운에 유저 추가
     addUserForTown(user);
     // 타운에 있는 유저 UUID 목록 호출
-    const townUsersUUID = getAllUserByTown();
+    const dungeonUUID = dungeon.getDungeonUsersUUID();
 
-    // 던전에서 유저 제거
-    if (!dungeon.removeDungeonUser(playerId)) {
-      logger.error(`leaveDungeonHandler: 해당 던전에서 ${playerId} 유저 제거 실패.`);
-      return;
-    }
+    createNotificationPacket(PACKET_ID.S_LeaveDungeon, { playerId }, dungeonUUID);
 
-    // 던전에 마지막 유저가 제거 되었다면
-    if (dungeon.isRemainedUser()) {
-      logger.info(
-        `dungeonId: ${dungeonId} 던전에 남아 있던 마지막 유저 ${playerId}가 던전을 떠났고 던전은 닫혔습니다.`,
-      );
-    }
+    const playerPayload = {
+      player: {
+        playerId: socket.id,
+        nickname: user.nickname,
+        class: user.myClass,
+        transform: TOWN_SPAWN_TRANSFORMS
+      },
+    };
 
-    createNotificationPacket(PACKET_ID.S_LeaveDungeon, { playerId }, townUsersUUID);
+    spawnPlayerTown(socket, user, playerPayload);
   } catch (err) {
     handleError(socket, err);
   }

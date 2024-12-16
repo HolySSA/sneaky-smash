@@ -24,10 +24,10 @@ class Dungeon {
     this.respawnTimers = new Map();
     this.droppedItems = {};
     this.spawnTransforms = [
-      [2.5, 0.5, 112],
-      [2.5, 0.5, -5.5],
-      [42, 0.5, 52.5],
-      [-38, 0.5, 52.5],
+      [2.5, 0.5, 112, 180],
+      [2.5, 0.5, -5.5, 0],
+      [42, 0.5, 52.5, 270],
+      [-38, 0.5, 52.5, 90],
     ];
 
     this.startTime = Date.now(); // 던전 시작 시간 초기화
@@ -51,7 +51,7 @@ class Dungeon {
         return this._currentHp;
       },
       set currentHp(value) {
-        this._currentHp = Math.max(0, value, statInfo.stats.maxHp);
+        this._currentHp = Math.max(0, Math.min(value, statInfo.stats.maxHp));
       },
       userKillCount: 0,
       monsterKillCount: 0,
@@ -81,8 +81,8 @@ class Dungeon {
 
     createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.usersUUID);
 
-    // 던전 세션 제거
-    this.Dispose();
+    this.monsterLogic.Dispose();
+    this.clearAllTimers();
   }
 
   spawnNexusNotification() {
@@ -201,14 +201,6 @@ class Dungeon {
     if (this.users.size === 0) {
       this.monsterLogic.pathServer.onClose();
     }
-  }
-
-  isRemainedUser() {
-    if (this.users.size === 0) {
-      this.removeDungeonSession();
-      return true;
-    }
-    return false;
   }
 
   removeDungeonSession() {
@@ -356,13 +348,13 @@ class Dungeon {
 
   updatePlayerHp(userId, amount) {
     const user = this.users.get(userId);
-
+    
     // 스탯 불러오기 수정
     const maxHp = user.statInfo.stats.maxHp;
     const currentHp = user.currentHp;
     const newHp = currentHp + amount;
     user.currentHp = Math.max(0, Math.min(newHp, maxHp));
-
+    
     if (user.currentHp != currentHp) {
       createNotificationPacket(
         PACKET_ID.S_UpdatePlayerHp,

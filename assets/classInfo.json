@@ -40,8 +40,8 @@
       "classId": 1004,
       "className": "큐르탄 - 망치",
       "stats": {
-        "atk": 13,
-        "def": 10,
+        "atk": 20,
+        "def": 8,
         "maxHp": 320,
         "moveSpeed": 5.5,
         "criticalProbability": 10.0,

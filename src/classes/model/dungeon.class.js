@@ -257,15 +257,23 @@ class Dungeon {
     const { stats: currentStats, exp: currentExp, maxExp: currentMaxExp } = user.statInfo;
 
     const newExp = currentExp - currentMaxExp;
+
+    const levelperStats = getGameAssets().levelperStats;
+
+    const userClassId = user.user.myClass;
+    const classLevelStats = levelperStats[userClassId]?.stats || {};
+
     user.statInfo = {
       level: nextLevel,
       stats: {
-        maxHp: currentStats.maxHp + 20,
-        atk: currentStats.atk + 3,
-        def: currentStats.def + 1,
-        moveSpeed: currentStats.moveSpeed + 1,
-        criticalProbability: currentStats.criticalProbability,
-        criticalDamageRate: currentStats.criticalDamageRate,
+        maxHp: currentStats.maxHp + (classLevelStats.maxHp || 0),
+        atk: currentStats.atk + (classLevelStats.atk || 0),
+        def: currentStats.def + (classLevelStats.def || 0),
+        moveSpeed: currentStats.moveSpeed + (classLevelStats.speed || 0),
+        criticalProbability:
+          currentStats.criticalProbability + (classLevelStats.criticalProbability || 0),
+        criticalDamageRate:
+          currentStats.criticalDamageRate + (classLevelStats.criticalDamageRate || 0),
       },
       exp: newExp,
       maxExp,

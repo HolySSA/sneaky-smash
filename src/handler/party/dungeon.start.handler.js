@@ -107,7 +107,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
         posX: transformData[0],
         posY: transformData[1],
         posZ: transformData[2],
-        rot: 0, // rotation 값은 나중에 받으면 수정
+        rot: transformData[3], // rotation 값은 나중에 받으면 수정
       };
 
       const statInfo = getStatsByUserClass(user.myClass);

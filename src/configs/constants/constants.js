@@ -12,6 +12,13 @@ const CONSTANTS = Object.freeze({
     { posX: 0, posY: 0.8, posZ: 102, rot: 0 },
     { posX: 2, posY: 0.8, posZ: 5, rot: 0 },
   ],
+
+  TOWN_SPAWN_TRANSFORMS: {
+      posX: -5,
+      posY: 0.5,
+      posZ: 135,
+      rot: 0,
+    }  
 });
 
 export default CONSTANTS;

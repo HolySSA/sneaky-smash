@@ -1,7 +1,10 @@
+import configs from '../../configs/configs.js';
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import logger from '../../utils/logger.js';
 import createResponse from '../../utils/packet/createResponse.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';
+
+const { TOWN_SPAWN_TRANSFORMS } = configs;
 
 class User {
   #pingQueue = [];
@@ -9,12 +12,7 @@ class User {
   constructor(socket) {
     this.socket = socket;
     this.id = socket.id;
-    this.transform = {
-      posX: -5,
-      posY: 0.5,
-      posZ: 135,
-      rot: 0,
-    };
+    this.transform = TOWN_SPAWN_TRANSFORMS;
     this.latency = 0;
     this.myClass = 0;
     this.nickname = '';

@@ -24,10 +24,10 @@ class Dungeon {
     this.respawnTimers = new Map();
     this.droppedItems = {};
     this.spawnTransforms = [
-      [2.5, 0.5, 112],
-      [2.5, 0.5, -5.5],
-      [42, 0.5, 52.5],
-      [-38, 0.5, 52.5],
+      [2.5, 0.5, 112, 180],
+      [2.5, 0.5, -5.5, 0],
+      [42, 0.5, 52.5, 270],
+      [-38, 0.5, 52.5, 90],
     ];
   }
 
@@ -79,8 +79,8 @@ class Dungeon {
 
     createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.usersUUID);
 
-    // 던전 세션 제거
-    this.Dispose();
+    this.monsterLogic.Dispose();
+    this.clearAllTimers();
   }
 
   spawnNexusNotification() {
@@ -199,14 +199,6 @@ class Dungeon {
     if (this.users.size === 0) {
       this.monsterLogic.pathServer.onClose();
     }
-  }
-
-  isRemainedUser() {
-    if (this.users.size === 0) {
-      this.removeDungeonSession();
-      return true;
-    }
-    return false;
   }
 
   removeDungeonSession() {

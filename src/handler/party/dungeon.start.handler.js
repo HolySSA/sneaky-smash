@@ -22,6 +22,7 @@ const dungeonStartHandler = async ({ socket, payload }) => {
     // 파티 세션
     const party = await getRedisParty(roomId);
 
+    //TODO 다시한번 말하지만 테스트 끝나고 배포전에 없애야합니다.
     // 던전 세션 생성 - dungeonLevel = dungeonId = dungeonCode ???
     // if (party.members.length < 2) {
     //   logger.warn(`2명 미만일 땐 시작할 수 없습니다. : ${JSON.stringify(party)}`);

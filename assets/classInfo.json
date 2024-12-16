@@ -7,7 +7,7 @@
         "atk": 15,
         "def": 5,
         "maxHp": 300,
-        "moveSpeed": 7,
+        "moveSpeed": 6.5,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
       }
@@ -19,7 +19,7 @@
         "atk": 16,
         "def": 4,
         "maxHp": 290,
-        "moveSpeed": 7,
+        "moveSpeed": 7.5,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
       }
@@ -43,7 +43,7 @@
         "atk": 13,
         "def": 10,
         "maxHp": 320,
-        "moveSpeed": 7,
+        "moveSpeed": 5.5,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
       }
@@ -55,7 +55,7 @@
         "atk": 19,
         "def": 2,
         "maxHp": 270,
-        "moveSpeed": 7,
+        "moveSpeed": 7.5,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
       }

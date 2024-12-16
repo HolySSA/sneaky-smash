@@ -40,14 +40,12 @@ const useItemHandler = async ({ socket, payload }) => {
     }
 
     const dungeon = getDungeonSession(userBySession.dungeonId);
-    const droppedItem = dungeon.getItem(itemInstanceId);
+    const droppedItem = dungeon.getDroppedObject(playerId, itemId, itemInstanceId);
 
-    if (!droppedItem || droppedItem.playerId != playerId || droppedItem.itemId != itemId) {
-      logger.error(`useItemHandler. not matched droppedItemInfo playerID: ${playerId}`);
+    if (!droppedItem) {
       return;
     }
 
-    dungeon.removeItem(itemInstanceId);
     const allUsers = dungeon.getDungeonUsersUUID();
     const itemInfo = {};
     // 아이템 정보에 맞는 스텟 증가를 적용시키기

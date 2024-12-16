@@ -54,7 +54,7 @@ class Dungeon {
       userKillCount: 0,
       monsterKillCount: 0,
       statInfo,
-      skillList: [],
+      skillList: {}, //getSkill가보면     dungeonUser.skillList[skillId] = { slot: slotIndex, ...skillData, lastUseTime: 0 }; 이렇게 등록함
     };
 
     this.users.set(userId, dungeonUser);
@@ -100,26 +100,32 @@ class Dungeon {
     return false;
   }
 
-  createItem(playerId, itemId, itemInstanceId) {
+  /**
+   *  몬스터를 통해 드랍된 아이템 정보를 보관합니다.
+   */
+  createDroppedObject(playerId, Id, itemInstanceId) {
     if (!this.users.has(playerId)) {
       return;
     }
 
-    const items = getGameAssets().item;
-    const item = items[itemId];
-    if (!item) {
+    this.droppedItems[itemInstanceId] = { playerId, Id };
+  }
+
+  /**
+   * 몬스터를 통해 드랍되었던 아이템 정보를 가져오며 데이터를 제거합니다.
+   * @param {Number} playerId
+   * @param {Number} Id  ItemID or SkillID
+   * @param {Number} itemInstanceId
+   * @returns
+   */
+  getDroppedObject(playerId, Id, itemInstanceId) {
+    const droppedItem = this.droppedItems[itemInstanceId];
+    if (!droppedItem || droppedItem.playerId != playerId || droppedItem.Id != Id) {
+      logger.error(`getItemOrSkill. not matched droppedItemInfo playerID: ${playerId} or Id ${Id}`);
       return;
     }
-
-    this.droppedItems[itemInstanceId] = { playerId, itemId };
-  }
-
-  getItem(itemInstanceId) {
-    return this.droppedItems[itemInstanceId];
-  }
-
-  removeItem(itemInstanceId) {
     delete this.droppedItems[itemInstanceId];
+    return droppedItem;
   }
 
   increaseMonsterKillCount(userId) {

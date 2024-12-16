@@ -1,15 +1,15 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
-import { getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
+import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import logger from '../../utils/logger.js';
 import { getUserById } from '../../sessions/user.session.js';
 
 // Notification
 const getSkillHandler = ({ socket, payload }) => {
-  const { skillId, itemInstanceId } = payload;
-  
+  const { skillId, itemInstanceId, slotIndex } = payload;
+
   const playerId = socket.id;
   try {
     const user = getUserById(playerId);
@@ -28,13 +28,34 @@ const getSkillHandler = ({ socket, payload }) => {
     const skillAssets = getGameAssets().skillInfo; // 맵핑된 스킬 정보 가져오기
     const skillData = skillAssets[skillId]; // ID로 직접 접근
 
+    const dungeon = getDungeonSession(user.dungeonId);
+
+    const dungeonUser = dungeon.users.get(playerId);
+
+    if (slotIndex > 2 || slotIndex < 0) {
+      logger.error(`getSkillHandler. no available skill slot : ${slotIndex}`);
+      return;
+    }
+
+    if (!dungeonUser) {
+      logger.error(`getSkillHandler. could not found dungeonUser`);
+      return;
+    }
+
+    const droppedSkillInfo = dungeon.getDroppedObject(playerId, skillId, itemInstanceId);
+    if (!droppedSkillInfo) {
+      return;
+    }
+
     if (!skillData) {
       logger.error(`스킬 정보를 찾을 수 없습니다. skillId: ${skillId}`);
       return;
     }
 
+    dungeonUser.skillList[skillId] = { slot: slotIndex, ...skillData, lastUseTime: 0 };
+
     const skillPayload = {
-      skillInfo : {...skillData, skillId},
+      skillInfo: { ...skillData, skillId },
       playerId,
       itemInstanceId,
     };

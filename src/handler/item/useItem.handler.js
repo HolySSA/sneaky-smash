@@ -47,8 +47,7 @@ const useItemHandler = async ({ socket, payload }) => {
         itemInfo[key] = attributeHandlers[key](dungeon, socket.id, value); // 해당 속성 처리
       }
     });
-    
-    const stats = dungeon.updateUserStats(playerId, itemInfo);
+    const stats = dungeon.getUserStats(playerId).stats;
 
     const useItemPayload = {
       playerId: socket.id,

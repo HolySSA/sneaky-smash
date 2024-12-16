@@ -44,7 +44,13 @@ class Dungeon {
 
     const dungeonUser = {
       user,
-      currentHp: statInfo.stats.maxHp,
+      _currentHp: statInfo.stats.maxHp,
+      get currentHp() {
+        return this._currentHp;
+      },
+      set currentHp(value) {
+        this._currentHp = Math.max(0, value, statInfo.stats.maxHp);
+      },
       userKillCount: 0,
       monsterKillCount: 0,
       statInfo,
@@ -205,7 +211,7 @@ class Dungeon {
       criticalProbability = 0,
       criticalDamageRate = 0,
     } = stats;
-    const statInfo = this.getUserStats(userId);    
+    const statInfo = this.getUserStats(userId);
 
     statInfo.stats = {
       atk: statInfo.stats.atk + atk,
@@ -303,7 +309,6 @@ class Dungeon {
     const healAmount = Math.floor(userMaxHp * 0.5);
 
     user.currentHp = Math.min(user.currentHp + healAmount, userMaxHp);
-
     createNotificationPacket(
       PACKET_ID.S_UpdatePlayerHp,
       { playerId: userId, hp: user.currentHp },

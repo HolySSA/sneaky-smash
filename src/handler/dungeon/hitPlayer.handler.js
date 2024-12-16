@@ -3,8 +3,6 @@ import handleError from '../../utils/error/errorHandler.js';
 import deathPlayerNotification from '../game/deathPlayer.notification.js';
 import { getUserById } from '../../sessions/user.session.js';
 import logger from '../../utils/logger.js';
-import createNotificationPacket from '../../utils/notification/createNotification.js';
-import { PACKET_ID } from '../../configs/constants/packetId.js';
 
 // message C_HitPlayer {
 //   int32 playerId = 1;  // 피격자 ID

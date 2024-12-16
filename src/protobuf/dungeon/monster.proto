@@ -46,6 +46,6 @@ message S_GetNavPath{
 }
 
 message S_MonsterKillCount {
-int32 playerId = 1;
-int32 monsterKillCount = 2;
+  int32 playerId = 1;
+  int32 monsterKillCount = 2;
 }

@@ -77,7 +77,7 @@ class Dungeon {
     const playerId = this.nexus.lastAttackerId;
     logger.info(`Game ended in dungeonId ${this.dungeonId}. Winner is player: ${playerId}`);
 
-    createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.userUUID);
+    createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.usersUUID);
 
     // 던전 세션 제거
     this.Dispose();

@@ -32,7 +32,7 @@ const partyJoinHandler = async ({ socket, payload }) => {
     } else {
       party = await joinRedisParty(roomId, socket.id);
     }
-    if (party.members.length >= 4) {
+    if (party.members.length > 4) {
       logger.info(`${roomId}의 파티의 인원이 가득찼습니다.`);
       return;
     }

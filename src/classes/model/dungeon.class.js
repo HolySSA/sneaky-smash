@@ -78,9 +78,6 @@ class Dungeon {
     logger.info(`Game ended in dungeonId ${this.dungeonId}. Winner is player: ${playerId}`);
 
     createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.usersUUID);
-
-    this.monsterLogic.Dispose();
-    this.clearAllTimers();
   }
 
   spawnNexusNotification() {

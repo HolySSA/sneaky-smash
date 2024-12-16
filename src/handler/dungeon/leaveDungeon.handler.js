@@ -33,7 +33,7 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
     const dungeonId = user.dungeonId;
     // 해당 유저가 있던 던전 불러오고
     const dungeon = getDungeonSession(dungeonId);
-    // 해당 유저 던전아이디 빈값으로
+    // 해당 유저 던전아이디 빈값으로    
     user.dungeonId = '';
     // 타운에 유저 추가
     addUserForTown(user);
@@ -49,7 +49,8 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
         class: user.myClass,
         transform: TOWN_SPAWN_TRANSFORMS
       },
-    };
+    };  
+    await dungeon.removeDungeonUser(playerId);
 
     spawnPlayerTown(socket, user, playerPayload);
   } catch (err) {

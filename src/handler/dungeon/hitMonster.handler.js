@@ -42,6 +42,7 @@ const hitMonsterHandler = ({ socket, payload }) => {
 
     // 몬스터의 죽음을 알리지 마라 이놈들아!
     if (currentHp <= 0) {
+      dungeon.monsterLogic.destroyMonsterById(monsterId);
       monsterKillNotification(socket, monster, dungeon, dungeonAllUsersUUID);
     }
   } catch (err) {

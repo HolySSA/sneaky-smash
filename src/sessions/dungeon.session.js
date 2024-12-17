@@ -70,7 +70,7 @@ const getStatsByUserClass = (userClass) => {
     logger.error('레벨 1의 경험치 정보를 찾을 수 없습니다.');
     return null;
   }
-  
+
   return {
     level: 1,
     stats: classInfos.stats,
@@ -79,15 +79,10 @@ const getStatsByUserClass = (userClass) => {
   };
 };
 
-const getDungeonSessions = () => {
-  return dungeonSessions;
-};
-
 export {
   addDungeonSession,
   getDungeonSession,
   removeDungeonSession,
-  getDungeonSessions,
   getDungeonUsersUUID,
   getStatsByUserClass,
 };

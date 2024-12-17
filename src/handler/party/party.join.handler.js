@@ -12,8 +12,10 @@ const partyJoinHandler = async ({ socket, payload }) => {
     let party = null;
     if (isOwner) {
       party = await addRedisParty(roomId, dungeonLevel, socket.id);
+      console.log(`partyJoinHandler. add =>`, party);
     } else {
       party = await joinRedisParty(roomId, socket.id);
+      console.log(`partyJoinHandler. join =>`, party);
     }
 
     if (party.members.length > 4) {

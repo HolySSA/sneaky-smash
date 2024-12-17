@@ -8,14 +8,14 @@ import createNotificationPacket from '../../utils/notification/createNotificatio
 
 const attributeHandlers = {
   curHp: (dungeon, socketId, value) => dungeon.updatePlayerHp(socketId, value),
-  atk: (dungeon, socketId, value) => dungeon.increasePlayerAtk(socketId, value),
-  def: (dungeon, socketId, value) => dungeon.increasePlayerDef(socketId, value),
-  maxHp: (dungeon, socketId, value) => dungeon.increasePlayerMaxHp(socketId, value),
-  moveSpeed: (dungeon, socketId, value) => dungeon.increasePlayerMoveSpeed(socketId, value),
+  atk: (dungeon, socketId, value) => dungeon.updatePlayerAtk(socketId, value),
+  def: (dungeon, socketId, value) => dungeon.updatePlayerDef(socketId, value),
+  maxHp: (dungeon, socketId, value) => dungeon.updatePlayerMaxHp(socketId, value),
+  moveSpeed: (dungeon, socketId, value) => dungeon.updatePlayerMoveSpeed(socketId, value),
   criticalProbability: (dungeon, socketId, value) =>
-    dungeon.increasePlayerCriticalProbability(socketId, value),
+    dungeon.updatePlayerCriticalProbability(socketId, value),
   criticalDamageRate: (dungeon, socketId, value) =>
-    dungeon.increasePlayerCriticalDamageRate(socketId, value),
+    dungeon.updatePlayerCriticalDamageRate(socketId, value),
 };
 
 const useItemHandler = async ({ socket, payload }) => {

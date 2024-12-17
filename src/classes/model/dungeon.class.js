@@ -231,29 +231,6 @@ class Dungeon {
     return user.statInfo;
   }
 
-  updateUserStats(userId, stats) {
-    const {
-      atk = 0,
-      def = 0,
-      maxHp = 0,
-      moveSpeed = 0,
-      criticalProbability = 0,
-      criticalDamageRate = 0,
-    } = stats;
-    const statInfo = this.getUserStats(userId);
-
-    statInfo.stats = {
-      atk: statInfo.stats.atk + atk,
-      def: statInfo.stats.def + def,
-      maxHp: statInfo.stats.maxHp + maxHp,
-      moveSpeed: statInfo.stats.moveSpeed + moveSpeed,
-      criticalProbability: statInfo.stats.criticalProbability + criticalProbability,
-      criticalDamageRate: statInfo.stats.criticalDamageRate + criticalDamageRate,
-    };
-
-    return statInfo.stats;
-  }
-
   levelUpUserStats(user, nextLevel, maxExp) {
     const { stats: currentStats, exp: currentExp, maxExp: currentMaxExp } = user.statInfo;
 
@@ -375,63 +352,47 @@ class Dungeon {
     return user.currentHp;
   }
 
-  increasePlayerAtk(userId, amount) {
+  updatePlayerAtk(userId, amount) {
     const user = this.users.get(userId);
 
-    user.statInfo.stats.atk = Math.min(amount + user.statInfo.stats.atk, user.statInfo.stats.atk);
+    user.statInfo.stats.atk = amount + user.statInfo.stats.atk;
 
     return user.statInfo.stats.atk;
   }
 
-  increasePlayerDef(userId, amount) {
+  updatePlayerDef(userId, amount) {
     const user = this.users.get(userId);
 
-    user.statInfo.stats.def = Math.min(amount + user.statInfo.stats.def, user.statInfo.stats.def);
+    user.statInfo.stats.def = amount + user.statInfo.stats.def;
 
     return user.statInfo.stats.def;
   }
 
-  increasePlayerMaxHp(userId, amount) {
+  updatePlayerMaxHp(userId, amount) {
     const user = this.users.get(userId);
-
-    user.statInfo.stats.maxHp = Math.min(
-      amount + user.statInfo.stats.maxHp,
-      user.statInfo.stats.maxHp,
-    );
-
+    user.statInfo.stats.maxHp = amount + user.statInfo.stats.maxHp;
     return user.statInfo.stats.maxHp;
   }
 
-  increasePlayerMoveSpeed(userId, amount) {
+  updatePlayerMoveSpeed(userId, amount) {
     const user = this.users.get(userId);
 
-    user.statInfo.stats.moveSpeed = Math.min(
-      amount + user.statInfo.stats.moveSpeed,
-      user.statInfo.stats.moveSpeed,
-    );
+    user.statInfo.stats.moveSpeed = amount + user.statInfo.stats.moveSpeed;
 
     return user.statInfo.stats.moveSpeed;
   }
 
-  increasePlayerCriticalProbability(userId, amount) {
+  updatePlayerCriticalProbability(userId, amount) {
     const user = this.users.get(userId);
 
-    user.statInfo.stats.criticalProbability = Math.min(
-      amount + user.statInfo.stats.criticalProbability,
-      user.statInfo.stats.criticalProbability,
-    );
+    user.statInfo.stats.criticalProbability = amount + user.statInfo.stats.criticalProbability;
 
     return user.criticalProbability;
   }
 
-  increasePlayerCriticalDamageRate(userId, amount) {
+  updatePlayerCriticalDamageRate(userId, amount) {
     const user = this.users.get(userId);
-
-    user.statInfo.stats.criticalDamageRate = Math.min(
-      amount + user.statInfo.stats.criticalDamageRate,
-      user.statInfo.stats.criticalDamageRate,
-    );
-
+    user.statInfo.stats.criticalDamageRate = amount + user.statInfo.stats.criticalDamageRate;
     return user.statInfo.stats.criticalDamageRate;
   }
 

@@ -18,7 +18,7 @@ const decodeMessageByPacketId = (packetId, buffer) => {
       longs: String, // Long 값을 문자열로 처리
       enums: String, // enum 값을 문자열로 처리
       bytes: String, // bytes를 문자열로 처리
-      default: true,
+      defaults: true,
     });
 
     return object;

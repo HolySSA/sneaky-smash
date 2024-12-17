@@ -8,6 +8,11 @@ message MonsterStatus {
   string monsterName = 3; // 몬스터 이름
 }
 
+message S_SetMonsterTarget{
+  int32 monsterId = 1; // 몬스터 식별 ID
+  int32 playerId = 2; // target
+}
+
 message S_MonsterAttack {
   int32 monsterId = 1; // 몬스터 식별 ID
 }

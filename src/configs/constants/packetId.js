@@ -57,6 +57,7 @@ export const PACKET_ID = {
   S_NexusSpawn: 51,
   S_PlayerKillCount: 52,
   S_GameEnd: 53,
+  S_SetMonsterTarget: 54,
   C_GetNavPath: 99,
   S_GetNavPath: 100,
   C_Logout: 101,

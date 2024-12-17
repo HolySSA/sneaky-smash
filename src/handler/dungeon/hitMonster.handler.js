@@ -26,7 +26,7 @@ const hitMonsterHandler = ({ socket, payload }) => {
     }
 
     const targetUser = dungeon.getDungeonUser(playerId);
-    const currentHp = monster.hit(damage, targetUser);
+    const { currentHp, resultDamage } = monster.hit(damage, targetUser);
 
     const dungeonAllUsersUUID = dungeon.getDungeonUsersUUID();
 
@@ -38,7 +38,11 @@ const hitMonsterHandler = ({ socket, payload }) => {
     );
 
     // 공격당한 monster noti
-    createNotificationPacket(PACKET_ID.S_HitMonster, { monsterId, damage }, dungeonAllUsersUUID);
+    createNotificationPacket(
+      PACKET_ID.S_HitMonster,
+      { monsterId, resultDamage },
+      dungeonAllUsersUUID,
+    );
 
     // 몬스터의 죽음을 알리지 마라 이놈들아!
     if (currentHp <= 0) {

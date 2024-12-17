@@ -185,8 +185,8 @@ class MonsterLogic {
     const monsterUniqueId = this.monsterIndex++;
 
     const elapsedTime = (Date.now() - this.dungeonInstance.startTime) / 1000; // 시작 이후 경과
-    const multiplier = 1 + Math.floor(elapsedTime / 30) * 0.2; // 30초마다 50% 증가
-
+    let multiplier = 1 + Math.floor(elapsedTime / 30) * 0.2; // 30초마다 50% 증가
+    multiplier += this.dungeonInstance.dungeonLevelFactor; //난이도에 따라 추가 스탯 증가
     // 증가된 스탯 적용
     const boostedMonsterInfo = {
       ...monsterInfo,

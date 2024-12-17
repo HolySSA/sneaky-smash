@@ -125,7 +125,8 @@ class Monster {
   }
 
   hit(damage, targetYou) {
-    this.curHp -= Math.max(0, damage * (100 - this.def) * 0.01); // 방어력이 공격력보다 커도 최소뎀
+    const resultDamage = damage * (100 - this.def) * 0.01;
+    this.curHp -= Math.max(0, resultDamage); // 방어력이 공격력보다 커도 최소뎀
 
     // 공격자를 타겟으로 설정
     if (!this.target) {
@@ -133,7 +134,7 @@ class Monster {
       this.targetOn = true; // 타겟 활성화
     }
 
-    return this.curHp;
+    return { currentHp: this.curHp, resultDamage };
   }
 }
 

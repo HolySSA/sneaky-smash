@@ -18,6 +18,10 @@ const hitPlayerHandler = ({ socket, payload }) => {
     }
 
     const dungeonId = user.dungeonId;
+    if (!dungeonId) {
+      //던전이 아니면 계산필요 x
+      return;
+    }
     const dungeon = getDungeonSession(dungeonId);
 
     // 플레이어가 플레이어를 잡으면 피회복을 하는 로직

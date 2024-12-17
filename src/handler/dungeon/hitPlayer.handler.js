@@ -28,9 +28,10 @@ const hitPlayerHandler = ({ socket, payload }) => {
     const resultDamage = dungeon.damagedUser(playerId, damage);
     const currentHp = dungeon.updatePlayerHp(playerId, -resultDamage);
 
-    if (currentHp <= 0 && attackerId != playerId) {
-      dungeon.getAmountHpByKillUser(attackerId);
-    } else if (currentHp <= 0) {
+    if (currentHp <= 0) {
+      if (attackerId != playerId) {
+        dungeon.getAmountHpByKillUser(attackerId);
+      }
       deathPlayerNotification(playerId, dungeon);
     }
   } catch (err) {

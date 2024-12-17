@@ -10,5 +10,6 @@ client.addHandler(PACKET_ID.S_Authorize, async (payload) => {
   //console.log(payload);
 });
 client.sendMessage(PACKET_ID.C_Authorize, {
-  token: 'test123',
+  token:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2IiwiaWF0IjoxNzM0NDAwODIwLCJleHAiOjE3MzQ1NzM2MjAsImF1ZCI6InNwYXJ0YSIsImlzcyI6Im11bHRpcGxlcm9ndWVsaWtlIn0.UT4c9akiNfPgxznSH7nAA2ZCSl8wk2i0n2ttK9QIxTA',
 });

@@ -7,7 +7,6 @@ import movePlayerHandler from './town/move.player.handler.js';
 import animationHandler from './town/animation.handler.js';
 import chatHandler from './town/chat.handler.js';
 // user
-import registerHandler from './user/register.handler.js';
 import logInHandler from './user/logIn.handler.js';
 // dungeon
 import hitMonsterHandler from './dungeon/hitMonster.handler.js';
@@ -44,10 +43,7 @@ const handlers = {
     handler: chatHandler,
   },
   // user
-  [PACKET_ID.C_Register]: {
-    handler: registerHandler,
-  },
-  [PACKET_ID.C_Login]: {
+  [PACKET_ID.C_Authorize]: {
     handler: logInHandler,
   },
   // dungeon

@@ -33,8 +33,9 @@ const logInHandler = async ({ socket, payload }) => {
   let success = true;
   let message = undefined;
   try {
-    const verified = verifyTokenAsync(token);
+    const verified = await verifyTokenAsync(token);
 
+    console.log(verified);
     if (!verified) {
       success = false;
       message = '만료된 토큰 입니다.';

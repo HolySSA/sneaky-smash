@@ -264,6 +264,8 @@ class Dungeon {
     const userClassId = user.user.myClass;
     const classLevelStats = levelperStats[userClassId]?.stats || {};
 
+    user.currentHp(user.currentHp + classLevelStats.maxHp);
+
     user.statInfo = {
       level: nextLevel,
       stats: {

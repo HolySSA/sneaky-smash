@@ -32,7 +32,6 @@ const hitPlayerHandler = ({ socket, payload }) => {
       if (attackerId != playerId) {
         dungeon.increaseUserKillCount(attackerId);
         dungeon.getAmountHpByKillUser(attackerId);
-        dungeon.increaseUserKillCount(attackerId);
       }
       deathPlayerNotification(playerId, dungeon);
     }

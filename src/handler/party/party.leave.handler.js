@@ -4,26 +4,36 @@ import { getRedisParty, removeRedisParty } from '../../sessions/redis/redis.part
 import Result from '../result.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import logger from '../../utils/logger.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 const partyLeaveHandler = async ({ socket, payload }) => {
   try {
     const { roomId } = payload;
 
-    const leavePayload = {
-      playerId: socket.id,
-      roomId,
-    };
-
     const party = await getRedisParty(roomId);
+    console.log(party);
 
     if (!party) {
       logger.error('파티가 존재하지 않습니다');
       return;
     }
 
-    if (party.owner === socket.id.toString()) {
+    if (party.owner == socket.id) {
       await removeRedisParty(roomId);
+      for (const playerId of party.members) {
+        createNotificationPacket(
+          PACKET_ID.S_PartyLeave,
+          { playerId, roomId },
+          getAllUserUUIDByTown(),
+        );
+      }
+      return;
     }
+
+    const leavePayload = {
+      playerId: socket.id,
+      roomId,
+    };
 
     return new Result(leavePayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
   } catch (e) {

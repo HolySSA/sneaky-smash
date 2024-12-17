@@ -145,20 +145,20 @@ class Dungeon {
     );
   }
 
-  increaseUserKillCount(userId) {
-    const user = this.users.get(userId);
+  increaseUserKillCount(attackUserId) {
+    const user = this.users.get(attackUserId);
     if (!user) {
-      logger.error(`해당 userId (${userId})를 가진 사용자가 던전에 없습니다.`);
+      logger.error(`해당 userId (${attackUserId})를 가진 사용자가 던전에 없습니다.`);
       return;
     }
     user.userKillCount += 1;
     logger.info(
-      `플레이어 ${userId}의 유저 킬 수가 증가했습니다. 현재 유저 킬 수: ${user.userKillCount}`,
+      `플레이어 ${attackUserId}의 유저 킬 수가 증가했습니다. 현재 유저 킬 수: ${user.userKillCount}`,
     );
 
     createNotificationPacket(
       PACKET_ID.S_PlayerKillCount,
-      { playerId: userId, playerKillCount: user.userKillCount },
+      { playerId: attackUserId, playerKillCount: user.userKillCount },
       this.getDungeonUsersUUID(),
     );
   }
@@ -468,33 +468,22 @@ class Dungeon {
       return;
     }
 
-    let remainingTime = respawnTime * 1000; // 초기 리스폰 시간 설정
-    const defaultIntervalTime = 1000; //기본값 1초
-    let intervalDuration = defaultIntervalTime;
+    respawnTime *= 1000; // 초기 리스폰 시간 설정
 
-    let lastTime = Date.now();
-    const interval = setInterval(() => {
-      const currentTime = Date.now();
-      const timeDiff = currentTime - lastTime;
-      lastTime = currentTime;
-      remainingTime -= timeDiff; // 흐른 시간 만큼 감소
-      logger.info(`userId : ${userId} 리스폰 시간 ${remainingTime}ms`);
-      if (remainingTime <= 0) {
-        clearInterval(interval); // 타이머 종료
-        this.respawnTimers.delete(userId); // 관리 목록에서 제거
-        this.onRespawn(userId); // 내부 리스폰 처리
-      }
-
-      if (remainingTime < defaultIntervalTime) {
-        intervalDuration = remainingTime;
-      }
-    }, intervalDuration); // 1초 간격으로 실행
-
-    this.respawnTimers.set(userId, interval); // 타이머 등록
+    let startTime = Date.now();
+    const timeKey = setTimeout(() => {
+      clearTimeout(timeKey); // 타이머 종료
+      this.respawnTimers.delete(userId); // 관리 목록에서 제거
+      this.onRespawn(userId); // 내부 리스폰 처리
+      logger.info(
+        `userId : ${userId} 리스폰 함. RespawnTime : ${respawnTime}ms => RemainingTime${Date.now() - startTime}ms`,
+      );
+    }, respawnTime);
+    this.respawnTimers.set(userId, timeKey); // 타이머 등록
   }
 
   clearAllTimers() {
-    this.respawnTimers.forEach((interval) => clearInterval(interval));
+    this.respawnTimers.forEach((interval) => clearTimeout(interval));
     this.respawnTimers.clear();
     logger.info('모든 리스폰 타이머 클리어!');
   }

@@ -1,12 +1,6 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
-import { getDungeonSession } from '../../sessions/dungeon.session.js';
-import {
-  getAllUserUUID,
-  getUserById,
-  updateUserTransformById,
-} from '../../sessions/user.session.js';
+import { updateUserTransformById } from '../../sessions/user.session.js';
 import broadcastBySession from '../../utils/notification/broadcastBySession.js';
-import Result from '../result.js';
 /**
  * 무브 핸들러
  * @param {object} socket - 클라이언트 소켓

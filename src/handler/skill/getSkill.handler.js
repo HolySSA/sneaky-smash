@@ -1,8 +1,7 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
 import handleError from '../../utils/error/errorHandler.js';
 import { getGameAssets } from '../../init/loadAsset.js';
-import { getDungeonSession, getDungeonUsersUUID } from '../../sessions/dungeon.session.js';
-import createNotificationPacket from '../../utils/notification/createNotification.js';
+import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import logger from '../../utils/logger.js';
 import { getUserById } from '../../sessions/user.session.js';
 import { enqueueSend } from '../../utils/socket/messageQueue.js';

@@ -54,11 +54,8 @@ class Nexus {
         this.#clearTimer();
         return;
       }
-
       const regenAmount = Math.floor(this.initialHp * REGEN_PERCENT);
       this.nexusHp = Math.min(this.nexusHp + regenAmount, this.initialHp);
-
-      logger.info(`Nexus 체력 회복 중: ${this.nexusHp}/${this.initialHp}`);
       this.updateNexusHpNotification(usersUUID);
     }, REGEN_NEXUS_HP_PER_TIME);
   }

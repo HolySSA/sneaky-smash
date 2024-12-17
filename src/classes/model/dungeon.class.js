@@ -410,9 +410,15 @@ class Dungeon {
 
     const getSpawnPos =
       this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
+    logger.info(`userId: ${userId} 리스폰!`);
+    console.log(user.currentHp);
+    console.log(user.stats);
+    console.log('-------------------------------');
 
     user.currentHp = user.statInfo.stats.maxHp;
 
+    console.log(user.currentHp);
+    console.log(user.stats);
     const reviveResponse = {
       playerId: userId,
       transform: {
@@ -425,8 +431,6 @@ class Dungeon {
     };
 
     createNotificationPacket(PACKET_ID.S_RevivePlayer, reviveResponse, this.getDungeonUsersUUID());
-
-    logger.info(`userId: ${userId} 리스폰!`);
   };
 
   startRespawnTimer(userId, respawnTime) {

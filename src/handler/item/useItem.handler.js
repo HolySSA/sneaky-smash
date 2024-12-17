@@ -65,6 +65,8 @@ const useItemHandler = async ({ socket, payload }) => {
       itemInstanceId,
     };
 
+    console.log();
+
     createNotificationPacket(PACKET_ID.S_UseItem, useItemPayload, allUsers);
   } catch (e) {
     handleError(socket, e);

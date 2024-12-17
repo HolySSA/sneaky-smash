@@ -27,6 +27,11 @@ const getSkillHandler = ({ socket, payload }) => {
     const skillAssets = getGameAssets().skillInfo; // 맵핑된 스킬 정보 가져오기
     const skillData = skillAssets[skillId]; // ID로 직접 접근
 
+    if (!skillData) {
+      logger.error(`스킬 정보를 찾을 수 없습니다. skillId: ${skillId}`);
+      return;
+    }
+
     const dungeon = getDungeonSession(user.dungeonId);
 
     const dungeonUser = dungeon.users.get(playerId);
@@ -47,11 +52,6 @@ const getSkillHandler = ({ socket, payload }) => {
       return;
     }
 
-    if (!skillData) {
-      logger.error(`스킬 정보를 찾을 수 없습니다. skillId: ${skillId}`);
-      return;
-    }
-
     dungeonUser.skillList[skillId] = { slot: slotIndex, ...skillData, lastUseTime: 0 };
 
     const skillPayload = {
@@ -69,20 +69,3 @@ const getSkillHandler = ({ socket, payload }) => {
 };
 
 export default getSkillHandler;
-
-// message SkillInfo {
-// 	int32	skillId	= 1;	// 스킬 ID
-// 	float	damageRate 	= 2;	// 스킬 계수
-// 	float	coolTime = 3;	// 스킬 쿨타임
-// }
-
-// message C_GetSkill {
-//   int32 skillId = 1;     // 장착된 스킬 ID
-//   int32 itemInstanceId = 2; 	// 고유 아이템 ID
-// }
-
-// message S_GetSkill {
-//   SkillInfo skillInfo = 1; // 스킬 슬롯 정보
-//   int32 playerId = 2;
-//   int32 itemInstanceId = 3; 	// 고유 아이템 ID
-// }

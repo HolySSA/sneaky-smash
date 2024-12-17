@@ -14,6 +14,7 @@ export const startHealthReport = async () => {
       serverName: SERVER_NAME,
       maxCapacity: SERVER_MAX_CAPACITY,
       currentUserCount: getAllUserUUID().length,
+      port: SERVER_PORT,
     }),
   );
 

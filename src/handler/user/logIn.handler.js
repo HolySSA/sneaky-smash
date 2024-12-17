@@ -43,11 +43,14 @@ const logInHandler = async ({ socket, payload }) => {
       socket.id = Number(verified.id);
       socket.account = verified.account;
       addUserSession(socket);
-      const loginBuffer = createResponse(PACKET_ID.S_Authorize, { success, message });
+      const character = await findCharacterByUserId(socket.id);
+      const loginBuffer = createResponse(PACKET_ID.S_Authorize, {
+        success,
+        message,
+        existCharacter: character != null,
+      });
       enqueueSend(socket.UUID, loginBuffer);
-
       if (success) {
-        const character = await findCharacterByUserId(socket.id);
         if (character) {
           await enterLogic(socket, character);
         }

@@ -33,7 +33,7 @@ const hitMonsterHandler = ({ socket, payload }) => {
     // 공격당한 몬스터 hp noti
     createNotificationPacket(
       PACKET_ID.S_UpdateMonsterHp,
-      { monsterId, hp: currentHp },
+      { monsterId, hp: Math.ceil(currentHp) },
       dungeonAllUsersUUID,
     );
 

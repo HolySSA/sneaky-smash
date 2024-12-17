@@ -21,19 +21,18 @@ const monsterKillNotification = (socket, monster, dungeon, dungeonAllUsersUUID) 
   let skillId = -1;
 
   const totalDropRate = ITEM_DROP_RATE + SKILL_DROP_RATE;
-  const drop = ITEM_DROP_RATE + SKILL_DROP_RATE - 0.1;
+  const drop = Math.random();
 
-  if (drop < totalDropRate) {
+  if (drop < ITEM_DROP_RATE) {
     itemInstanceId++;
-    if (drop < ITEM_DROP_RATE) {
-      const itemPivotId = 500;
-      itemId = Math.floor(Math.random() * itemAssets.length) + itemPivotId;
-      dungeon.createDroppedObject(playerId, itemId, itemInstanceId);
-    } else {
-      const skillPivotId = 100;
-      skillId = Math.floor(Math.random() * skillAssets.length) + skillPivotId;
-      dungeon.createDroppedObject(playerId, skillId, itemInstanceId);
-    }
+    const itemPivotId = 500;
+    itemId = Math.floor(Math.random() * itemAssets.length) + itemPivotId;
+    dungeon.createDroppedObject(playerId, itemId, itemInstanceId);
+  } else if (drop < totalDropRate) {
+    itemInstanceId++;
+    const skillPivotId = 100;
+    skillId = Math.floor(Math.random() * skillAssets.length) + skillPivotId;
+    dungeon.createDroppedObject(playerId, skillId, itemInstanceId);
   }
 
   // 해당 유저 몬스터 죽인 숫자 노티

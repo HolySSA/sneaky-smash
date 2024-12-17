@@ -3,15 +3,15 @@
     "version": "1.0.0",
     "data": [
       { "level": 1, "spawnTime": 3 },
-      { "level": 2, "spawnTime": 5 },
-      { "level": 3, "spawnTime": 7 },
-      { "level": 4, "spawnTime": 9 },
-      { "level": 5, "spawnTime": 11 },
-      { "level": 6, "spawnTime": 13 },
-      { "level": 7, "spawnTime": 15 },
-      { "level": 8, "spawnTime": 17 },
-      { "level": 9, "spawnTime": 19 },
-      { "level": 10, "spawnTime": 21 },
-      { "level": 11, "spawnTime": 23 }
+      { "level": 2, "spawnTime": 4 },
+      { "level": 3, "spawnTime": 5 },
+      { "level": 4, "spawnTime": 6 },
+      { "level": 5, "spawnTime": 7 },
+      { "level": 6, "spawnTime": 8 },
+      { "level": 7, "spawnTime": 9 },
+      { "level": 8, "spawnTime": 10 },
+      { "level": 9, "spawnTime": 11 },
+      { "level": 10, "spawnTime": 12 },
+      { "level": 11, "spawnTime": 13 }
     ]
   }

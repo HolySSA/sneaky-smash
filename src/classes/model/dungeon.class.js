@@ -487,6 +487,7 @@ class Dungeon {
   }
 
   clearAllTimers() {
+    this.nexus.nexusTimerDispose();
     this.respawnTimers.forEach((interval) => clearTimeout(interval));
     this.respawnTimers.clear();
     logger.info('모든 리스폰 타이머 클리어!');

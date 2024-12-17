@@ -9,6 +9,10 @@ const { NEXUS_SPAWN_TRANSFORMS } = configs;
 const NEXUS_HP = 3000;
 const NEXUS_HP_THRESHOLD = NEXUS_HP * 0.25;
 
+const REGEN_DELAY = 20 * 1000;
+const REGEN_PERCENT = 0.01;
+const RESTROING_NEXUS_HP_PER_TIME = 1000;
+
 class Nexus {
   constructor() {
     this.nexusId = generateNexusId();
@@ -18,6 +22,37 @@ class Nexus {
     this.position = NEXUS_SPAWN_TRANSFORMS[0];
     this.isDead = false;
     this.lastAttackerId = null;
+
+    // 체력 회복 타이머
+    this.regenerationTimer = null;
+  }
+
+  resetRegenerationTimer(usersUUID) {
+    // 기존 타이머 제거
+    if (this.regenerationTimer) {
+      clearInterval(this.regenerationTimer);
+      this.regenerationTimer = null;
+    }
+
+    this.regenerationTimer = setTimeout(() => {
+      this.startRegeneration(usersUUID);
+    }, REGEN_DELAY);
+  }
+
+  startRegeneration(usersUUID) {
+    this.regenerationTimer = setInterval(() => {
+      if (this.isDead || this.nexusHp >= this.initialHp) {
+        clearInterval(this.regenerationTimer);
+        this.regenerationTimer = null;
+        return;
+      }
+
+      const regenAmount = Math.floor(this.initialHp * REGEN_PERCENT);
+      this.nexusHp = Math.min(this.nexusHp + regenAmount, this.initialHp);
+
+      logger.info(`Nexus 체력 회복 중: ${this.nexusHp}/${this.initialHp}`);
+      this.updateNexusHpNotification(usersUUID);
+    }, RESTROING_NEXUS_HP_PER_TIME);
   }
 
   #getRandomSpawnNexus() {
@@ -53,6 +88,8 @@ class Nexus {
     this.nexusHp = Math.max(this.nexusHp - damage, 0);
     this.lastAttackerId = playerId;
 
+    this.resetRegenerationTimer(usersUUID);
+
     if (this.nexusHp <= 0) {
       this.isDead = true;
       logger.info('Nexus is destroyed.');
@@ -84,6 +121,15 @@ class Nexus {
 
   updateNexusHpNotification(usersUUID) {
     createNotificationPacket(PACKET_ID.S_UpdateNexusHp, { hp: this.nexusHp }, usersUUID);
+  }
+
+  nexusTimerDispose() {
+    if (this.regenerationTimer) {
+      clearInterval(this.regenerationTimer);
+      this.regenerationTimer = null;
+    }
+
+    logger.info('Nexus 리소스가 정리되었습니다.');
   }
 }
 

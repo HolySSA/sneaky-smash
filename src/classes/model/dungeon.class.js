@@ -50,13 +50,7 @@ class Dungeon {
 
     const dungeonUser = {
       user,
-      _currentHp: statInfo.stats.maxHp,
-      get currentHp() {
-        return this._currentHp;
-      },
-      set currentHp(value) {
-        this._currentHp = Math.max(0, Math.min(value, statInfo.stats.maxHp));
-      },
+      currentHp: statInfo.stats.maxHp,
       userKillCount: 0,
       monsterKillCount: 0,
       statInfo,
@@ -412,13 +406,11 @@ class Dungeon {
       this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
     logger.info(`userId: ${userId} 리스폰!`);
     console.log(user.currentHp);
-    console.log(user.stats);
+    console.log(user.statInfo);
     console.log('-------------------------------');
-
-    user.currentHp = user.statInfo.stats.maxHp;
-
+    this.updatePlayerHp(userId, user.statInfo.stats.maxHp);
     console.log(user.currentHp);
-    console.log(user.stats);
+    console.log(user.statInfo);
     const reviveResponse = {
       playerId: userId,
       transform: {

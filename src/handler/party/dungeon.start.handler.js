@@ -77,8 +77,10 @@ const dungeonStartHandler = async ({ socket, payload }) => {
 
       await dungeon.addDungeonUser(user, statInfo);
     }
-
+    
     createNotificationPacket(PACKET_ID.S_Despawn, despawnPayload, townUsers);
+    
+    dungeon.monsterLogic.spawnMonsterZone();
 
     // 파티원 모두의 정보
     const enterDungeonPayload = {

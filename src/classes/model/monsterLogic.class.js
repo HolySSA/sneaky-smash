@@ -149,6 +149,8 @@ class MonsterLogic {
       if (distance < closestDistance && value.currentHp > 0) {
         closestDistance = distance;
         closestPlayer = value;
+
+        createNotificationPacket(PACKET_ID.S_SetMonsterTarget, { monsterId: monster.id, playerId: value.id }, this.dungeonInstance.usersUUID);
       }
     }
 

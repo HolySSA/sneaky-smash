@@ -94,6 +94,7 @@ class Monster {
     if (!this.target) {
       return;
     }
+    
     if (this.target.user.currentHp <= 0) {
       this.target = null;
       return;

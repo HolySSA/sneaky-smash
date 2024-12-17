@@ -176,6 +176,12 @@ class Dungeon {
         this.usersUUID.splice(index, 1);
       }
 
+      if (this.users.size == 1) {
+        const lastUser = this.users.values().next().value;
+        this.nexus.lastAttackerId = lastUser.user.id;
+        this.handleGameEnd();
+      }
+
       if (this.users.size == 0) {
         this.Dispose();
       }

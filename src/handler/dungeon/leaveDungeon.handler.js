@@ -27,10 +27,10 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
     user.dungeonId = '';
     const dungeon = getDungeonSession(dungeonId);
     if (dungeon) {
-      await dungeon.removeDungeonUser(playerId);
-
       // 타운에 있는 유저 UUID 목록 호출
       const dungeonUUID = dungeon.getDungeonUsersUUID();
+
+      await dungeon.removeDungeonUser(playerId);
 
       createNotificationPacket(PACKET_ID.S_LeaveDungeon, { playerId }, dungeonUUID);
     } else {

@@ -29,11 +29,11 @@
         "stats": {
           "level": 1,
           "maxHp": 80.0,
-          "atk": 30,
+          "atk": 25,
           "def": 1.0,
           "speed": 0.5,
           "criticalProbability": 8.0,
-          "criticalDamageRate": 10.0
+          "criticalDamageRate": 8.0
         }
       },
       {

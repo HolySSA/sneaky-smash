@@ -402,6 +402,9 @@ class Dungeon {
   onRespawn = (userId) => {
     const user = this.users.get(userId);
 
+    if (!user) {
+      return;
+    }
     const getSpawnPos =
       this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
     this.updatePlayerHp(userId, user.statInfo.stats.maxHp);

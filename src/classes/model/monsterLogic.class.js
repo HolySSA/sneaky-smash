@@ -244,7 +244,7 @@ class MonsterLogic {
               monster.target = closestPlayer;
               createNotificationPacket(
                 PACKET_ID.S_SetMonsterTarget,
-                { monsterId: monster.id, playerId: closestPlayer.id },
+                { monsterId: monster.id, playerId: closestPlayer.user.id },
                 this.dungeonInstance.usersUUID,
               );
             } else {

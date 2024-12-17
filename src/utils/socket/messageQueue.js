@@ -43,6 +43,16 @@ const getUserQueue = (socketUUID) => {
   return userQueues;
 };
 
+export const findAllUserQueueByUserId = (userId) => {
+  const result = [];
+  for (const key in queueBySocket) {
+    if (queueBySocket[key].socket.id == userId) {
+      result.push(queueBySocket[key]);
+    }
+  }
+  return result;
+};
+
 export const enqueueSend = (socketUUID, buffer) => {
   const userQueue = getUserQueue(socketUUID);
   if (userQueue) {

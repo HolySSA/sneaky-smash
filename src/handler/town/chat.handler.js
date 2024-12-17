@@ -11,9 +11,8 @@ import configs from '../../configs/configs.js';
 const chatHandler = async ({ socket, payload }) => {
   try {
     const { chatMsg } = payload;
-    const isTownUser = getUserSessionByIdFromTown(socket.id);
     const nickname = getUserById(socket.id).nickname;
-    if (isTownUser) {
+    if (!socket.dungeonId) {
       await pubChat(socket.id, nickname, chatMsg);
     } else {
       const user = getUserById(socket.id);

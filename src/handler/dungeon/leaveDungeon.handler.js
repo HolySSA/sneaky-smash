@@ -23,15 +23,21 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
     // 던전 아이디 가져오고
     const dungeonId = user.dungeonId;
     // 해당 유저가 있던 던전 불러오고
-    const dungeon = getDungeonSession(dungeonId);
     // 해당 유저 던전아이디 빈값으로
     user.dungeonId = '';
-    // 타운에 유저 추가
-    addUserForTown(user);
-    // 타운에 있는 유저 UUID 목록 호출
-    const dungeonUUID = dungeon.getDungeonUsersUUID();
+    const dungeon = getDungeonSession(dungeonId);
+    if (dungeon) {
+      // 타운에 유저 추가
+      addUserForTown(user);
+      // 타운에 있는 유저 UUID 목록 호출
+      const dungeonUUID = dungeon.getDungeonUsersUUID();
 
-    createNotificationPacket(PACKET_ID.S_LeaveDungeon, { playerId }, dungeonUUID);
+      createNotificationPacket(PACKET_ID.S_LeaveDungeon, { playerId }, dungeonUUID);
+    } else {
+      logger.error(
+        `leaveDungeonHandler. dungeon is undefined : ${dungeon} / User => ${playerId} / DungeonId : ${dungeonId}`,
+      );
+    }
 
     const playerPayload = {
       player: {

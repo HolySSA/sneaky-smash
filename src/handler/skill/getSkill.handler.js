@@ -47,12 +47,9 @@ const getSkillHandler = ({ socket, payload }) => {
     }
 
     //지정 슬롯외의 값이 오면 폐기하겠단 의미이므로 삭제
-    if (slotIndex > 2 || slotIndex < 0) {
-      logger.info(`getSkillHandler. no available skill slot : ${slotIndex}`);
-      return;
+    if (slotIndex < 3 && slotIndex >= 0) {
+      dungeonUser.skillList[skillId] = { slot: slotIndex, ...skillData, lastUseTime: 0 };
     }
-
-    dungeonUser.skillList[skillId] = { slot: slotIndex, ...skillData, lastUseTime: 0 };
 
     const skillPayload = {
       skillInfo: { ...skillData, skillId },
@@ -62,7 +59,6 @@ const getSkillHandler = ({ socket, payload }) => {
 
     const buffer = createResponse(PACKET_ID.S_GetSkill, skillPayload);
     enqueueSend(socket.UUID, buffer);
-    logger.info(`getSkillHandler 성공: playerId=${playerId}, skillId=${skillId}`);
   } catch (error) {
     handleError(socket, error);
   }

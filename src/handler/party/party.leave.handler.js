@@ -11,7 +11,6 @@ const partyLeaveHandler = async ({ socket, payload }) => {
     const { roomId } = payload;
 
     const party = await getRedisParty(roomId);
-    console.log(party);
 
     if (!party) {
       logger.error('파티가 존재하지 않습니다');

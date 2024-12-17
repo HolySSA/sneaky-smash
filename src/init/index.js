@@ -5,6 +5,7 @@ import dbPool from '../db/database.js';
 import { connect } from '../utils/redis/redisManager.js';
 import { subscribeChatChannels } from '../sessions/redis/redis.chat.js';
 import { startHealthReport } from '../sessions/redis/redis.health.js';
+import { subDuplicatedSignIn } from '../sessions/redis/redis.account.js';
 
 const initServer = async () => {
   try {
@@ -15,6 +16,7 @@ const initServer = async () => {
     await dbPool.init();
     await subscribeChatChannels();
     await startHealthReport();
+    await subDuplicatedSignIn();
   } catch (err) {
     logger.error(err);
     process.exit(1); // 에러 발생 시 게임 종료

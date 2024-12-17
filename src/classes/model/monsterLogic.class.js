@@ -16,7 +16,7 @@ class MonsterLogic {
     this.monsterIndex = 1;
 
     this.monsterLogicInterval = 100;
-    this.spawnInterval = 1000 * 30; // 30초
+    this.spawnInterval = 1000 * 25; // 30초
     this.spawnZones = [
       {
         id: 1,

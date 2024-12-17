@@ -4,8 +4,8 @@
         "classId": 1001,
         "stats": {
           "level": 1,
-          "maxHp": 140.0,
-          "atk": 30.0,
+          "maxHp": 120.0,
+          "atk": 20.0,
           "def": 4.0,
           "speed": 0.4,
           "criticalProbability": 3.0,
@@ -16,8 +16,8 @@
         "classId": 1002,
         "stats": {
           "level": 1,
-          "maxHp": 125.0,
-          "atk": 35.0,
+          "maxHp": 105.0,
+          "atk": 25.0,
           "def": 3.0,
           "speed": 0.4,
           "criticalProbability": 3.0,
@@ -28,8 +28,8 @@
         "classId": 1003,
         "stats": {
           "level": 1,
-          "maxHp": 100.0,
-          "atk": 40,
+          "maxHp": 80.0,
+          "atk": 30,
           "def": 1.0,
           "speed": 0.5,
           "criticalProbability": 8.0,
@@ -40,8 +40,8 @@
         "classId": 1004,
         "stats": {
           "level": 1,
-          "maxHp": 150.0,
-          "atk": 40.0,
+          "maxHp": 130.0,
+          "atk": 30.0,
           "def": 7.0,
           "speed": 0.3,
           "criticalProbability": 5.0,
@@ -53,7 +53,7 @@
         "stats": {
           "level": 1,
           "maxHp": 75.0,
-          "atk": 30.0,
+          "atk": 20.0,
           "def": 1.0,
           "speed": 0.2,
           "criticalProbability": 1.0,

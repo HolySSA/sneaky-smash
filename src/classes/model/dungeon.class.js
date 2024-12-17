@@ -404,13 +404,7 @@ class Dungeon {
 
     const getSpawnPos =
       this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
-    logger.info(`userId: ${userId} 리스폰!`);
-    console.log(user.currentHp);
-    console.log(user.statInfo);
-    console.log('-------------------------------');
     this.updatePlayerHp(userId, user.statInfo.stats.maxHp);
-    console.log(user.currentHp);
-    console.log(user.statInfo);
     const reviveResponse = {
       playerId: userId,
       transform: {

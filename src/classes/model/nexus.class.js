@@ -11,7 +11,7 @@ const NEXUS_HP_THRESHOLD = NEXUS_HP * 0.25;
 
 const REGEN_DELAY = 20 * 1000;
 const REGEN_PERCENT = 0.01;
-const RESTROING_NEXUS_HP_PER_TIME = 1000;
+const REGEN_NEXUS_HP_PER_TIME = 1000;
 
 class Nexus {
   constructor() {
@@ -25,14 +25,23 @@ class Nexus {
 
     // 체력 회복 타이머
     this.regenerationTimer = null;
+    this.regenerationInterval = null;
   }
 
-  resetRegenerationTimer(usersUUID) {
-    // 기존 타이머 제거
+  #clearTimer() {
     if (this.regenerationTimer) {
       clearInterval(this.regenerationTimer);
       this.regenerationTimer = null;
     }
+
+    if (this.regenerationInterval) {
+      clearInterval(this.regenerationInterval);
+      this.regenerationInterval = null;
+    }
+  }
+
+  resetRegenerationTimer(usersUUID) {
+    this.#clearTimer();
 
     this.regenerationTimer = setTimeout(() => {
       this.startRegeneration(usersUUID);
@@ -40,10 +49,9 @@ class Nexus {
   }
 
   startRegeneration(usersUUID) {
-    this.regenerationTimer = setInterval(() => {
+    this.regenerationInterval = setInterval(() => {
       if (this.isDead || this.nexusHp >= this.initialHp) {
-        clearInterval(this.regenerationTimer);
-        this.regenerationTimer = null;
+        this.#clearTimer();
         return;
       }
 
@@ -52,7 +60,7 @@ class Nexus {
 
       logger.info(`Nexus 체력 회복 중: ${this.nexusHp}/${this.initialHp}`);
       this.updateNexusHpNotification(usersUUID);
-    }, RESTROING_NEXUS_HP_PER_TIME);
+    }, REGEN_NEXUS_HP_PER_TIME);
   }
 
   #getRandomSpawnNexus() {
@@ -123,11 +131,8 @@ class Nexus {
     createNotificationPacket(PACKET_ID.S_UpdateNexusHp, { hp: this.nexusHp }, usersUUID);
   }
 
-  nexusTimerDispose() {
-    if (this.regenerationTimer) {
-      clearInterval(this.regenerationTimer);
-      this.regenerationTimer = null;
-    }
+  Dispose() {
+    this.#clearTimer();
 
     logger.info('Nexus 리소스가 정리되었습니다.');
   }

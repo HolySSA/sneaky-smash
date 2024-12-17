@@ -487,15 +487,21 @@ class Dungeon {
   }
 
   clearAllTimers() {
-    this.nexus.nexusTimerDispose();
     this.respawnTimers.forEach((interval) => clearTimeout(interval));
     this.respawnTimers.clear();
     logger.info('모든 리스폰 타이머 클리어!');
   }
 
   Dispose() {
-    this.monsterLogic.Dispose();
-    this.monsterLogic = null;
+    if (this.nexus) {
+      this.nexus.Dispose();
+      this.nexus = null;
+    }
+    if (this.monsterLogic) {
+      this.monsterLogic.Dispose();
+      this.monsterLogic = null;
+    }
+
     this.clearAllTimers();
     removeDungeonSession(this.dungeonId);
   }

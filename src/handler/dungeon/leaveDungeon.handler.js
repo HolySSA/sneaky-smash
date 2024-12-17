@@ -28,7 +28,16 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
     const dungeon = getDungeonSession(dungeonId);
     if (dungeon) {
       // 타운에 유저 추가
-      addUserForTown(user);
+      const playerPayload = {
+        player: {
+          playerId: socket.id,
+          nickname: user.nickname,
+          class: user.myClass,
+          transform: TOWN_SPAWN_TRANSFORMS,
+        },
+      };
+
+      spawnPlayerTown(socket, user, playerPayload);
       // 타운에 있는 유저 UUID 목록 호출
       const dungeonUUID = dungeon.getDungeonUsersUUID();
 
@@ -39,17 +48,7 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
       );
     }
 
-    const playerPayload = {
-      player: {
-        playerId: socket.id,
-        nickname: user.nickname,
-        class: user.myClass,
-        transform: TOWN_SPAWN_TRANSFORMS,
-      },
-    };
     await dungeon.removeDungeonUser(playerId);
-
-    spawnPlayerTown(socket, user, playerPayload);
   } catch (err) {
     handleError(socket, err);
   }

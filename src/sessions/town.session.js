@@ -1,4 +1,3 @@
-import User from '../classes/model/user.class.js';
 import logger from '../utils/logger.js';
 import { townSessions } from './sessions.js';
 const allUsersUUID = [];

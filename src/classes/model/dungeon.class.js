@@ -8,6 +8,7 @@ import { getGameAssets } from '../../init/loadAsset.js';
 import createNotificationPacket from '../../utils/notification/createNotification.js';
 import { setSessionId } from '../../sessions/redis/redis.user.js';
 import Nexus from './nexus.class.js';
+import { removeUserForTown } from '../../sessions/town.session.js';
 
 class Dungeon {
   constructor(dungeonInfo) {
@@ -36,6 +37,7 @@ class Dungeon {
   async addDungeonUser(user, statInfo) {
     const userId = user.socket.id;
     user.dungeonId = this.dungeonId;
+    removeUserForTown(userId);
     await setSessionId(userId, this.dungeonId);
     if (this.users.has(userId)) {
       logger.info('이미 던전에 참여 중인 유저입니다.');

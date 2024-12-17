@@ -19,7 +19,6 @@ const chatHandler = async ({ socket, payload }) => {
     } else {
       const dungeon = getDungeonSession(dungeonId);
       if (dungeon) {
-        console.log({ playerId: socket.id, nickname, chatMsg, serverIndex: configs.ServerIndex });
         createNotificationPacket(
           PACKET_ID.S_Chat,
           { playerId: socket.id, nickname, chatMsg, serverIndex: configs.ServerIndex.toString() },

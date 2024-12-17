@@ -14,7 +14,7 @@ class Dungeon {
   constructor(dungeonInfo, dungeonLevel) {
     this.dungeonId = dungeonInfo.dungeonId;
     this.dungeonLevel = dungeonLevel;
-    this.dungeonLevelFactor = 1.0 + dungeonLevel * 0.1;
+    this.dungeonLevelFactor = (dungeonLevel - 1) * 0.1;
     this.name = dungeonInfo.name;
     this.users = new Map();
     this.usersUUID = [];

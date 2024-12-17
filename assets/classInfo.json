@@ -55,7 +55,7 @@
         "atk": 20,
         "def": 2,
         "maxHp": 270,
-        "moveSpeed": 7.5,
+        "moveSpeed": 6,
         "criticalProbability": 10.0,
         "criticalDamageRate": 10.0
       }

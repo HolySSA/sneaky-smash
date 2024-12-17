@@ -22,15 +22,7 @@ const partyLeaveHandler = async ({ socket, payload }) => {
     }
 
     if (party.owner == socket.id) {
-      for (const playerId of party.members) {
-        createNotificationPacket(
-          PACKET_ID.S_PartyLeave,
-          { playerId, roomId },
-          getAllUserUUIDByTown(),
-        );
-      }
       await removeRedisParty(roomId);
-      return;
     }
     await leaveRedisParty(roomId, socket.id);
 

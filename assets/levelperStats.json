@@ -52,7 +52,7 @@
         "classId": 1005,
         "stats": {
           "level": 1,
-          "maxHp": 50.0,
+          "maxHp": 75.0,
           "atk": 30.0,
           "def": 1.0,
           "speed": 0.2,

@@ -8,7 +8,7 @@ import { getRedis } from './utils/redis/redisManager.js';
 import AsyncExitHook from 'async-exit-hook';
 import { registServerAndGetIndex, unregistServer } from './sessions/redis/redis.server.js';
 
-const { SERVER_BIND, SERVER_PORT, ServerUUID } = configs;
+const { SERVER_BIND, SERVER_PORT, ServerUUID, SERVER_NAME } = configs;
 
 const clients = [];
 const server = net.createServer((socket) => {
@@ -24,7 +24,7 @@ initServer()
       const serverIndex = await registServerAndGetIndex();
       addConfig('ServerIndex', serverIndex);
       logger.info(
-        `Server[${serverIndex}] ${ServerUUID} is on ${bindInfo.address}:${bindInfo.port}`,
+        `Server "${SERVER_NAME}"[${serverIndex}] ${ServerUUID} is on ${bindInfo.address}:${bindInfo.port}`,
       );
     });
   })

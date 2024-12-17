@@ -11,7 +11,7 @@ dotenv.config();
  */
 const requiredEnv = {
   DB: ['HOST', 'PORT', 'USER', 'PASSWORD', 'NAME', 'CONNECTION_LIMIT'],
-  SERVER: ['PORT', 'BIND'],
+  SERVER: ['PORT', 'BIND', 'MAX_CAPACITY', 'NAME'],
   REDIS: ['HOST', 'PORT', 'PASSWORD'],
   SECURE: ['PEPPER', 'SALT'],
   LOGGER: ['STACK_TRACE'],

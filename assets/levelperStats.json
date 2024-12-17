@@ -4,12 +4,12 @@
         "classId": 1001,
         "stats": {
           "level": 1,
-          "maxHp": 110.0,
+          "maxHp": 140.0,
           "atk": 30.0,
           "def": 4.0,
           "speed": 0.4,
           "criticalProbability": 3.0,
-          "criticalDamageRate": 5.0
+          "criticalDamageRate": 7.0
         }
       },
       {

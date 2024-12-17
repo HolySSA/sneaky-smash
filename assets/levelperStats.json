@@ -53,7 +53,7 @@
         "stats": {
           "level": 1,
           "maxHp": 75.0,
-          "atk": 20.0,
+          "atk": 30.0,
           "def": 1.0,
           "speed": 0.2,
           "criticalProbability": 1.0,

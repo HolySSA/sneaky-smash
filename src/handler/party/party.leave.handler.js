@@ -8,7 +8,6 @@ import {
 import Result from '../result.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import logger from '../../utils/logger.js';
-import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 const partyLeaveHandler = async ({ socket, payload }) => {
   try {

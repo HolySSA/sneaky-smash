@@ -6,7 +6,7 @@ import createNotificationPacket from '../../utils/notification/createNotificatio
 
 const { NEXUS_SPAWN_TRANSFORMS } = configs;
 
-const NEXUS_HP = 3000;
+const NEXUS_HP = 6000;
 const NEXUS_HP_THRESHOLD = NEXUS_HP * 0.25;
 
 const REGEN_DELAY = 20 * 1000;

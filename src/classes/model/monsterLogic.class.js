@@ -148,7 +148,7 @@ class MonsterLogic {
 
       if (distance < closestDistance && value.currentHp > 0) {
         closestDistance = distance;
-        closestPlayer = value;        
+        closestPlayer = value;
       }
     }
 
@@ -239,16 +239,20 @@ class MonsterLogic {
               // 플레이어 감지 시 활성화
               if (!monster.targetOn) {
                 monster.targetOn = true;
-                logger.info(`${monster.name}이(가) 플레이어를 감지했습니다.`);
+                // logger.info(`${monster.name}이(가) 플레이어를 감지했습니다.`);
               }
               monster.target = closestPlayer;
-              createNotificationPacket(PACKET_ID.S_SetMonsterTarget, { monsterId: monster.id, playerId: closestPlayer.id }, this.dungeonInstance.usersUUID);
+              createNotificationPacket(
+                PACKET_ID.S_SetMonsterTarget,
+                { monsterId: monster.id, playerId: closestPlayer.id },
+                this.dungeonInstance.usersUUID,
+              );
             } else {
               // 감지 범위 벗어남
               if (monster.targetOn) {
                 monster.targetOn = false;
                 monster.target = null;
-                logger.info(`${monster.name}는 플레이어를 놓쳤습니다.`);
+                // logger.info(`${monster.name}는 플레이어를 놓쳤습니다.`);
               }
             }
           }
@@ -271,7 +275,7 @@ class MonsterLogic {
             monster.targetOn = false;
             monster.target = null;
             monster.stopMove = false;
-            logger.info(`${monster.name}는 플레이어를 놓쳤습니다.`);
+            //  logger.info(`${monster.name}는 플레이어를 놓쳤습니다.`);
           }
         }
       });

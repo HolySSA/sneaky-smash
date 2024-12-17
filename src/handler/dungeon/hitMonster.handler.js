@@ -40,7 +40,7 @@ const hitMonsterHandler = ({ socket, payload }) => {
     // 공격당한 monster noti
     createNotificationPacket(
       PACKET_ID.S_HitMonster,
-      { monsterId, resultDamage },
+      { monsterId, damage: resultDamage },
       dungeonAllUsersUUID,
     );
 

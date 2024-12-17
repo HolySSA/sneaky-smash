@@ -94,7 +94,7 @@ class Monster {
     if (!this.target) {
       return;
     }
-    
+
     if (this.target.user.currentHp <= 0) {
       this.target = null;
       return;
@@ -108,7 +108,7 @@ class Monster {
 
     if (distanceToTarget <= this.attackRange) {
       this.stopMove = true;
-      logger.info(`${this.name}이(가) ${this.target}를 공격합니다!`);
+      //logger.info(`${this.name}이(가) ${this.target.id}를 공격합니다!`);
       this.target = null; // 공격 후 타겟 초기화
 
       const attackPayload = {

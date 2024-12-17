@@ -52,7 +52,7 @@
       "classId": 1005,
       "className": "기르탄 - 마법",
       "stats": {
-        "atk": 20,
+        "atk": 30,
         "def": 2,
         "maxHp": 270,
         "moveSpeed": 5.5,

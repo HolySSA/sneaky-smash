@@ -11,8 +11,10 @@ import Nexus from './nexus.class.js';
 import { removeUserForTown } from '../../sessions/town.session.js';
 
 class Dungeon {
-  constructor(dungeonInfo) {
+  constructor(dungeonInfo, dungeonLevel) {
     this.dungeonId = dungeonInfo.dungeonId;
+    this.dungeonLevel = dungeonLevel;
+    this.dungeonLevelFactor = 1.0 + dungeonLevel * 0.1;
     this.name = dungeonInfo.name;
     this.users = new Map();
     this.usersUUID = [];

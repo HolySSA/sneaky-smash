@@ -6,7 +6,7 @@ message Stats {
   int32 atk = 1;
   int32 def = 2; 
   int32 maxHp = 3; 
-  int32 moveSpeed = 4;
+  float moveSpeed = 4;
   float criticalProbability = 5;
   float criticalDamageRate = 6;
 }

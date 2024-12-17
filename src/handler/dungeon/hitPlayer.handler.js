@@ -13,7 +13,7 @@ const hitPlayerHandler = ({ socket, payload }) => {
 
     const user = getUserById(playerId);
     if (!user) {
-      logger.error(`hitPlayerHandler: User not found by 피격자 ${playerId}.`);
+      //  logger.error(`hitPlayerHandler: User not found by 피격자 ${playerId}.`);
       return;
     }
 

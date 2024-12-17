@@ -19,14 +19,18 @@ const despawnLogic = async (socket) => {
 
   if (user) {
     await setIsSignIn(userId, false);
-    const dungeon = getDungeonSession(user.dungeonId);
-    if (dungeon) {
-      dungeon.removeDungeonUser(userId);
-    }
-    removeUserForTown(userId);
+    //console.log(`despawnLogic`, user.dungeonId);
     const payload = {
       playerIds: [userId],
     };
+
+    broadcastBySession(socket, PACKET_ID.S_Despawn, payload, true);
+
+    const dungeon = getDungeonSession(user.dungeonId);
+    if (dungeon) {
+      await dungeon.removeDungeonUser(userId);
+    }
+    removeUserForTown(userId);
 
     const AllUUID = getAllUserUUIDByTown();
     const party = await getRedisPartyByUserId(userId);
@@ -40,11 +44,9 @@ const despawnLogic = async (socket) => {
       };
       createNotificationPacket(PACKET_ID.S_PartyLeave, leavePayload, AllUUID);
     }
-
-    broadcastBySession(socket, PACKET_ID.S_Despawn, payload, true);
   }
 
-    removeUserSession(socket);
+  removeUserSession(socket);
 };
 
 export default despawnLogic;

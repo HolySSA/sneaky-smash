@@ -59,7 +59,7 @@ export const enqueueSend = (socketUUID, buffer) => {
     userQueue.sendQueue.push(buffer);
     processSendQueue(socketUUID);
   } else {
-    logger.error(`enqueueSend. ${socketUUID} is unknown user`);
+    // logger.error(`enqueueSend. ${socketUUID} is unknown user`);
   }
 };
 

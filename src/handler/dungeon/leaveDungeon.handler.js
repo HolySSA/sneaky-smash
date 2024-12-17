@@ -37,6 +37,8 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
         },
       };
 
+      await dungeon.removeDungeonUser(playerId);
+
       spawnPlayerTown(socket, user, playerPayload);
       // 타운에 있는 유저 UUID 목록 호출
       const dungeonUUID = dungeon.getDungeonUsersUUID();
@@ -47,8 +49,6 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
         `leaveDungeonHandler. dungeon is undefined : ${dungeon} / User => ${playerId} / DungeonId : ${dungeonId}`,
       );
     }
-
-    await dungeon.removeDungeonUser(playerId);
   } catch (err) {
     handleError(socket, err);
   }

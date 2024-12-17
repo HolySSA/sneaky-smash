@@ -32,7 +32,7 @@ class Dungeon {
       [42, 0.5, 52.5, 270],
       [-38, 0.5, 52.5, 90],
     ];
-
+    this.gameOver = false;
     this.startTime = Date.now(); // 던전 시작 시간 초기화
   }
 
@@ -58,14 +58,13 @@ class Dungeon {
     };
 
     this.users.set(userId, dungeonUser);
-
     return user;
   }
 
   attackedNexus(damage, playerId) {
     if (this.nexus) {
-      const isGameOver = this.nexus.hitNexus(damage, playerId, this.usersUUID);
-      if (isGameOver) {
+      this.gameOver = this.nexus.hitNexus(damage, playerId, this.usersUUID);
+      if (this.gameOver) {
         logger.info(`Nexus destroyed in dungeon ${this.dungeonId}.`);
         return true; // 게임 종료
       }
@@ -76,8 +75,9 @@ class Dungeon {
   handleGameEnd() {
     const playerId = this.nexus.lastAttackerId;
     logger.info(`Game ended in dungeonId ${this.dungeonId}. Winner is player: ${playerId}`);
-
+    this.gameOver = true;
     createNotificationPacket(PACKET_ID.S_GameEnd, { playerId }, this.usersUUID);
+    this.Dispose();
   }
 
   spawnNexusNotification() {
@@ -174,7 +174,7 @@ class Dungeon {
         this.usersUUID.splice(index, 1);
       }
 
-      if (this.users.size == 1) {
+      if (this.users.size == 1 && this.gameOver == false) {
         const lastUser = this.users.values().next().value;
         this.nexus.lastAttackerId = lastUser.user.id;
         this.handleGameEnd();

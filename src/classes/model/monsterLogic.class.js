@@ -242,7 +242,7 @@ class MonsterLogic {
                 logger.info(`${monster.name}이(가) 플레이어를 감지했습니다.`);
               }
               monster.target = closestPlayer;
-              createNotificationPacket(PACKET_ID.S_SetMonsterTarget, { monsterId: monster.id, playerId: closestPlayer.id }, this.dungeonInstance.usersUUID);
+              createNotificationPacket(PACKET_ID.S_SetMonsterTarget, { monsterId: monster.id, playerId: closestPlayer.user.id }, this.dungeonInstance.usersUUID);
             } else {
               // 감지 범위 벗어남
               if (monster.targetOn) {

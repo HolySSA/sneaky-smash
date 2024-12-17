@@ -4,12 +4,6 @@ import { PACKET_ID } from '../../constants/packetId.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { findCharacterByUserId } from '../../db/model/characters.db.js';
 
-//   message S_UserKillCount {
-//      int32 playerId = 1;
-//      int32 userKillCount = 2;
-//   }
-// 유저가 유저를 몇명 죽이느냐
-
 const userKillCounter = async (socket) => {
   try {
     // redis에서 유저정보갖고오기

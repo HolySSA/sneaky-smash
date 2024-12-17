@@ -2,7 +2,6 @@ export const RESPONSE_SUCCESS_CODE = 0;
 
 export const reverseMapping = {};
 
-// 너무 많아서 일단 그냥 쓰기.
 export const PACKET_ID = {
   C_Enter: 0,
   S_Enter: 1,

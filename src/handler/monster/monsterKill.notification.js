@@ -5,37 +5,6 @@ import createNotificationPacket from '../../utils/notification/createNotificatio
 
 const { ITEM_DROP_RATE, SKILL_DROP_RATE, MONSTER_EXP } = configs;
 
-// 패킷명세
-
-// message TransformInfo {
-//   float posX = 1;   // X 좌표 (기본값 : -9 ~ 9)
-//   float posY = 2;   // Y 좌표 (기본값 : 1)
-//   float posZ = 3;   // Z 좌표 (기본값 : -8 ~ 8)
-//   float rot = 4;    // 회전 값 (기본값 : 0 ~ 360)
-// }
-
-// **StatInfo** - 플레이어의 상세 스탯 정보
-// message StatInfo {
-//   int32 level = 1;                 // 플레이어 레벨
-//   Stats stats = 2;
-//   float exp = 3;                   // 경험치
-//   float maxExp = 4;
-// }
-
-// message S_MonsterKill {
-//   int32 monsterId = 1; // 몬스터 식별 ID
-//   int32 itemId = 2;
-//   int32 playerId = 3;
-//   int32 skillId = 4;
-//   TransformInfo transform = 5;
-//   float exp = 6;
-// }
-
-// message S_GetExp { ★
-//   int32 playerId = 1;
-//   int32 expAmount = 2;
-//   }
-
 let itemInstanceId = 1;
 
 const monsterKillNotification = (socket, monster, dungeon, dungeonAllUsersUUID) => {

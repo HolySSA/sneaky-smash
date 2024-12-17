@@ -10,15 +10,6 @@ import spawnPlayerTown from '../../utils/etc/enterTown.js';
 import configs from '../../configs/configs.js';
 
 const { TOWN_SPAWN_TRANSFORMS } = configs;
-// message C_LeaveDungeon {
-//   // 던전에서 나가기 요청
-// }
-
-// 패킷명세
-// 던전에서 나가는 응답 (S_LeaveDungeon)
-// message S_LeaveDungeon {
-//     int32 playerId = 1;          // 던전에서 나간 플레이어 ID
-//   }
 
 const leaveDungeonHandler = async ({ socket, payload }) => {
   const playerId = socket.id;
@@ -33,7 +24,7 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
     const dungeonId = user.dungeonId;
     // 해당 유저가 있던 던전 불러오고
     const dungeon = getDungeonSession(dungeonId);
-    // 해당 유저 던전아이디 빈값으로    
+    // 해당 유저 던전아이디 빈값으로
     user.dungeonId = '';
     // 타운에 유저 추가
     addUserForTown(user);
@@ -47,9 +38,9 @@ const leaveDungeonHandler = async ({ socket, payload }) => {
         playerId: socket.id,
         nickname: user.nickname,
         class: user.myClass,
-        transform: TOWN_SPAWN_TRANSFORMS
+        transform: TOWN_SPAWN_TRANSFORMS,
       },
-    };  
+    };
     await dungeon.removeDungeonUser(playerId);
 
     spawnPlayerTown(socket, user, playerPayload);

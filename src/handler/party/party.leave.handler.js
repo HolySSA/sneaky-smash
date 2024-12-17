@@ -5,16 +5,6 @@ import Result from '../result.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import logger from '../../utils/logger.js';
 
-// // **C_PartyLeave** - 파티에서 나가기 요청 메시지
-// message C_PartyLeave {
-//   int32 roomId = 1;  // 방 번호
-// }
-
-// message S_PartyLeave {
-// 	int32 playerId = 1;
-// 	int32 roomId = 2;
-// }
-
 const partyLeaveHandler = async ({ socket, payload }) => {
   try {
     const { roomId } = payload;

@@ -72,21 +72,3 @@ const useSkillHandler = async ({ socket, payload }) => {
   }
 };
 export default useSkillHandler;
-
-// message SkillInfo {
-// 	int32	skillId	= 1	// 스킬 ID
-//  int32   damageRate = 2 //
-// 	float	coolTime= 3	// 스킬 쿨타임
-// }
-// message C_UseSkill {
-//   int32 skillId = 1; // 사용할 스킬 ID
-//   ProjectileDirection dir = 2;
-//   TransformInfo transform = 3;
-//   }
-
-//   message S_UseSkill {
-//   int32 playerId = 1; // 플레이어 고유 ID
-//   SkillInfo skillInfo = 2; // 사용된 스킬 정보
-//   ProjectileDirection dir = 3;
-//   TransformInfo transform = 4;
-//   }

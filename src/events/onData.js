@@ -1,5 +1,4 @@
 import configs from '../configs/configs.js';
-import { PACKET_ID } from '../configs/constants/packetId.js';
 import decodeMessageByPacketId from '../utils/packet/decodePacket.js';
 import logger from '../utils/logger.js';
 import { enqueueReceive } from '../utils/socket/messageQueue.js';

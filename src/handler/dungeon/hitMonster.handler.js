@@ -51,13 +51,3 @@ const hitMonsterHandler = ({ socket, payload }) => {
 };
 
 export default hitMonsterHandler;
-
-// message C_HitMonster{
-//     int32 monsterId = 1;  // 플레이어 ID
-//     int32 damage = 2;    // 데미지
-//   }
-//   // 몬스터 공격 알림
-//   message S_HitMonster{
-//     int32 monsterId = 1;  // 플레이어 ID
-//     int32 damage = 2;    // 데미지
-//   }

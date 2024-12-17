@@ -5,7 +5,7 @@
         "stats": {
           "level": 1,
           "maxHp": 120.0,
-          "atk": 20.0,
+          "atk": 30.0,
           "def": 4.0,
           "speed": 0.4,
           "criticalProbability": 3.0,
@@ -17,7 +17,7 @@
         "stats": {
           "level": 1,
           "maxHp": 105.0,
-          "atk": 25.0,
+          "atk": 31.0,
           "def": 3.0,
           "speed": 0.4,
           "criticalProbability": 3.0,

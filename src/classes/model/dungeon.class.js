@@ -450,6 +450,8 @@ class Dungeon {
     const getSpawnPos =
       this.spawnTransforms[Math.floor(Math.random() * this.spawnTransforms.length)];
 
+    user.currentHp = user.statInfo.stats.maxHp;
+
     const reviveResponse = {
       playerId: userId,
       transform: {
@@ -462,8 +464,6 @@ class Dungeon {
     };
 
     createNotificationPacket(PACKET_ID.S_RevivePlayer, reviveResponse, this.getDungeonUsersUUID());
-
-    user.currentHp = user.statInfo.stats.maxHp;
 
     logger.info(`userId: ${userId} 리스폰!`);
   };

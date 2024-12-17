@@ -11,16 +11,18 @@ import configs from '../../configs/configs.js';
 const chatHandler = async ({ socket, payload }) => {
   try {
     const { chatMsg } = payload;
+    const user = getUserById(socket.id);
+    const dungeonId = user.dungeonId;
     const nickname = getUserById(socket.id).nickname;
-    if (!socket.dungeonId) {
+    if (!dungeonId) {
       await pubChat(socket.id, nickname, chatMsg);
     } else {
-      const user = getUserById(socket.id);
-      const dungeon = getDungeonSession(user.dungeonId);
+      const dungeon = getDungeonSession(dungeonId);
       if (dungeon) {
+        console.log({ playerId: socket.id, nickname, chatMsg, serverIndex: configs.ServerIndex });
         createNotificationPacket(
           PACKET_ID.S_Chat,
-          { playerId: socket.id, nickname, chatMsg, serverIndex: configs.ServerIndex },
+          { playerId: socket.id, nickname, chatMsg, serverIndex: configs.ServerIndex.toString() },
           dungeon.usersUUID,
         );
       } else {

@@ -5,9 +5,9 @@ import {
   leaveRedisParty,
   removeRedisParty,
 } from '../../sessions/redis/redis.party.js';
-import Result from '../result.js';
 import { getAllUserUUIDByTown } from '../../sessions/town.session.js';
 import logger from '../../utils/logger.js';
+import createNotificationPacket from '../../utils/notification/createNotification.js';
 
 const partyLeaveHandler = async ({ socket, payload }) => {
   try {
@@ -30,7 +30,7 @@ const partyLeaveHandler = async ({ socket, payload }) => {
       roomId,
     };
 
-    return new Result(leavePayload, PACKET_ID.S_PartyLeave, getAllUserUUIDByTown());
+    createNotificationPacket(PACKET_ID.S_PartyLeave, leavePayload, getAllUserUUIDByTown());
   } catch (e) {
     handleError(socket, e);
   }

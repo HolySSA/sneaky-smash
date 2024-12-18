@@ -59,6 +59,8 @@ class MysqlService {
 
     await Promise.all(jobs);
     logger.info(`createTables for database done.`);
+    await this.internalPool.end();
+    logger.info('MySQL Connection Pool closed.');
   }
 
   addToQueue(queue, query, params) {

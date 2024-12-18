@@ -1,4 +1,5 @@
 import { PACKET_ID } from '../../configs/constants/packetId.js';
+import partyLeaveHandler from '../../handler/party/party.leave.handler.js';
 import { getDungeonSession } from '../../sessions/dungeon.session.js';
 import { getRedisPartyByUserId, removeRedisParty } from '../../sessions/redis/redis.party.js';
 import { setIsSignIn } from '../../sessions/redis/redis.user.js';
@@ -32,17 +33,9 @@ const despawnLogic = async (socket) => {
     }
     removeUserForTown(userId);
 
-    const AllUUID = getAllUserUUIDByTown();
     const party = await getRedisPartyByUserId(userId);
     if (party) {
-      if (party.members.length <= 1) {
-        await removeRedisParty(party.roomId);
-      }
-      const leavePayload = {
-        playerId: socket.id,
-        roomId: party.roomId,
-      };
-      createNotificationPacket(PACKET_ID.S_PartyLeave, leavePayload, AllUUID);
+      await partyLeaveHandler({ socket: { id: userId }, payload: { roomId: party.roomId } });
     }
   }
 

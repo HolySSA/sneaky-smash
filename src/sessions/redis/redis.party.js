@@ -176,7 +176,7 @@ const getRedisPartyByUserId = async (userId) => {
     if (isMember) {
       const [members, info] = await Promise.all([redis.smembers(partyKey), redis.hgetall(infoKey)]);
       return {
-        roomId,
+        roomId: Number(roomId),
         members,
         dungeonLevel: info.dungeonLevel,
         owner: info.owner,

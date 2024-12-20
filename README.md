@@ -1,8 +1,20 @@
 # Sneaky SMASH
 
 ## 🎈 팀 노션
-[브로셔](https://pollen-violin-7c8.notion.site/Sneaky-SMASH-15fca0528acf80bd8c4ec4250be8a169)  \n
-[노션](https://teamsparta.notion.site/8-b5a0145e1e434ae6b45ca653cdfa04d2)
+[프로젝트 브로셔](https://pollen-violin-7c8.notion.site/Sneaky-SMASH-15fca0528acf80bd8c4ec4250be8a169)  
+[프로젝트 노션](https://teamsparta.notion.site/8-b5a0145e1e434ae6b45ca653cdfa04d2)
+
+## 👋 프로젝트 소개
+
+## ⚙️ 서비스 아키텍처
+
+## 🛠️ 기술 구현
+
+## 📌 구현 기능
+
+## 📝 패킷 구조
+
+
 
 ## Town
 

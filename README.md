@@ -33,19 +33,28 @@
 
 ## 📝 패킷 구조 (정리 예정)
 
+### User
+
+- `C_Register : 27`
+- `S_Register : 28`
+- `C_Login  : 29`
+- `S_Login  : 30`
+- `C_Logout  : 101`
+- `C_Logout  : 102`
+
 ### Town
 
 - `C_Enter: 0`
 - `S_Enter: 1`
-- `S_Spawn: 2` <!-- C 없음 -->
-- `S_Despawn: 3` <!-- C 없음 -->
+- `S_Spawn: 2`
+- `S_Despawn: 3`
 - `C_Move: 4`
 - `S_Move: 5`
 - `C_Animation: 6`
 - `S_Animation: 7`
 - `C_Chat: 8`
 - `S_Chat: 9`
-- `S_EnterDungeon: 10` <!-- C 없음 -->
+- `S_EnterDungeon: 10`
 
 ### Battle
 
@@ -55,81 +64,171 @@
 - `S_UpdateMonsterHp: 14`
 - `S_UpdateNexusHp: 15`
 - `S_LevelUp: 16`
-- `C_DestroyNexus: 17`
-- `S_DestroyNexus: 18`
-- `C_PlayerAttackToPlayer: 19`
-- `S_PlayerAttackToPlayer: 20`
-- `C_PlayerAttackToMonster: 21`
-- `S_PlayerAttackToMonster: 22`
+- `C_AttackedNexus: 17`
+- `S_AttackedNexus: 18`
+- `C_HitPlayer : 19`
+- `S_HitPlayer : 20`
+- `C_HitMonster : 21`
+- `S_HitMonster : 22`
 - `S_PlayerStatus: 23`
+- `S_DeathPlayer: 24`
+- `S_RevivePlayer: 25`
+- `S_GetExp: 26`
+- `S_NexusSpawn: 51`
+- `S_PlayerKillCount: 52`
+- `S_GameEnd: 53`
 
 ### Skills & Items
 
-- `C_UseItem: 28`
-- `S_UseItem: 29`
-- `C_GetSkill: 30`
-- `S_GetSkill: 31`
-- `C_ShootProjectile: 32`
-- `S_ShootProjectile: 33`
-- `C_UseSkill: 34`
-- `S_UseSkill: 35`
+- `C_UseItem: 31`
+- `S_UseItem: 32`
+- `C_GetSkill: 33`
+- `S_GetSkill: 34`
+- `C_ShootProjectile: 35`
+- `S_ShootProjectile: 36`
+- `C_UseSkill: 37`
+- `S_UseSkill: 38`
 
 ### Monsters
 
-- `S_MonsterAttack: 36`
-- `S_MonsterMove: 37`
-- `S_MonsterKill: 38`
-- `S_MonsterSpawn: 39`
-- `S_MonsterStatus: 40`
+- `S_MonsterAttack: 39`
+- `S_MonsterMove: 40`
+- `S_MonsterKill: 41`
+- `S_MonsterSpawn: 42`
+- `S_MonsterKillCount: 43`
 
 ### Party
 
-- `C_Party: 41`
-- `S_Party: 42`
-- `C_PartyJoin: 43`
-- `S_PartyJoin: 44`
-- `C_PartyLeave: 45`
-- `S_PartyLeave: 46`
-- `C_MatchStart: 47`
+- `C_Party: 44`
+- `S_Party: 45`
+- `C_PartyJoin: 46`
+- `S_PartyJoin: 47`
+- `C_PartyLeave: 48`
+- `S_PartyLeave: 49`
+- `C_MatchStart: 50`
 
 ### Path
 
 - `C_GetNavPath: 99`
 - `S_GetNavPath: 100`
+- `C_Authorize: 100`
+- `C_Authorize: 100`
+- `S_GameServerInfo: 100`
+- `S_Ping: 254`
+- `C_Ping: 255`
 
 ## 📁 디렉토리 구조 (정리 예정)
 
 ```
-src/
-├── handlers/
+MULTIPLEROGUELIKE/
+├── assets/
+│ ├── classInfo.json
+│ ├── dungeonInfo.json
+│ ├── equipment.json
+│ ├── item.json
+│ ├── levelperStats.json
+│ ├── monster.json
+│ ├── projectile.json
+│ ├── skill.json
+│ ├── userExp.json
+│ └── userSpawnTime.json
+├── src/
 │ ├── classes/
 │ │ ├── manager/
-│ │ │ └── sampleManager.js
+│ │ │ ├── base.manager.js
+│ │ │ ├── DB.Manager.js
+│ │ │ └── latency.manager.js
 │ │ └── model/
-│ │ └── userClass.js
+│ │ ├── dungeon.class.js
+│ │ ├── monster.class.js
+│ │ ├── monsterLogic.class.js
+│ │ ├── nexus.class.js
+│ │ ├── pathServer.js
+│ │ └── user.class.js
 │ ├── configs/
-│ │ ├── config.js
-│ │ └── constants/
-│ │  ├── constants.js
-│ │  ├── env.js
-│ │  ├── header.js
-│ │  ├── game.js
-│ │  ├── packetId.js
-│ │  └── serverUUID.js
+│ │ ├── constants/
+│ │ │ ├── constants.js
+│ │ │ ├── env.js
+│ │ │ ├── header.js
+│ │ │ ├── game.js
+│ │ │ ├── packetId.js
+│ │ │ └── serverUUID.js
+│ │ └── config.js
 │ ├── db/
-│ │ ├── user/
-│ │ │ ├── user.db.js
+│ │ ├── migrations/
+│ │ │ └── createSchema.js
+│ │ ├── model/
+│ │ │ ├── boss.db.js
+│ │ │ ├── characters.db.js
+│ │ │ ├── dungeon.db.js
+│ │ │ ├── equipment.db.js
+│ │ │ ├── inventoryitem.db.js
+│ │ │ ├── item.db.js
+│ │ │ ├── monster.db.js
+│ │ │ ├── skill.db.js
+│ │ │ ├── stage.db.js
+│ │ │ └── user.db.js
+│ │ ├── query/
+│ │ │ ├── boss.query.js
+│ │ │ ├── characters.query.js
+│ │ │ ├── dungeon.query.js
+│ │ │ ├── equipment.query.js
+│ │ │ ├── inventoryitem.query.js
+│ │ │ ├── item.query.js
+│ │ │ ├── monster.query.js
+│ │ │ ├── skill.query.js
+│ │ │ ├── stage.query.js
 │ │ │ └── user.query.js
+│ │ ├── sql/
+│ │ │ ├── 0_user_db.sql
+│ │ │ ├── 1_item_db.sql
+│ │ │ ├── boss_db.sql
+│ │ │ ├── characters_db.sql
+│ │ │ ├── dungeon_db.sql
+│ │ │ ├── equipment_db.sql
+│ │ │ ├── inventoryItem_db.sql
+│ │ │ ├── monsters_db.sql
+│ │ │ ├── skill_db.sql
+│ │ │ └── stage_db.sql
 │ │ └── database.js
 │ ├── events/
+│ │ ├── onClose.js
 │ │ ├── onConnection.js
 │ │ ├── onData.js
 │ │ ├── onEnd.js
 │ │ └── onError.js
 │ ├── handler/
+│ │ ├── dungeon/
+│ │ │ ├── hitMonster.handler.js
+│ │ │ ├── hitPlayer.handler.js
+│ │ │ └── leaveDungeon.handler.js
+│ │ ├── game/
+│ │ │ └── deathPlayer.notification.js
+│ │ ├── healthCheck/
+│ │ │ └── pong.handler.js
+│ │ ├── item/
+│ │ │ └── useItem.handler.js
+│ │ ├── monster/
+│ │ │ └── monsterKill.notification.js
+│ │ ├── nexus/
+│ │ │ └── attackedNexus.handler.js
+│ │ ├── party/
+│ │ │ ├──dungeon.start.handler.js
+│ │ │ ├── party.handler.js
+│ │ │ ├── party.join.handler.js
+│ │ │ └── party.leave.handler.js
+│ │ ├── skill/
+│ │ │ ├── getSkill.handler.js
+│ │ │ ├── shootProjectile.handler.js
+│ │ │ └── useSkill.handler.js
+│ │ ├── town/
+│ │ │ ├── animation.handler.js
+│ │ │ ├── chat.handler.js
+│ │ │ ├── enter.handler.js
+│ │ │ └── move.player.handler.js
 │ │ ├── user/
-│ │ │ ├── login.handler.js
-│ │ │ └── register.handler.js
+│ │ │ └── login.handler.js
+│ │ ├── result.js
 │ │ └── index.js
 │ ├── init/
 │ │ ├── index.js
@@ -138,42 +237,73 @@ src/
 │ ├── protobuf/
 │ │ ├── dungeon/
 │ │ │ ├── battle.proto
-│ │ │ └── boss.proto
+│ │ │ ├── monster.proto
+│ │ │ └── stage.proto
 │ │ ├── town/
-│ │ │ ├── login.proto
 │ │ │ ├── match.proto
 │ │ │ └── town.proto
 │ │ └── user/
 │ │ ├── customMessage.proto
-│ │ ├── inventory.proto
+│ │ ├── healthCheck.proto
 │ │ ├── item.proto
-│ │ ├── player.proto
+│ │ ├── login.proto
 │ │ └── skill.proto
+│ ├── sessions/
+│ │ ├── redis/
+│ │ │ ├── helper.js
+│ │ │ ├── redis.account.js
+│ │ │ ├── redis.chat.js
+│ │ │ ├── redis.health.js
+│ │ │ ├── redis.party.js
+│ │ │ ├── redis.server.js
+│ │ │ └── redis.user.js
+│ │ ├── dungeon.session.js
+│ │ ├── sessions.js
+│ │ ├── town.session.js
+│ │ └── user.session.js
 │ ├── utils/
 │ │ ├── error/
 │ │ │ ├── customError.js
 │ │ │ ├── errorCodes.js
 │ │ │ └── errorHandler.js
+│ │ ├── etc/
+│ │ │ ├── despawn.logic.js
+│ │ │ ├── enter.logic.js
+│ │ │ └── enterTown.js
 │ │ ├── joi/
 │ │ │ └── joiUtils.js
+│ │ ├── navmesh/
+│ │ │ └── navmesh.js
 │ │ ├── notification/
+│ │ │ ├── broadcastBySession.js
 │ │ │ └── createNotification.js
-│ │ ├── parser/
-│ │ │ └── packetParser.js
+│ │ ├── packet/
+│ │ │ ├── createHeader.js
+│ │ │ ├── createResponse.js
+│ │ │ └── decodePacket.js
 │ │ ├── redis/
 │ │ │ └── redisManager.js
-│ │ ├── response/
-│ │ │ └── createResponse.js
+│ │ ├── socket/
+│ │ │ └── messageQueue.js
 │ │ ├── dateFormatter.js
+│ │ ├── generateNexusId.js
+│ │ ├── logger.js
+│ │ ├── makeUUID.js
 │ │ └── transfromCase.js
-│ ├── protobuf.zip
 │ └── server.js
+├── .dockerignore
 ├── .env
 ├── .gitignore
+├── .prettierignore
 ├── .prettierrc
+├── docker-compose.yml
+├── Dockerfile
+├── eslint.config.js
+├── jsonconfig.json
+├── nodemon.json
 ├── package-lock.json
 ├── package.json
-└── client.js
+└── README.md
 ```
 
 ## 👩‍💻 팀원

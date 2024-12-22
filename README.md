@@ -153,12 +153,8 @@
 
 # 📝 패킷 구조
 
-패킷 명세는 아래 각 항목을 클릭하면 자세히 볼 수 있습니다.
-
----
-
 <details>
-<summary>### User</summary>
+<summary>🟦 User</summary>
 
 - `C_Register : 27`
 - `S_Register : 28`
@@ -170,7 +166,7 @@
 </details>
 
 <details>
-<summary>### Town</summary>
+<summary>🟦 Town</summary>
 
 - `C_Enter: 0`
 - `S_Enter: 1`
@@ -187,7 +183,7 @@
 </details>
 
 <details>
-<summary>### Battle</summary>
+<summary>🟦 Battle</summary>
 
 - `C_LeaveDungeon: 11`
 - `S_LeaveDungeon: 12`
@@ -212,7 +208,7 @@
 </details>
 
 <details>
-<summary>###Skills & Items</summary>
+<summary>🟦 Skills & Items</summary>
 
 - `C_UseItem: 31`
 - `S_UseItem: 32`
@@ -226,7 +222,7 @@
 </details>
 
 <details>
-<summary>###Monsters</summary>
+<summary>🟦 Monsters</summary>
 
 - `S_MonsterAttack: 39`
 - `S_MonsterMove: 40`
@@ -237,7 +233,7 @@
 </details>
 
 <details>
-<summary>###Party</summary>
+<summary>🟦 Party</summary>
 
 - `C_Party: 44`
 - `S_Party: 45`
@@ -250,7 +246,7 @@
 </details>
 
 <details>
-<summary>### Path</summary>
+<summary>🟦 Path</summary>
 
 - `C_GetNavPath: 99`
 - `S_GetNavPath: 100`
@@ -260,12 +256,6 @@
 - `C_Ping: 255`
 
 </details>
-
-# MULTIPLEROGUELIKE 프로젝트
-
-이 프로젝트는 멀티플레이 기반의 로그라이크 게임 서버를 구현합니다. 아래는 프로젝트의 디렉토리 구조와 패킷 구조입니다.
-
----
 
 ## 📁 디렉토리 구조
 

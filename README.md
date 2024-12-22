@@ -17,8 +17,7 @@
 ![서비스 아키텍처](https://github.com/user-attachments/assets/1cf53135-a523-4f57-8f92-5a67a8c22240)
 
 ## 🛠️ 기술 구현
-
-#### Programming Languages
+<span style="font-size: 18px; font-weight: bold;">Programming Languages</span>
 <span>
   <img src="https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript Badge" height="30px"/>
   <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge" height="30px"/>

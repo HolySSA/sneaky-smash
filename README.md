@@ -250,8 +250,9 @@
 
 - `C_GetNavPath: 99`
 - `S_GetNavPath: 100`
-- `C_Authorize: 100`
-- `S_GameServerInfo: 100`
+- `C_Authorize: 103`
+- `C_Authorize: 104`
+- `S_GameServerInfo: 253`
 - `S_Ping: 254`
 - `C_Ping: 255`
 
@@ -422,7 +423,6 @@
 - `README.md`
 
 </details>
-
 
 ## 👩‍💻 팀원
 

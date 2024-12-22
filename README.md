@@ -18,46 +18,52 @@
 
 ## 🛠️ 기술 구현
 
-#### Programming Languages
-<span>
-  <img src="https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript Badge" height="30px"/>
-  <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge" height="30px"/>
-</span>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">Programming Languages</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+  <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
-#### Socket Programming
-<span>
-  <img src="https://img.shields.io/badge/TCP-00599C?style=for-the-badge&logo=protocol&logoColor=white" alt="TCP Badge" height="30px"/>
-  <img src="https://img.shields.io/badge/Protobuf-336791?style=for-the-badge&logo=google&logoColor=white" alt="Protobuf Badge" height="30px"/>
-</span>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">Socket Programming</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/TCP-00599C?style=for-the-badge&logo=protocol&logoColor=white" alt="TCP Badge" style="display: inline-block; margin-right: 5px; padding: 0; line-height: 0;"/>
+  <img src="https://img.shields.io/badge/Protobuf-336791?style=for-the-badge&logo=google&logoColor=white" alt="Protobuf Badge" style="display: inline-block; margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
-#### Game Server & Login Server
-<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js Badge" height="30px"/>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">Game Server & Login Server</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js Badge" style="display: inline-block; margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
-#### Pathfinding Server
-<img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge" height="30px"/>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">Pathfinding Server</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
-#### Client
-<img src="https://img.shields.io/badge/Unity-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Badge" height="30px"/>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">Client</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/Unity-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
-#### DB
-<span>
-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL Badge" height="30px"/>
-  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis Badge" height="30px"/>
-</span>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">DB</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
-#### DevOps
-<span>
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Badge" height="30px"/>
-  <img src="https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose Badge" height="30px"/>
-  <img src="https://img.shields.io/badge/Traefik-000000?style=for-the-badge&logo=traefik&logoColor=white" alt="Traefik Badge" height="30px"/>
-  <img src="https://img.shields.io/badge/VPS-FF6600?style=for-the-badge&logo=linux&logoColor=white" alt="VPS Badge" height="30px"/>
-</span>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">DevOps</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+  <img src="https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+  <img src="https://img.shields.io/badge/Traefik-000000?style=for-the-badge&logo=traefik&logoColor=white" alt="Traefik Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+  <img src="https://img.shields.io/badge/VPS-FF6600?style=for-the-badge&logo=linux&logoColor=white" alt="VPS Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
-#### VCS (Version Control System)
-<span>
-  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Badge" height="30px"/>
-  <img src="https://img.shields.io/badge/Unity%20Version%20Control-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Version Control Badge" height="30px"/>
-</span>
+<p style="font-size: 16px; font-weight: bold; margin: 0; padding: 0;">VCS (Version Control System)</p>
+<p align="left" style="margin: 0; padding: 0; line-height: 0;">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+  <img src="https://img.shields.io/badge/Unity%20Version%20Control-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Version Control Badge" style="margin: 0; padding: 0; line-height: 0;"/>
+</p>
 
 ## 📌 주요 기능 및 구성 요소
 
@@ -133,6 +139,7 @@
 <summary>📦 패킷</summary>
 
 ### User
+
 - `C_Register : 27`
 - `S_Register : 28`
 - `C_Login  : 29`
@@ -141,6 +148,7 @@
 - `S_Logout  : 102`
 
 ### Town
+
 - `C_Enter: 0`
 - `S_Enter: 1`
 - `S_Spawn: 2`
@@ -154,6 +162,7 @@
 - `S_EnterDungeon: 10`
 
 ### Battle
+
 - `C_LeaveDungeon: 11`
 - `S_LeaveDungeon: 12`
 - `S_UpdatePlayerHp: 13`
@@ -175,6 +184,7 @@
 - `S_GameEnd: 53`
 
 ### Skills & Items
+
 - `C_UseItem: 31`
 - `S_UseItem: 32`
 - `C_GetSkill: 33`
@@ -185,6 +195,7 @@
 - `S_UseSkill: 38`
 
 ### Monsters
+
 - `S_MonsterAttack: 39`
 - `S_MonsterMove: 40`
 - `S_MonsterKill: 41`
@@ -192,6 +203,7 @@
 - `S_MonsterKillCount: 43`
 
 ### Party
+
 - `C_Party: 44`
 - `S_Party: 45`
 - `C_PartyJoin: 46`
@@ -201,6 +213,7 @@
 - `C_MatchStart: 50`
 
 ### Path
+
 - `C_GetNavPath: 99`
 - `S_GetNavPath: 100`
 - `C_Authorize: 103`
@@ -211,13 +224,13 @@
 
 </details>
 
-
 ## 📁디렉토리 구조
 
 <details>
 <summary>📂 디렉토리 </summary>
 
 #### 📂 assets
+
 - `classInfo.json`
 - `dungeonInfo.json`
 - `equipment.json`
@@ -230,6 +243,7 @@
 - `userSpawnTime.json`
 
 #### 📂 src
+
 - 📂 `classes`
   - 📂 `manager`
     - `base.manager.js`
@@ -390,9 +404,8 @@
 - `server.js`
 
 ---
+
 </details>
-
-
 
 ## 👩‍💻 팀원
 

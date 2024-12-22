@@ -18,7 +18,7 @@
 
 ## 🛠️ 기술 구현
 
-<span style="font-size: 24px; font-weight: bold;">Programming Languages</span>
+<b style="font-size: 24px; font-weight: bold;">Programming Languages</b>
     <br>
     <img src="https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white"
         alt="JavaScript Badge" />
@@ -75,6 +75,7 @@
 ## 📌 주요 기능 및 구성 요소
 
 ### **VPS (Virtual Private Server)**
+<h3> style="color </h3>
 
 고가용성 서버를 구성하기 위해 VPS를 사용했습니다.
 

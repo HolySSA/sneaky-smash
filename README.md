@@ -151,18 +151,26 @@
 
 ---
 
-## 📝 패킷 구조 (정리 예정)
+# 📝 패킷 구조
 
-### User
+패킷 명세는 아래 각 항목을 클릭하면 자세히 볼 수 있습니다.
+
+---
+
+<details>
+<summary>### User</summary>
 
 - `C_Register : 27`
 - `S_Register : 28`
 - `C_Login  : 29`
 - `S_Login  : 30`
 - `C_Logout  : 101`
-- `C_Logout  : 102`
+- `S_Logout  : 102`
 
-### Town
+</details>
+
+<details>
+<summary>### Town</summary>
 
 - `C_Enter: 0`
 - `S_Enter: 1`
@@ -176,7 +184,10 @@
 - `S_Chat: 9`
 - `S_EnterDungeon: 10`
 
-### Battle
+</details>
+
+<details>
+<summary>### Battle</summary>
 
 - `C_LeaveDungeon: 11`
 - `S_LeaveDungeon: 12`
@@ -198,7 +209,10 @@
 - `S_PlayerKillCount: 52`
 - `S_GameEnd: 53`
 
-### Skills & Items
+</details>
+
+<details>
+<summary>### Skills & Items</summary>
 
 - `C_UseItem: 31`
 - `S_UseItem: 32`
@@ -209,7 +223,10 @@
 - `C_UseSkill: 37`
 - `S_UseSkill: 38`
 
-### Monsters
+</details>
+
+<details>
+<summary>### Monsters</summary>
 
 - `S_MonsterAttack: 39`
 - `S_MonsterMove: 40`
@@ -217,7 +234,10 @@
 - `S_MonsterSpawn: 42`
 - `S_MonsterKillCount: 43`
 
-### Party
+</details>
+
+<details>
+<summary>### Party</summary>
 
 - `C_Party: 44`
 - `S_Party: 45`
@@ -227,15 +247,20 @@
 - `S_PartyLeave: 49`
 - `C_MatchStart: 50`
 
-### Path
+</details>
+
+<details>
+<summary>### Path</summary>
 
 - `C_GetNavPath: 99`
 - `S_GetNavPath: 100`
 - `C_Authorize: 100`
-- `C_Authorize: 100`
 - `S_GameServerInfo: 100`
 - `S_Ping: 254`
 - `C_Ping: 255`
+
+</details>
+
 
 ## 📁 디렉토리 구조 (정리 예정)
 
@@ -425,6 +450,179 @@ MULTIPLEROGUELIKE/
 ├── package.json
 └── README.md
 ```
+
+# MULTIPLEROGUELIKE 프로젝트
+
+이 프로젝트는 멀티플레이 기반의 로그라이크 게임 서버를 구현합니다. 아래는 프로젝트의 디렉토리 구조와 패킷 구조입니다.
+
+---
+
+## 📁 디렉토리 구조
+
+<details>
+<summary>assets/</summary>
+
+- `classInfo.json`
+- `dungeonInfo.json`
+- `equipment.json`
+- `item.json`
+- `levelperStats.json`
+- `monster.json`
+- `projectile.json`
+- `skill.json`
+- `userExp.json`
+- `userSpawnTime.json`
+
+</details>
+
+<details>
+<summary>src/</summary>
+
+<details>
+<summary>classes/</summary>
+
+- **manager/**
+  - `base.manager.js`
+  - `DB.Manager.js`
+  - `latency.manager.js`
+- **model/**
+  - `dungeon.class.js`
+  - `monster.class.js`
+  - `monsterLogic.class.js`
+  - `nexus.class.js`
+  - `pathServer.js`
+  - `user.class.js`
+
+</details>
+
+<details>
+<summary>configs/</summary>
+
+- **constants/**
+  - `constants.js`
+  - `env.js`
+  - `header.js`
+  - `game.js`
+  - `packetId.js`
+  - `serverUUID.js`
+- `config.js`
+
+</details>
+
+<details>
+<summary>db/</summary>
+
+- **migrations/**
+  - `createSchema.js`
+- **model/**
+  - `boss.db.js`
+  - `characters.db.js`
+  - `dungeon.db.js`
+  - `equipment.db.js`
+  - `inventoryitem.db.js`
+  - `item.db.js`
+  - `monster.db.js`
+  - `skill.db.js`
+  - `stage.db.js`
+  - `user.db.js`
+- **query/**
+  - `boss.query.js`
+  - `characters.query.js`
+  - `dungeon.query.js`
+  - `equipment.query.js`
+  - `inventoryitem.query.js`
+  - `item.query.js`
+  - `monster.query.js`
+  - `skill.query.js`
+  - `stage.query.js`
+  - `user.query.js`
+- **sql/**
+  - `0_user_db.sql`
+  - `1_item_db.sql`
+  - `boss_db.sql`
+  - `characters_db.sql`
+  - `dungeon_db.sql`
+  - `equipment_db.sql`
+  - `inventoryItem_db.sql`
+  - `monsters_db.sql`
+  - `skill_db.sql`
+  - `stage_db.sql`
+- `database.js`
+
+</details>
+
+<details>
+<summary>events/</summary>
+
+- `onClose.js`
+- `onConnection.js`
+- `onData.js`
+- `onEnd.js`
+- `onError.js`
+
+</details>
+
+<details>
+<summary>handler/</summary>
+
+- **dungeon/**
+  - `hitMonster.handler.js`
+  - `hitPlayer.handler.js`
+  - `leaveDungeon.handler.js`
+- **game/**
+  - `deathPlayer.notification.js`
+- **healthCheck/**
+  - `pong.handler.js`
+- **item/**
+  - `useItem.handler.js`
+- **monster/**
+  - `monsterKill.notification.js`
+- **nexus/**
+  - `attackedNexus.handler.js`
+- **party/**
+  - `dungeon.start.handler.js`
+  - `party.handler.js`
+  - `party.join.handler.js`
+  - `party.leave.handler.js`
+- **skill/**
+  - `getSkill.handler.js`
+  - `shootProjectile.handler.js`
+  - `useSkill.handler.js`
+- **town/**
+  - `animation.handler.js`
+  - `chat.handler.js`
+  - `enter.handler.js`
+  - `move.player.handler.js`
+- **user/**
+  - `login.handler.js`
+- `result.js`
+- `index.js`
+
+</details>
+
+...
+
+</details>
+
+<details>
+<summary>기타 최상위 파일</summary>
+
+- `.dockerignore`
+- `.env`
+- `.gitignore`
+- `.prettierignore`
+- `.prettierrc`
+- `docker-compose.yml`
+- `Dockerfile`
+- `eslint.config.js`
+- `jsonconfig.json`
+- `nodemon.json`
+- `package-lock.json`
+- `package.json`
+- `README.md`
+
+</details>
+
 
 ## 👩‍💻 팀원
 

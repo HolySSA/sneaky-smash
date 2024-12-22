@@ -25,7 +25,6 @@
 </p>
 
 <span style="font-size: 18px; font-weight: bold"> Socket Programming</span>
-<br>
 <p align="left" style="margin: 0; padding: 0; line-height: 0;">
   <img src="https://img.shields.io/badge/TCP-00599C?style=for-the-badge&logo=protocol&logoColor=white" alt="TCP Badge" style="display: inline-block; margin-right: 5px; padding: 0; line-height: 0;"/>
   <img src="https://img.shields.io/badge/Protobuf-336791?style=for-the-badge&logo=google&logoColor=white" alt="Protobuf Badge" style="display: inline-block; margin: 0; padding: 0; line-height: 0;"/>

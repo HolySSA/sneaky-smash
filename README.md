@@ -212,7 +212,7 @@
 </details>
 
 <details>
-<summary>### Skills & Items</summary>
+<summary>###Skills & Items</summary>
 
 - `C_UseItem: 31`
 - `S_UseItem: 32`
@@ -226,7 +226,7 @@
 </details>
 
 <details>
-<summary>### Monsters</summary>
+<summary>###Monsters</summary>
 
 - `S_MonsterAttack: 39`
 - `S_MonsterMove: 40`
@@ -237,7 +237,7 @@
 </details>
 
 <details>
-<summary>### Party</summary>
+<summary>###Party</summary>
 
 - `C_Party: 44`
 - `S_Party: 45`
@@ -260,196 +260,6 @@
 - `C_Ping: 255`
 
 </details>
-
-
-## 📁 디렉토리 구조 (정리 예정)
-
-```
-MULTIPLEROGUELIKE/
-├── assets/
-│ ├── classInfo.json
-│ ├── dungeonInfo.json
-│ ├── equipment.json
-│ ├── item.json
-│ ├── levelperStats.json
-│ ├── monster.json
-│ ├── projectile.json
-│ ├── skill.json
-│ ├── userExp.json
-│ └── userSpawnTime.json
-├── src/
-│ ├── classes/
-│ │ ├── manager/
-│ │ │ ├── base.manager.js
-│ │ │ ├── DB.Manager.js
-│ │ │ └── latency.manager.js
-│ │ └── model/
-│ │ ├── dungeon.class.js
-│ │ ├── monster.class.js
-│ │ ├── monsterLogic.class.js
-│ │ ├── nexus.class.js
-│ │ ├── pathServer.js
-│ │ └── user.class.js
-│ ├── configs/
-│ │ ├── constants/
-│ │ │ ├── constants.js
-│ │ │ ├── env.js
-│ │ │ ├── header.js
-│ │ │ ├── game.js
-│ │ │ ├── packetId.js
-│ │ │ └── serverUUID.js
-│ │ └── config.js
-│ ├── db/
-│ │ ├── migrations/
-│ │ │ └── createSchema.js
-│ │ ├── model/
-│ │ │ ├── boss.db.js
-│ │ │ ├── characters.db.js
-│ │ │ ├── dungeon.db.js
-│ │ │ ├── equipment.db.js
-│ │ │ ├── inventoryitem.db.js
-│ │ │ ├── item.db.js
-│ │ │ ├── monster.db.js
-│ │ │ ├── skill.db.js
-│ │ │ ├── stage.db.js
-│ │ │ └── user.db.js
-│ │ ├── query/
-│ │ │ ├── boss.query.js
-│ │ │ ├── characters.query.js
-│ │ │ ├── dungeon.query.js
-│ │ │ ├── equipment.query.js
-│ │ │ ├── inventoryitem.query.js
-│ │ │ ├── item.query.js
-│ │ │ ├── monster.query.js
-│ │ │ ├── skill.query.js
-│ │ │ ├── stage.query.js
-│ │ │ └── user.query.js
-│ │ ├── sql/
-│ │ │ ├── 0_user_db.sql
-│ │ │ ├── 1_item_db.sql
-│ │ │ ├── boss_db.sql
-│ │ │ ├── characters_db.sql
-│ │ │ ├── dungeon_db.sql
-│ │ │ ├── equipment_db.sql
-│ │ │ ├── inventoryItem_db.sql
-│ │ │ ├── monsters_db.sql
-│ │ │ ├── skill_db.sql
-│ │ │ └── stage_db.sql
-│ │ └── database.js
-│ ├── events/
-│ │ ├── onClose.js
-│ │ ├── onConnection.js
-│ │ ├── onData.js
-│ │ ├── onEnd.js
-│ │ └── onError.js
-│ ├── handler/
-│ │ ├── dungeon/
-│ │ │ ├── hitMonster.handler.js
-│ │ │ ├── hitPlayer.handler.js
-│ │ │ └── leaveDungeon.handler.js
-│ │ ├── game/
-│ │ │ └── deathPlayer.notification.js
-│ │ ├── healthCheck/
-│ │ │ └── pong.handler.js
-│ │ ├── item/
-│ │ │ └── useItem.handler.js
-│ │ ├── monster/
-│ │ │ └── monsterKill.notification.js
-│ │ ├── nexus/
-│ │ │ └── attackedNexus.handler.js
-│ │ ├── party/
-│ │ │ ├──dungeon.start.handler.js
-│ │ │ ├── party.handler.js
-│ │ │ ├── party.join.handler.js
-│ │ │ └── party.leave.handler.js
-│ │ ├── skill/
-│ │ │ ├── getSkill.handler.js
-│ │ │ ├── shootProjectile.handler.js
-│ │ │ └── useSkill.handler.js
-│ │ ├── town/
-│ │ │ ├── animation.handler.js
-│ │ │ ├── chat.handler.js
-│ │ │ ├── enter.handler.js
-│ │ │ └── move.player.handler.js
-│ │ ├── user/
-│ │ │ └── login.handler.js
-│ │ ├── result.js
-│ │ └── index.js
-│ ├── init/
-│ │ ├── index.js
-│ │ ├── loadProtos.js
-│ │ └── protofiles.js
-│ ├── protobuf/
-│ │ ├── dungeon/
-│ │ │ ├── battle.proto
-│ │ │ ├── monster.proto
-│ │ │ └── stage.proto
-│ │ ├── town/
-│ │ │ ├── match.proto
-│ │ │ └── town.proto
-│ │ └── user/
-│ │ ├── customMessage.proto
-│ │ ├── healthCheck.proto
-│ │ ├── item.proto
-│ │ ├── login.proto
-│ │ └── skill.proto
-│ ├── sessions/
-│ │ ├── redis/
-│ │ │ ├── helper.js
-│ │ │ ├── redis.account.js
-│ │ │ ├── redis.chat.js
-│ │ │ ├── redis.health.js
-│ │ │ ├── redis.party.js
-│ │ │ ├── redis.server.js
-│ │ │ └── redis.user.js
-│ │ ├── dungeon.session.js
-│ │ ├── sessions.js
-│ │ ├── town.session.js
-│ │ └── user.session.js
-│ ├── utils/
-│ │ ├── error/
-│ │ │ ├── customError.js
-│ │ │ ├── errorCodes.js
-│ │ │ └── errorHandler.js
-│ │ ├── etc/
-│ │ │ ├── despawn.logic.js
-│ │ │ ├── enter.logic.js
-│ │ │ └── enterTown.js
-│ │ ├── joi/
-│ │ │ └── joiUtils.js
-│ │ ├── navmesh/
-│ │ │ └── navmesh.js
-│ │ ├── notification/
-│ │ │ ├── broadcastBySession.js
-│ │ │ └── createNotification.js
-│ │ ├── packet/
-│ │ │ ├── createHeader.js
-│ │ │ ├── createResponse.js
-│ │ │ └── decodePacket.js
-│ │ ├── redis/
-│ │ │ └── redisManager.js
-│ │ ├── socket/
-│ │ │ └── messageQueue.js
-│ │ ├── dateFormatter.js
-│ │ ├── generateNexusId.js
-│ │ ├── logger.js
-│ │ ├── makeUUID.js
-│ │ └── transfromCase.js
-│ └── server.js
-├── .dockerignore
-├── .env
-├── .gitignore
-├── .prettierignore
-├── .prettierrc
-├── docker-compose.yml
-├── Dockerfile
-├── eslint.config.js
-├── jsonconfig.json
-├── nodemon.json
-├── package-lock.json
-├── package.json
-└── README.md
-```
 
 # MULTIPLEROGUELIKE 프로젝트
 

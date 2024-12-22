@@ -154,7 +154,7 @@
 ## 📝 패킷 구조
 
 <details>
-<summary>📦 패킷 구조</summary>
+<summary>📦 패킷</summary>
 
 ### User
 - `C_Register : 27`
@@ -179,8 +179,6 @@
 - `S_Chat: 9`
 - `S_EnterDungeon: 10`
 
----
-
 ### Battle
 - `C_LeaveDungeon: 11`
 - `S_LeaveDungeon: 12`
@@ -202,8 +200,6 @@
 - `S_PlayerKillCount: 52`
 - `S_GameEnd: 53`
 
----
-
 ### Skills & Items
 - `C_UseItem: 31`
 - `S_UseItem: 32`
@@ -214,16 +210,12 @@
 - `C_UseSkill: 37`
 - `S_UseSkill: 38`
 
----
-
 ### Monsters
 - `S_MonsterAttack: 39`
 - `S_MonsterMove: 40`
 - `S_MonsterKill: 41`
 - `S_MonsterSpawn: 42`
 - `S_MonsterKillCount: 43`
-
----
 
 ### Party
 - `C_Party: 44`
@@ -234,8 +226,6 @@
 - `S_PartyLeave: 49`
 - `C_MatchStart: 50`
 
----
-
 ### Path
 - `C_GetNavPath: 99`
 - `S_GetNavPath: 100`
@@ -245,14 +235,13 @@
 - `S_Ping: 254`
 - `C_Ping: 255`
 
-
 </details>
 
 
 ## 📁디렉토리 구조
 
 <details>
-<summary>📂 MULTIPLEROGUELIKE</summary>
+<summary>📂 디렉토리 </summary>
 
 #### 📂 assets
 - `classInfo.json`

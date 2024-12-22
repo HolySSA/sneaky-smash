@@ -261,152 +261,7 @@
 ## 📁 디렉토리 구조
 
 <details>
-<summary>assets/</summary>
-
-- `classInfo.json`
-- `dungeonInfo.json`
-- `equipment.json`
-- `item.json`
-- `levelperStats.json`
-- `monster.json`
-- `projectile.json`
-- `skill.json`
-- `userExp.json`
-- `userSpawnTime.json`
-
-</details>
-
-<details>
-<summary>src/</summary>
-
-<details>
-<summary>classes/</summary>
-
-- **manager/**
-  - `base.manager.js`
-  - `DB.Manager.js`
-  - `latency.manager.js`
-- **model/**
-  - `dungeon.class.js`
-  - `monster.class.js`
-  - `monsterLogic.class.js`
-  - `nexus.class.js`
-  - `pathServer.js`
-  - `user.class.js`
-
-</details>
-
-<details>
-<summary>configs/</summary>
-
-- **constants/**
-  - `constants.js`
-  - `env.js`
-  - `header.js`
-  - `game.js`
-  - `packetId.js`
-  - `serverUUID.js`
-- `config.js`
-
-</details>
-
-<details>
-<summary>db/</summary>
-
-- **migrations/**
-  - `createSchema.js`
-- **model/**
-  - `boss.db.js`
-  - `characters.db.js`
-  - `dungeon.db.js`
-  - `equipment.db.js`
-  - `inventoryitem.db.js`
-  - `item.db.js`
-  - `monster.db.js`
-  - `skill.db.js`
-  - `stage.db.js`
-  - `user.db.js`
-- **query/**
-  - `boss.query.js`
-  - `characters.query.js`
-  - `dungeon.query.js`
-  - `equipment.query.js`
-  - `inventoryitem.query.js`
-  - `item.query.js`
-  - `monster.query.js`
-  - `skill.query.js`
-  - `stage.query.js`
-  - `user.query.js`
-- **sql/**
-  - `0_user_db.sql`
-  - `1_item_db.sql`
-  - `boss_db.sql`
-  - `characters_db.sql`
-  - `dungeon_db.sql`
-  - `equipment_db.sql`
-  - `inventoryItem_db.sql`
-  - `monsters_db.sql`
-  - `skill_db.sql`
-  - `stage_db.sql`
-- `database.js`
-
-</details>
-
-<details>
-<summary>events/</summary>
-
-- `onClose.js`
-- `onConnection.js`
-- `onData.js`
-- `onEnd.js`
-- `onError.js`
-
-</details>
-
-<details>
-<summary>handler/</summary>
-
-- **dungeon/**
-  - `hitMonster.handler.js`
-  - `hitPlayer.handler.js`
-  - `leaveDungeon.handler.js`
-- **game/**
-  - `deathPlayer.notification.js`
-- **healthCheck/**
-  - `pong.handler.js`
-- **item/**
-  - `useItem.handler.js`
-- **monster/**
-  - `monsterKill.notification.js`
-- **nexus/**
-  - `attackedNexus.handler.js`
-- **party/**
-  - `dungeon.start.handler.js`
-  - `party.handler.js`
-  - `party.join.handler.js`
-  - `party.leave.handler.js`
-- **skill/**
-  - `getSkill.handler.js`
-  - `shootProjectile.handler.js`
-  - `useSkill.handler.js`
-- **town/**
-  - `animation.handler.js`
-  - `chat.handler.js`
-  - `enter.handler.js`
-  - `move.player.handler.js`
-- **user/**
-  - `login.handler.js`
-- `result.js`
-- `index.js`
-
-</details>
-
-...
-
-</details>
-
-<details>
-<summary>기타 최상위 파일</summary>
+<summary>### MULTIPLEROGUELIKE</summary>
 
 - `.dockerignore`
 - `.env`
@@ -422,7 +277,376 @@
 - `package.json`
 - `README.md`
 
+<details>
+<summary>📂 assets</summary>
+
+- `classInfo.json`
+- `dungeonInfo.json`
+- `equipment.json`
+- `item.json`
+- `levelperStats.json`
+- `monster.json`
+- `projectile.json`
+- `skill.json`
+- `userExp.json`
+- `userSpawnTime.json`
+
 </details>
+
+<details>
+<summary>📂 src</summary>
+
+<details>
+<summary>📂 classes</summary>
+
+<details>
+<summary>📂 manager</summary>
+
+- `base.manager.js`
+- `DB.Manager.js`
+- `latency.manager.js`
+
+</details>
+
+<details>
+<summary>📂 model</summary>
+
+- `dungeon.class.js`
+- `monster.class.js`
+- `monsterLogic.class.js`
+- `nexus.class.js`
+- `pathServer.js`
+- `user.class.js`
+
+</details>
+
+</details>
+
+<details>
+<summary>📂 configs</summary>
+
+<details>
+<summary>📂 constants</summary>
+
+- `constants.js`
+- `env.js`
+- `header.js`
+- `game.js`
+- `packetId.js`
+- `serverUUID.js`
+
+</details>
+
+- `config.js`
+
+</details>
+
+<details>
+<summary>📂 db</summary>
+
+<details>
+<summary>📂 migrations</summary>
+
+- `createSchema.js`
+
+</details>
+
+<details>
+<summary>📂 model</summary>
+
+- `boss.db.js`
+- `characters.db.js`
+- `dungeon.db.js`
+- `equipment.db.js`
+- `inventoryitem.db.js`
+- `item.db.js`
+- `monster.db.js`
+- `skill.db.js`
+- `stage.db.js`
+- `user.db.js`
+
+</details>
+
+<details>
+<summary>📂 query</summary>
+
+- `boss.query.js`
+- `characters.query.js`
+- `dungeon.query.js`
+- `equipment.query.js`
+- `inventoryitem.query.js`
+- `item.query.js`
+- `monster.query.js`
+- `skill.query.js`
+- `stage.query.js`
+- `user.query.js`
+
+</details>
+
+<details>
+<summary>📂 sql</summary>
+
+- `0_user_db.sql`
+- `1_item_db.sql`
+- `boss_db.sql`
+- `characters_db.sql`
+- `dungeon_db.sql`
+- `equipment_db.sql`
+- `inventoryItem_db.sql`
+- `monsters_db.sql`
+- `skill_db.sql`
+- `stage_db.sql`
+
+</details>
+
+- `database.js`
+
+</details>
+
+<details>
+<summary>📂 events</summary>
+
+- `onClose.js`
+- `onConnection.js`
+- `onData.js`
+- `onEnd.js`
+- `onError.js`
+
+</details>
+
+<details>
+<summary>📂 handler</summary>
+
+<details>
+<summary>📂 dungeon</summary>
+
+- `hitMonster.handler.js`
+- `hitPlayer.handler.js`
+- `leaveDungeon.handler.js`
+
+</details>
+
+<details>
+<summary>📂 game</summary>
+
+- `deathPlayer.notification.js`
+
+</details>
+
+<details>
+<summary>📂 healthCheck</summary>
+
+- `pong.handler.js`
+
+</details>
+
+<details>
+<summary>📂 item</summary>
+
+- `useItem.handler.js`
+
+</details>
+
+<details>
+<summary>📂 monster</summary>
+
+- `monsterKill.notification.js`
+
+</details>
+
+<details>
+<summary>📂 nexus</summary>
+
+- `attackedNexus.handler.js`
+
+</details>
+
+<details>
+<summary>📂 party</summary>
+
+- `dungeon.start.handler.js`
+- `party.handler.js`
+- `party.join.handler.js`
+- `party.leave.handler.js`
+
+</details>
+
+<details>
+<summary>📂 skill</summary>
+
+- `getSkill.handler.js`
+- `shootProjectile.handler.js`
+- `useSkill.handler.js`
+
+</details>
+
+<details>
+<summary>📂 town</summary>
+
+- `animation.handler.js`
+- `chat.handler.js`
+- `enter.handler.js`
+- `move.player.handler.js`
+
+</details>
+
+<details>
+<summary>📂 user</summary>
+
+- `login.handler.js`
+
+</details>
+
+- `result.js`
+- `index.js`
+
+</details>
+
+<details>
+<summary>📂 init</summary>
+
+- `index.js`
+- `loadProtos.js`
+- `protofiles.js`
+
+</details>
+
+<details>
+<summary>📂 protobuf</summary>
+
+<details>
+<summary>📂 dungeon</summary>
+
+- `battle.proto`
+- `monster.proto`
+- `stage.proto`
+
+</details>
+
+<details>
+<summary>📂 town</summary>
+
+- `match.proto`
+- `town.proto`
+
+</details>
+
+<details>
+<summary>📂 user</summary>
+
+- `customMessage.proto`
+- `healthCheck.proto`
+- `item.proto`
+- `login.proto`
+- `skill.proto`
+
+</details>
+
+</details>
+
+<details>
+<summary>📂 sessions</summary>
+
+<details>
+<summary>📂 redis</summary>
+
+- `helper.js`
+- `redis.account.js`
+- `redis.chat.js`
+- `redis.health.js`
+- `redis.party.js`
+- `redis.server.js`
+- `redis.user.js`
+
+</details>
+
+- `dungeon.session.js`
+- `sessions.js`
+- `town.session.js`
+- `user.session.js`
+
+</details>
+
+<details>
+<summary>📂 utils</summary>
+
+<details>
+<summary>📂 error</summary>
+
+- `customError.js`
+- `errorCodes.js`
+- `errorHandler.js`
+
+</details>
+
+<details>
+<summary>📂 etc</summary>
+
+- `despawn.logic.js`
+- `enter.logic.js`
+- `enterTown.js`
+
+</details>
+
+<details>
+<summary>📂 joi</summary>
+
+- `joiUtils.js`
+
+</details>
+
+<details>
+<summary>📂 navmesh</summary>
+
+- `navmesh.js`
+
+</details>
+
+<details>
+<summary>📂 notification</summary>
+
+- `broadcastBySession.js`
+- `createNotification.js`
+
+</details>
+
+<details>
+<summary>📂 packet</summary>
+
+- `createHeader.js`
+- `createResponse.js`
+- `decodePacket.js`
+
+</details>
+
+<details>
+<summary>📂 redis</summary>
+
+- `redisManager.js`
+
+</details>
+
+<details>
+<summary>📂 socket</summary>
+
+- `messageQueue.js`
+
+</details>
+
+- `dateFormatter.js`
+- `generateNexusId.js`
+- `logger.js`
+- `makeUUID.js`
+- `transfromCase.js`
+
+</details>
+
+- `server.js`
+
+</details>
+
+</details>
+
 
 ## 👩‍💻 팀원
 

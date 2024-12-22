@@ -164,8 +164,6 @@
 - `C_Logout  : 101`
 - `S_Logout  : 102`
 
----
-
 ### Town
 - `C_Enter: 0`
 - `S_Enter: 1`

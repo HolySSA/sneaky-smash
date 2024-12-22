@@ -18,7 +18,7 @@
 
 ## 🛠️ 기술 구현
 
-### Programming Languages
+##### Programming Languages
 <p align="left">
   <img src="https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript Badge"/>
   <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge"/>

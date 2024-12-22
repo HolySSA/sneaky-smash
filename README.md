@@ -25,10 +25,10 @@
 </span>
 
 #### Socket Programming
-<p align="left">
+<span>
   <img src="https://img.shields.io/badge/TCP-00599C?style=for-the-badge&logo=protocol&logoColor=white" alt="TCP Badge"/>
   <img src="https://img.shields.io/badge/Protobuf-336791?style=for-the-badge&logo=google&logoColor=white" alt="Protobuf Badge"/>
-</p>
+</span>
 
 #### Game Server & Login Server
 <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js Badge"/>

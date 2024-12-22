@@ -1,4 +1,4 @@
-# Sneaky SMASH
+# SNEAKY SMASH
 
 ## 🎈 팀 노션
 
@@ -7,29 +7,149 @@
 
 ## 👋 프로젝트 소개
 
-- 게임명: Sneaky SMASH
+- 게임명: SNEAKY SMASH
+- 프로젝트 기간: 2024.11.13(수) ~ 2024.12.22(일)
 - 게임 장르: 배틀로얄 / RPG
-- 프로젝트 소개: ‘Sneaky SMASH’는 던전 투기장에 입장해 몬스터를 사냥하며 성장하고, 최종적으로 넥서스를 파괴하면 승리하는 게임입니다.
+- 프로젝트 소개: **SNEAKY SMASH**는 던전 투기장에 입장해 몬스터를 사냥하며 성장하고, 최종적으로 넥서스를 파괴하면 승리하는 게임입니다.
 
 ## ⚙️ 서비스 아키텍처
 
-![서비스 아키텍처](https://github.com/user-attachments/assets/021b15a0-417f-48f5-8f9a-05ccb40fde32)
+![서비스 아키텍처](https://github.com/user-attachments/assets/1cf53135-a523-4f57-8f92-5a67a8c22240)
 
 ## 🛠️ 기술 구현
 
-| 기술               | 설명                                                                                                                                                                                                                         |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **NodeJS**         | JavaScript를 사용하므로 개발 속도가 빠르다는 것이 장점입니다. 또한 npm을 통해 많은 라이브러리와 모듈을 사용할 수 있습니다.                                                                                                   |
-| **Docker-Compose** | Docker Compose는 많은 Docker 컨테이너를 한 번에 관리할 수 있도록 해주며, 개발 환경과 운영 환경의 일관성을 보장합니다. 이를 통해 어떤 환경에서도 동일하게 동작할 수 있어 배포 오류를 줄일 수 있습니다.                        |
-| **Traefik**        | API 게이트웨이로써 Traefik은 Docker와 연동하여 라우팅 관리가 간편합니다. 클라이언트가 어떤 서버로 진입을 원할 때 Traefik이 적절한 서버로 라우팅해줍니다. 또한 클라이언트의 요청을 여러 서버로 균등하게 분산해줄 수 있습니다. |
-| **Redis**          | 인메모리 DB인 Redis는 데이터를 읽고 쓰는 속도가 매우 빨라 실시간 데이터를 캐싱하는 데에 유리하여 사용하게 되었습니다.                                                                                                        |
-| **MySQL**          | 데이터의 무결성과 일관성이 장점인 MySQL을 데이터베이스로 사용하였습니다.                                                                                                                                                     |
+### Programming Languages
 
-## 📌 구현 기능 (정리 예정)
+<p align="left">
+  <img src="https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript Badge"/>
+  <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge"/>
+</p>
 
-- 동시성 처리(비동기) - 메세지 큐 설명
-- 캐싱 - redis
-- 로드밸런싱 - Traefik
+### Socket Programming
+
+<p align="left">
+  <img src="https://img.shields.io/badge/TCP-00599C?style=for-the-badge&logo=protocol&logoColor=white" alt="TCP Badge"/>
+  <img src="https://img.shields.io/badge/Protobuf-336791?style=for-the-badge&logo=google&logoColor=white" alt="Protobuf Badge"/>
+</p>
+
+### Game Server & Login Server
+
+<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js Badge"/>
+
+### Pathfinding Server
+
+<img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C# Badge"/>
+
+### Client
+
+<img src="https://img.shields.io/badge/Unity-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Badge"/>
+
+### DB
+
+<p align="left">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL Badge"/>
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="Redis Badge"/>
+</p>
+
+### DevOps
+
+<p align="left">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Badge"/>
+  <img src="https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose Badge"/>
+  <img src="https://img.shields.io/badge/Traefik-000000?style=for-the-badge&logo=traefik&logoColor=white" alt="Traefik Badge"/>
+  <img src="https://img.shields.io/badge/VPS-FF6600?style=for-the-badge&logo=linux&logoColor=white" alt="VPS Badge"/>
+</p>
+
+### VCS (Virsion Control System)
+
+<p align="left">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Badge"/>
+  <img src="https://img.shields.io/badge/Unity%20Version%20Control-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Version Control Badge"/>
+</p>
+
+## 📌 주요 기능 및 구성 요소
+
+### **VPS (Virtual Private Server)**
+
+고가용성 서버를 구성하기 위해 VPS를 사용했습니다.
+
+- **Minimum Server**: 필요한 서비스를 직접 설치하여 불필요한 서비스 동작 방지.
+- **확장성 고려**: 가상 노드 간 통신을 허용하여 서비스 수평 확장 가능.
+- **위험 관리**: Fail-Over 복구를 위해 스냅샷 저장.
+- **보안성**: 외부로부터 숨겨진 노드를 통해 보안성 강화.
+
+---
+
+### **Traefik**
+
+클라이언트 요청을 적절한 서비스로 라우팅하는 API-Gateway로 활용했습니다.
+
+- **리다이렉팅**: 클라이언트 요청을 적합한 백엔드 서비스로 라우팅.
+- **연결 지원**: SNI(Server Name Indication) 기반 서비스 연결 및 관리.
+
+---
+
+### **Login Server**
+
+로그인 및 유저 관리를 담당하며, 게임 서버 상태를 안내합니다.
+
+- **유저 관리**: 로그인/회원 가입으로 등록된 유저 인증.
+- **게임 서버 안내**: Redis를 활용해 서버 상태를 확인 및 갱신.
+
+---
+
+### **Game Server**
+
+인가된 유저만 접속 가능한 실제 게임 서비스 서버입니다.
+
+- **이동 동기화**: 마을 및 던전에 따라 이동 상태를 동기화.
+- **애니메이션 동기화**: 캐릭터의 모션 및 감정 표현 동기화.
+- **최대 인원 관리**: 서버 부하 방지 및 유저 경험 최적화.
+- **게임 로직**: 몬스터, 넥서스, PVP 등 게임 로직 처리.
+- **상태 동기화**: 캐릭터, 몬스터, 넥서스 등 다양한 개체에 대한 상태를 동기화.
+- **채팅 관리**: Redis를 통해 마을 및 던전 채팅 지원. (마을에서는 서버가 달라도 Redis를 통해 채팅 공유. 던전의 경우, 해당 던전 내에서만 채팅 공유)
+
+---
+
+### **Pathfinding Server**
+
+몬스터 길 찾기를 담당하는 독립 서버입니다.
+
+- **독립성**: 각 몬스터 간 길 찾기 요청을 독립적으로 처리.
+- **효율적인 연산**: 경량화된 데이터와 Unity 연산 최적화 라이브러리 활용.
+- **게임 서버 부하 감소**: 게임 서버와 연산 분리.
+
+---
+
+### **Message Queue**
+
+클라이언트 및 서버 간 순차적 처리를 위한 메시지 큐를 사용했습니다.
+
+- **클라이언트**: 송수신 순서를 보장하기 위한 큐 동작.
+- **서버**: 클라이언트별 독립적인 메시지 큐 제공.
+
+---
+
+### **MySQL / Redis**
+
+데이터 영속성과 캐싱 전략을 위해 MySQL과 Redis를 함께 활용했습니다.
+
+- **MySQL**: 데이터 영속성과 복잡한 쿼리 처리.
+- **Redis**: 자주 호출되는 데이터에 대한 캐싱 전략 및 서버 간 상태/메세지 공유.
+
+---
+
+### **Docker**
+
+서버 배포 및 관리 자동화를 위해 Docker를 활용했습니다.
+
+- **배포 용이**: Docker-Compose를 통해 서버 생성 및 관리.
+- **Fail-Over 관리**: 서비스 재시작 및 독립적 실행 환경 제공.
+- **Traefik 호환성**: 복잡도를 낮춘 API-Gateway 설정.
+- **수평 확장**: 필요 시 서버 추가/삭제로 유저 수용량 제어.
+- **리소스 분배**: 같은 장치 내에서 동작 하더라도 할당할 리소스를 선택하여 효율적으로 리소스 분배.
+
+---
 
 ## 📝 패킷 구조 (정리 예정)
 
@@ -308,12 +428,12 @@ MULTIPLEROGUELIKE/
 
 ## 👩‍💻 팀원
 
-| 이름   | 블로그                                                  | GitHub                                             |
-| ------ | ------------------------------------------------------- | -------------------------------------------------- |
-| 정동현 | [803571](https://blog.naver.com/803571)                 | [803571](https://github.com/803571)                |
-| 신성안 | [holy-s](https://holy-s.tistory.com/)                   | [HolySSA](https://github.com/HolySSA)              |
-| 변우영 | [abcd9986](https://velog.io/@abcd9986/posts)            | [interneton](https://github.com/interneton)        |
-| 정준엽 | [wnsduq8737](https://velog.io/@wnsduq8737/posts)        | [JungJaeU](https://github.com/JungJaeU)            |
-| 송인우 | [songinwoo](https://velog.io/@songinwoo/posts)          | [INU-coder](https://github.com/INU-coder)          |
-| 이정수 | [artbiit](https://velog.io/@artbiit/series)             | [artbiit](https://github.com/artbiit)              |
-| 박용현 | [dydgustmdfl1231](https://dydgustmdfl1231.tistory.com/) | [YongHyeon1231](https://github.com/YongHyeon1231/) |
+| 이름   | 블로그                                                       | GitHub                                             |
+| ------ | ------------------------------------------------------------ | -------------------------------------------------- |
+| 정동현 | [803571 Blog](https://blog.naver.com/803571)                 | [803571](https://github.com/803571)                |
+| 신성안 | [holy-s Blog](https://holy-s.tistory.com/)                   | [HolySSA](https://github.com/HolySSA)              |
+| 변우영 | [abcd9986 Blog](https://velog.io/@abcd9986/posts)            | [interneton](https://github.com/interneton)        |
+| 정준엽 | [wnsduq8737 Blog](https://velog.io/@wnsduq8737/posts)        | [JungJaeU](https://github.com/JungJaeU)            |
+| 송인우 | [songinwoo Blog](https://velog.io/@songinwoo/posts)          | [INU-coder](https://github.com/INU-coder)          |
+| 이정수 | [artbiit Blog](https://velog.io/@artbiit/series)             | [artbiit](https://github.com/artbiit)              |
+| 박용현 | [dydgustmdfl1231 Blog](https://dydgustmdfl1231.tistory.com/) | [YongHyeon1231](https://github.com/YongHyeon1231/) |

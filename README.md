@@ -55,8 +55,8 @@
 
 #### VCS (Version Control System)
 <span>
-  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Badge" height="20px"/>
-  <img src="https://img.shields.io/badge/Unity%20Version%20Control-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Version Control Badge" height="20px"/>
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Badge" height="30px"/>
+  <img src="https://img.shields.io/badge/Unity%20Version%20Control-000000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity Version Control Badge" height="30px"/>
 </span>
 
 ## 📌 주요 기능 및 구성 요소

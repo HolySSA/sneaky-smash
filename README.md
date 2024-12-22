@@ -144,90 +144,91 @@
 
 <details>
 <summary>📦 패킷</summary>
+접두어 'C_"는 클라이언트에서 서버로, "S_" 서버에서 클라이언트로 보낸다는 의미입니다.
 
 ### User
 
-- `C_Register : 27`
-- `S_Register : 28`
-- `C_Login  : 29`
-- `S_Login  : 30`
-- `C_Logout  : 101`
-- `S_Logout  : 102`
+- `C_Register[27]`: 회원가입 요청
+- `S_Register[28]`: 회원가입 응답
+- `C_Login[29]`: 로그인 요청
+- `S_Login[30]`: 로그인 응답
+- `C_Logout[101]`: 로그아웃 요청
+- `S_Logout[102]`: 로그아웃 응답
 
 ### Town
 
-- `C_Enter: 0`
-- `S_Enter: 1`
-- `S_Spawn: 2`
-- `S_Despawn: 3`
-- `C_Move: 4`
-- `S_Move: 5`
-- `C_Animation: 6`
-- `S_Animation: 7`
-- `C_Chat: 8`
-- `S_Chat: 9`
-- `S_EnterDungeon: 10`
+- `C_Enter[0]`: 마을 입장 요청
+- `S_Enter[1]`: 마을 입장 응답
+- `S_Spawn[2]`: 특정 세션 입장한 유저 알림
+- `S_Despawn[3]`: 특정 세션 연결 해제한 유저 아림
+- `C_Move[4]`:  움직임 요청
+- `S_Move[5]`:  움직임 알림
+- `C_Animation[6]`:  애니메이션 요청
+- `S_Animation[7]`:  애니메이션 알림
+- `C_Chat[8]`: 채팅 요청
+- `S_Chat[9]`: 채팅 알림
+- `S_EnterDungeon[10]`: 던전 진입 요청
 
 ### Battle
 
-- `C_LeaveDungeon: 11`
-- `S_LeaveDungeon: 12`
-- `S_UpdatePlayerHp: 13`
-- `S_UpdateMonsterHp: 14`
-- `S_UpdateNexusHp: 15`
-- `S_LevelUp: 16`
-- `C_AttackedNexus: 17`
-- `S_AttackedNexus: 18`
-- `C_HitPlayer : 19`
-- `S_HitPlayer : 20`
-- `C_HitMonster : 21`
-- `S_HitMonster : 22`
-- `S_PlayerStatus: 23`
-- `S_DeathPlayer: 24`
-- `S_RevivePlayer: 25`
-- `S_GetExp: 26`
-- `S_NexusSpawn: 51`
-- `S_PlayerKillCount: 52`
-- `S_GameEnd: 53`
+- `C_LeaveDungeon[11]`: 던전 퇴장 요청
+- `S_LeaveDungeon[12]`: 던전 퇴장 응답
+- `S_UpdatePlayerHp[13]`: 플레이어 체력 변화 알림
+- `S_UpdateMonsterHp[14]`: 몬스터 체력 변화 알림
+- `S_UpdateNexusHp[15]`: 넥서스 체력 변화 알림
+- `S_LevelUp[16]`: 레벨업 알림
+- `C_AttackedNexus[17]`: 넥서스 공격 요청
+- `S_AttackedNexus[18]`: 넥서스 공격 응답
+- `C_HitPlayer[19]`: 플레이어 피격 요청
+- `S_HitPlayer[20]`: 플레이어 피격 응답
+- `C_HitMonster[21]`: 몬스터 피격 요청
+- `S_HitMonster[22]`: 몬스터 피격 응답
+- `S_PlayerStatus[23]`: 플레이어 스테이터스 변화 알림
+- `S_DeathPlayer[24]`: 플레이어 사망 알림
+- `S_RevivePlayer[25]`: 플레이어 부활 알림
+- `S_GetExp[26]`: 경험치 획득 알림
+- `S_NexusSpawn[51]`: 넥서스 위치 알림
+- `S_PlayerKillCount[52]`: 플레이어 킬 수 알림
+- `S_GameEnd[53]`: 게임 종료 알림
 
 ### Skills & Items
 
-- `C_UseItem: 31`
-- `S_UseItem: 32`
-- `C_GetSkill: 33`
-- `S_GetSkill: 34`
-- `C_ShootProjectile: 35`
-- `S_ShootProjectile: 36`
-- `C_UseSkill: 37`
-- `S_UseSkill: 38`
+- `C_UseItem[31]`: 아이템 사용 요청
+- `S_UseItem[32]`: 아이템 사용 응답
+- `C_GetSkill[33]`: 스킬 획득 요청
+- `S_GetSkill[34]`: 스킬 획득 응답
+- `C_ShootProjectile[35]`: 투사체 발사 요청
+- `S_ShootProjectile[36]`: 투사체 발사 알림
+- `C_UseSkill[37]`: 스킬 사용 요청
+- `S_UseSkill[38]`: 스킬 사용 알림
 
 ### Monsters
 
-- `S_MonsterAttack: 39`
-- `S_MonsterMove: 40`
-- `S_MonsterKill: 41`
-- `S_MonsterSpawn: 42`
-- `S_MonsterKillCount: 43`
+- `S_MonsterAttack[39]`: 몬스터 공격 알림
+- `S_MonsterMove[40]`: 몬스터 이동 알림
+- `S_MonsterKill[41]`: 몬스터 처치 알림
+- `S_MonsterSpawn[42]`: 몬스터 부활 알림
+- `S_MonsterKillCount[43]`:몬스터 처치 횟수 알림
 
 ### Party
 
-- `C_Party: 44`
-- `S_Party: 45`
-- `C_PartyJoin: 46`
-- `S_PartyJoin: 47`
-- `C_PartyLeave: 48`
-- `S_PartyLeave: 49`
-- `C_MatchStart: 50`
+- `C_Party[44]`: 파티 정보 요청
+- `S_Party[45]`: 파티 정보 알림
+- `C_PartyJoin[46]`: 파티 가입 요청
+- `S_PartyJoin[47]`: 파티 가입 응답
+- `C_PartyLeave[48]`: 파티 탈퇴 요청
+- `S_PartyLeave[49]`: 파티 탈퇴 응답
+- `C_MatchStart[50]`: 게임 시작 요청
 
 ### Path
 
-- `C_GetNavPath: 99`
-- `S_GetNavPath: 100`
-- `C_Authorize: 103`
-- `S_Authorize: 104`
-- `S_GameServerInfo: 253`
-- `S_Ping: 254`
-- `C_Ping: 255`
+- `C_GetNavPath[99]`: 몬스터 길 찾기 요청
+- `S_GetNavPath[100]`: 몬스터 길 찾기 응답
+- `C_Authorize[103]`: 게임 서버 인증 요청
+- `S_Authorize[104]`: 게임 서버 인증 응답
+- `S_GameServerInfo[253]`: 게임 서버 목록 및 정보 알림
+- `S_Ping[254]`: 플레이어에게 ping
+- `C_Ping[255]`: 서버에게 pong
 
 </details>
 

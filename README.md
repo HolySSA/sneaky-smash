@@ -151,11 +151,12 @@
 
 ---
 
-# 📝 패킷 구조
+## 📝 패킷 구조
 
 <details>
-<summary>🟦 User</summary>
+<summary>📦 패킷 구조</summary>
 
+### User
 - `C_Register : 27`
 - `S_Register : 28`
 - `C_Login  : 29`
@@ -163,11 +164,9 @@
 - `C_Logout  : 101`
 - `S_Logout  : 102`
 
-</details>
+---
 
-<details>
-<summary>🟦 Town</summary>
-
+### Town
 - `C_Enter: 0`
 - `S_Enter: 1`
 - `S_Spawn: 2`
@@ -180,11 +179,9 @@
 - `S_Chat: 9`
 - `S_EnterDungeon: 10`
 
-</details>
+---
 
-<details>
-<summary>🟦 Battle</summary>
-
+### Battle
 - `C_LeaveDungeon: 11`
 - `S_LeaveDungeon: 12`
 - `S_UpdatePlayerHp: 13`
@@ -205,11 +202,9 @@
 - `S_PlayerKillCount: 52`
 - `S_GameEnd: 53`
 
-</details>
+---
 
-<details>
-<summary>🟦 Skills & Items</summary>
-
+### Skills & Items
 - `C_UseItem: 31`
 - `S_UseItem: 32`
 - `C_GetSkill: 33`
@@ -219,22 +214,18 @@
 - `C_UseSkill: 37`
 - `S_UseSkill: 38`
 
-</details>
+---
 
-<details>
-<summary>🟦 Monsters</summary>
-
+### Monsters
 - `S_MonsterAttack: 39`
 - `S_MonsterMove: 40`
 - `S_MonsterKill: 41`
 - `S_MonsterSpawn: 42`
 - `S_MonsterKillCount: 43`
 
-</details>
+---
 
-<details>
-<summary>🟦 Party</summary>
-
+### Party
 - `C_Party: 44`
 - `S_Party: 45`
 - `C_PartyJoin: 46`
@@ -243,27 +234,25 @@
 - `S_PartyLeave: 49`
 - `C_MatchStart: 50`
 
-</details>
+---
 
-<details>
-<summary>🟦 Path</summary>
-
+### Path
 - `C_GetNavPath: 99`
 - `S_GetNavPath: 100`
 - `C_Authorize: 103`
-- `C_Authorize: 104`
+- `S_Authorize: 104`
 - `S_GameServerInfo: 253`
 - `S_Ping: 254`
 - `C_Ping: 255`
 
+
 </details>
 
-## 📁 MULTIPLEROGUELIKE 디렉토리 구조
+
+## 📁디렉토리 구조
 
 <details>
 <summary>📂 MULTIPLEROGUELIKE</summary>
-
-### MULTIPLEROGUELIKE
 
 #### 📂 assets
 - `classInfo.json`

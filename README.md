@@ -75,7 +75,6 @@
 ## 📌 주요 기능 및 구성 요소
 
 ### **VPS (Virtual Private Server)**
-<h3> style="color </h3>
 
 고가용성 서버를 구성하기 위해 VPS를 사용했습니다.
 

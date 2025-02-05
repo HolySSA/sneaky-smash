@@ -1,9 +1,8 @@
 # SNEAKY SMASH
 
-## 🎈 팀 노션
+## 🎈 팀 브로셔
 
-- [프로젝트 브로셔](https://pollen-violin-7c8.notion.site/SNEAKY-SMASH-164ca0528acf8072a337cc4abd620ab6)
-- [프로젝트 노션](https://teamsparta.notion.site/8-b5a0145e1e434ae6b45ca653cdfa04d2)
+- [프로젝트 브로셔]([https://pollen-violin-7c8.notion.site/SNEAKY-SMASH-164ca0528acf8072a337cc4abd620ab6](https://dune-poultry-b4f.notion.site/Sneaky-Smash-187266df14918097938dfa229253a9e0?pvs=4))
 
 ## 👋 프로젝트 소개
 
